@@ -4,7 +4,7 @@ from nltk.corpus import wordnet as wn, stopwords
 import pandas as pd
 import re
 from empath import Empath
-#
+
 #These are our five categories
 anger = wn.synset("anger.n.01")
 love = wn.synset("love.n.01")
