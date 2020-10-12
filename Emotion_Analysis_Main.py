@@ -4,7 +4,7 @@ from nltk.corpus import wordnet as wn, stopwords
 import pandas as pd
 import re
 from empath import Empath
-
+#
 #These are our five categories
 anger = wn.synset("anger.n.01")
 love = wn.synset("love.n.01")
@@ -27,7 +27,7 @@ def load_dataset(file):
 train_data = load_dataset("C:/Users/ine_m/Desktop/Oulun Yliopisto/M1/NLP/NLP_Project/NLP_Project/emotion dataset/train.txt")
 test_data = load_dataset("C:/Users/ine_m/Desktop/Oulun Yliopisto/M1/NLP/NLP_Project/NLP_Project/emotion dataset/test.txt")
 val_data = load_dataset("C:/Users/ine_m/Desktop/Oulun Yliopisto/M1/NLP/NLP_Project/NLP_Project/emotion dataset/val.txt")
-#"C:/Users/ine_m/Desktop/Oulun Yliopisto/M1/NLP/NLP_Project/NLP_Project/emotion dataset/train.txt"
+
 #Here we open the Harvard inquirer XL file
 file = r'inquirerbasic.xls'
 xl = pd.read_excel(file)
