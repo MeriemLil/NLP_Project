@@ -49,7 +49,13 @@ class DATA():
                                              csv_reader_params={'delimiter':';'})
             
         self.TEXT.build_vocab(self.train, self.test)
-        self.train_iter, self.test_iter = data.BucketIterator.splits((self.train, self.test),
+        self.test_iter, self.dev_iter = \
+            data.BucketIterator.splits((self.test, self.dev),
+        										   batch_size=args.batch_size,
+        										   device=args.device,
+                                                   repeat=False)
+        self.train_iter, _ = \
+            data.BucketIterator.splits((self.test, self.dev),
         										   batch_size=args.batch_size,
         										   device=args.device,
                                                    repeat=True)

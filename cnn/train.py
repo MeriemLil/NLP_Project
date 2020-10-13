@@ -37,19 +37,19 @@ def train(args, data, vectors):
 		present_epoch = int(iterator.epoch)
 		if present_epoch == args.epoch or early_stop > 10:
 			break
-		if present_epoch >= last_epoch:
+		if present_epoch > last_epoch:
 			print('epoch:', present_epoch + 1)
 			print_summary = True
 		last_epoch = present_epoch
 
 		pred = model(batch)
-
 		optimizer.zero_grad()
 		batch_loss = criterion(pred, batch.label)
 		loss += batch_loss.item()
 		batch_loss.backward()
 		nn.utils.clip_grad_norm_(parameters, max_norm=args.norm_limit)
 		optimizer.step()
+
 
 		_, pred = pred.max(dim=1)
 		acc += (pred == batch.label).sum().float()
@@ -59,7 +59,8 @@ def train(args, data, vectors):
 			print_summary = False
 			acc /= size
 			acc = acc.cpu().item()
-			test_loss, test_acc = test(model, data)
+
+			test_loss, test_acc = test(model, data, mode='dev')
 			early_stop += 1
 			c = present_epoch
 
@@ -77,7 +78,6 @@ def train(args, data, vectors):
 				early_stop = 0
 			acc, loss, size = 0, 0, 0
 			model.train()
-
 	writer.close()
 	print(f'max test acc: {max_test_acc:.3f}')
 
