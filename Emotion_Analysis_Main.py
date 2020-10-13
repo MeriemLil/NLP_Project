@@ -5,15 +5,14 @@ import pandas as pd
 import re
 from empath import Empath
 
-#These are our six categories
+#These are our five categories
 anger = wn.synset("anger.n.01")
 love = wn.synset("love.n.01")
 sadness = wn.synset("sadness.n.01")
 surprise = wn.synset("surprise.n.01")
 joy = wn.synset("joy.n.01")
-fear = wn.synset("fear.n.01")
 #joined in a list
-categories = [anger, love, sadness, surprise, joy, fear]
+categories = [anger, love, sadness, surprise, joy]
 
 # import data files
 train = pd.read_csv('./data/train.txt', header=None, names=['text','label'], sep=';')
