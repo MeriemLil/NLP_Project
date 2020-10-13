@@ -1,0 +1,4 @@
+/data/GoogleNews-vectors-negative300.bin
+/cnn/runs/*
+/cnn/ml_steps.py
+*.pyc
