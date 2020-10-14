@@ -8,16 +8,20 @@ import torch.nn.functional as F
 
 
 class CNNSentence(nn.Module):
-
+    
+	"""
+	Wrapper class for neural network model
+	"""
 	def __init__(self, args, data, vectors):
 		super(CNNSentence, self).__init__()
-
+        #save args
 		self.args = args
-
+        
 		self.word_emb = nn.Embedding(args.word_vocab_size, args.word_dim, padding_idx=1)
 		# initialize word embedding with pretrained word2vec
 		if args.mode != 'rand':
 			self.word_emb.weight.data.copy_(torch.from_numpy(vectors))
+		
 		if args.mode in ('static', 'multichannel'):
 			self.word_emb.weight.requires_grad = False
 		if args.mode == 'multichannel':

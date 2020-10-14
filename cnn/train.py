@@ -21,7 +21,8 @@ def train(args, data, vectors):
 	model.to(torch.device(args.device))
 
 	parameters = filter(lambda p: p.requires_grad, model.parameters())
-	optimizer = optim.Adadelta(parameters, lr=args.learning_rate)
+	#adam optimizer seems to provide best convergence
+	optimizer = optim.Adam(parameters, lr=args.learning_rate, weight_decay = args.regularization)
 	criterion = nn.CrossEntropyLoss()
 
 	writer = SummaryWriter(log_dir='runs/' + args.model_time)
@@ -35,7 +36,7 @@ def train(args, data, vectors):
 	early_stop = 0
 	for i, batch in enumerate(iterator):
 		present_epoch = int(iterator.epoch)
-		if present_epoch == args.epoch or early_stop > 10:
+		if present_epoch == args.epoch or early_stop >= args.early_stop:
 			break
 		if present_epoch > last_epoch:
 			print('epoch:', present_epoch + 1)
@@ -92,13 +93,16 @@ def main():
     parser.add_argument('--dropout', default=0.5, type=float)
     parser.add_argument('--epoch', default=300, type=int)
     parser.add_argument('--device', default='cpu')
-    parser.add_argument('--learning-rate', default=0.1, type=float)
+    parser.add_argument('--learning-rate', default=0.001, type=float)
     parser.add_argument('--word-dim', default=300, type=int)
     parser.add_argument('--norm-limit', default=3.0, type=float)
     parser.add_argument("--mode", default="non-static",
                         help="available models: rand, static, non-static, multichannel")
     parser.add_argument('--num-feature-maps', default=100, type=int)
-    
+    parser.add_argument('--embeddings', default='word2vec',
+                        help='available vector models: word2vec, fasttext')
+    parser.add_argument('--early_stop', default=10, type=int)
+    parser.add_argument('--regularization', default=0.0, type=float)
     args = parser.parse_args()
     data = DATA(args)
     vectors = getVectors(args, data)
