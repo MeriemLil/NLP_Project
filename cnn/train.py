@@ -3,6 +3,7 @@ Adapted from https://github.com/baaesh/CNN-sentence-classification-pytorch/
 """
 
 import argparse
+import json
 import copy
 import os
 import torch
@@ -29,11 +30,12 @@ def train(args, data, vectors):
 
 	model.train()
 	acc, loss, size, last_epoch = 0, 0, 0, -1
-	max_test_acc = 0
+	min_test_loss = 100
 
 	print_summary = False
 	iterator = data.train_iter
 	early_stop = 0
+	print(args.early_stop)
 	for i, batch in enumerate(iterator):
 		present_epoch = int(iterator.epoch)
 		if present_epoch == args.epoch or early_stop >= args.early_stop:
@@ -73,14 +75,13 @@ def train(args, data, vectors):
 			print(f'train loss: {loss:.3f} / test loss: {test_loss:.3f}'
 				  f' / train acc: {acc:.3f} / test acc: {test_acc:.3f}')
 
-			if test_acc > max_test_acc:
-				max_test_acc = test_acc
+			if test_loss < min_test_loss:
+				min_test_loss = test_loss
 				best_model = copy.deepcopy(model)
 				early_stop = 0
 			acc, loss, size = 0, 0, 0
 			model.train()
 	writer.close()
-	print(f'max test acc: {max_test_acc:.3f}')
 
 	return best_model
 
@@ -101,8 +102,9 @@ def main():
     parser.add_argument('--num-feature-maps', default=100, type=int)
     parser.add_argument('--embeddings', default='word2vec',
                         help='available vector models: word2vec, fasttext')
-    parser.add_argument('--early_stop', default=10, type=int)
+    parser.add_argument('--early-stop', default=5, type=int)
     parser.add_argument('--regularization', default=0.0, type=float)
+    
     args = parser.parse_args()
     data = DATA(args)
     vectors = getVectors(args, data)
@@ -116,10 +118,13 @@ def main():
     print('training start!')
     best_model = train(args, data, vectors)
     
+    #save model trainable params
     if not os.path.exists('saved_models'):
     	os.makedirs('saved_models')
-    torch.save(best_model.state_dict(), f'saved_models/CNN_Sentece_{args.model_time}.pt')
-    
+    torch.save(best_model.state_dict(), f'saved_models/CNN_sentence_{args.model_time}.pt')
+    #save model arguments to json
+    with open(f'saved_models/args{args.model_time}.txt', 'w') as f:
+         json.dump(args.__dict__, f, indent=2)
     print('training finished!')
 
 

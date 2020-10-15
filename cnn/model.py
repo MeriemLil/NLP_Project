@@ -14,7 +14,7 @@ class CNNSentence(nn.Module):
 	"""
 	def __init__(self, args, data, vectors):
 		super(CNNSentence, self).__init__()
-        #save args
+        # save args
 		self.args = args
         
 		self.word_emb = nn.Embedding(args.word_vocab_size, args.word_dim, padding_idx=1)
@@ -22,6 +22,7 @@ class CNNSentence(nn.Module):
 		if args.mode != 'rand':
 			self.word_emb.weight.data.copy_(torch.from_numpy(vectors))
 		
+        # with static and multichannel, we set the embeddings and untrainable.
 		if args.mode in ('static', 'multichannel'):
 			self.word_emb.weight.requires_grad = False
 		if args.mode == 'multichannel':

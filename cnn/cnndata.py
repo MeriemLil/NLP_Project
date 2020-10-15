@@ -27,7 +27,7 @@ def getVectors(args, data):
         if args.embeddings != 'fasttext':
             embed = KeyedVectors.load_word2vec_format('../data/GoogleNews-vectors-negative300.bin', binary=True)
         else:
-            embed = fasttext.load_facebook_vectors('../data/cc.en.300.bin', encoding='utf-8')
+            embed = KeyedVectors.load_word2vec_format('../data/wiki-news-300d-1M.vec', encoding='utf-8')
         for i in range(len(data.TEXT.vocab)):
             word = data.TEXT.vocab.itos[i]
             if word in embed.vocab:
@@ -49,21 +49,27 @@ class TextDataset(data.TabularDataset):
     
 class DATA():
     """
-    Class defining the dataset to be fed into the model.
+    Class defining the full dataset to be fed into the torch model.
     """
     def __init__(self, args):
+        
+        #defield torch dataset field type objects
         self.TEXT = data.Field(batch_first=True, lower=True, fix_length=70)
         self.LABEL = data.Field(sequential=False, unk_token=None)
         fields = [('text', self.TEXT), ('label', self.LABEL)]        
         
+        #create datasets from file
         self.train = TextDataset('../data/train.txt', 'CSV', fields,
                                              csv_reader_params={'delimiter':';'})
         self.dev = TextDataset('../data/test.txt', 'CSV', fields,
                                              csv_reader_params={'delimiter':';'})
         self.test = TextDataset('../data/val.txt', 'CSV', fields,
                                              csv_reader_params={'delimiter':';'})
-            
+        #build vocabularies for the sentences and the label   
         self.TEXT.build_vocab(self.train, self.dev, self.test)
+        self.LABEL.build_vocab(self.train)
+        #create batch iterator items that feed into the model. For training we use repeat = True
+        #to enable running the training for multiple epochs. For testing and dev sets
         self.test_iter, self.dev_iter = \
             data.BucketIterator.splits((self.test, self.dev),
                 								   batch_size=args.batch_size,
@@ -74,4 +80,4 @@ class DATA():
                 								   batch_size=args.batch_size,
                 								   device=args.device,
                                                    repeat=True)
-        self.LABEL.build_vocab(self.train)
+        

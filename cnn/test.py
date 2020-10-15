@@ -4,12 +4,13 @@ Adapted from https://github.com/baaesh/CNN-sentence-classification-pytorch/
 
 
 import argparse
+import json
 
 import torch
 from torch import nn
 
 from model import CNNSentence
-from cnndata import DATA
+from cnndata import DATA, getVectors
 
 
 def test(model, data, mode='test'):
@@ -39,7 +40,7 @@ def test(model, data, mode='test'):
     criterion = nn.CrossEntropyLoss()
     model.eval()
     acc, loss, size = 0, 0, 0
-    
+    preds = torch.empty(0, 1)
     #run test for batch iterators
     for batch in iterator:
         pred = model(batch)
@@ -48,52 +49,49 @@ def test(model, data, mode='test'):
         loss += batch_loss.item()
         #predict and compare to labels to get sum of correct predictions
         _, pred = pred.max(dim=1)
+        preds = torch.cat((preds, pred), 0)
         acc += (pred == batch.label).sum().float()
         size += len(pred)
     #divide by n to get accuracy
     acc /= size
     acc = acc.cpu().item()
-    return loss, acc
+    return loss, acc, preds
 
+
+def load_args(args):
+    """
+    Helper function to load model args from file    
+    """
+    with open(f'saved_models/args{args.model_time}.txt', 'r') as f:
+        arg_dict = json.load(f)
+    args.__dict__.update(arg_dict)
+    return args
 
 def load_model(args, data):
     """
-    
-    
+    Helper function to load model from file    
     """
+    model_path = f'saved_models/CNN_sentence_{args.model_time}.pt'
     model = CNNSentence(args, data)
-    model.load_state_dict(torch.load(args.model_path))
-
-    if args.device == 'gpu':
-        model.cuda(args.gpu)
+    model.load_state_dict(torch.load(model_path))
 
     return model
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--batch-size', default=64, type=int)
-    parser.add_argument('--dropout', default=0.5, type=float)
-    parser.add_argument('--device', default='cpu')
-    parser.add_argument('--word-dim', default=300, type=int)
-    parser.add_argument("--mode", default="non-static", help="available models: rand, static, non-static, multichannel")
-    parser.add_argument('--num-feature-maps', default=5, type=int)
-
+    parser.add_argument('--model-time', default='08-31-53', type=str)
     args = parser.parse_args()
-
-    print('loading SNLI data...')
+    args = load_args(args)
+    print('loading data...')
     data = DATA(args)
-
     setattr(args, 'word_vocab_size', len(data.TEXT.vocab))
     setattr(args, 'class_size', len(data.LABEL.vocab))
-
-    # if block size is lower than 0, a heuristic for block size is applied.
-    if args.block_size < 0:
-        args.block_size = data.block_size
-
+    print('loading vectors...')
+    vectors = getVectors(args, data)
     print('loading model...')
-    model = load_model(args, data)
-
-    _, acc = test(model, data)
-
-    print(f'test acc: {acc:.3f}')
+    model = load_model(args, data, vectors)
+    loss, acc, preds = test(model, data)
+    print(preds)
+    print(f'test acc: {acc:.3f}')    
+    print(f'loss acc: {loss:.3f}')
