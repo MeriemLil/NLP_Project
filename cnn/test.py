@@ -12,6 +12,8 @@ from torch import nn
 from model import CNNSentence
 from cnndata import DATA, getVectors
 
+from sklearn.metrics import multilabel_confusion_matrix, precision_score, recall_score
+
 
 def test(model, data, mode='test'):
     """
@@ -28,6 +30,7 @@ def test(model, data, mode='test'):
     -------
     loss : loss for the dataset
     acc : accuracy of model
+    preds: torch tensor of shape [n, 2] with predictions and labels
 
     """
     #create iterator from input dataset
@@ -81,11 +84,13 @@ def load_model(args, data, vectors):
 
 
 if __name__ == '__main__':
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-time', default='09_02_09', type=str,
                         help='Input a model-time of a saved model in format HH_MM_SS')
     args = parser.parse_args()
     args = load_args(args)
+    
     print('loading data...')
     data = DATA(args)
     setattr(args, 'word_vocab_size', len(data.TEXT.vocab))
@@ -94,7 +99,26 @@ if __name__ == '__main__':
     vectors = getVectors(args, data)
     print('loading model...')
     model = load_model(args, data, vectors)
+    #get loss, acc and preds from test util
     loss, acc, preds = test(model, data)
-    print(preds)
+    
+    #transform from torch tensor to array and compute required metrics
+    preds = preds.numpy().astype(int)
+    conf = multilabel_confusion_matrix(preds[:,1], preds[:,0])  
+    prec = precision_score(preds[:,1], preds[:,0], average='weighted')
+    rec = recall_score(preds[:,1], preds[:,0], average='weighted')
+    
+    #restructure the confusion matrix to list
+    conf = [[conf[i,:,:].tolist(),data.LABEL.vocab.itos[i]] for i in range(conf.shape[0])]
+    #dump to json
+    with open(f'saved_models/test_res{args.model_time}.txt', 'w') as f:
+         json.dump({'conf':conf,'acc':acc,'loss':loss, 'prec':prec,'rec':rec}, f, indent=2)
+    
     print(f'test acc: {acc:.3f}')    
-    print(f'loss acc: {loss:.3f}')
+    print(f'test loss: {loss:.3f}')
+    print(f'test precision: {prec:.3f}')
+    print(f'test recall: {rec:.3f}')
+    print('Confusion matrices:')
+    print(conf)
+    
+    
