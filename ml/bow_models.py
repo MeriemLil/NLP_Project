@@ -21,20 +21,13 @@ from joblib import Parallel, delayed
 import json
 import os
 
-"""
-TODO:
-    Add different options e.g. scaling the input for the different classifiers
-    based on their behaviour
-    
-    Comment the bow_iterations function
-    
-
-"""
 
 def run_bow_iterations(params, train, dev, clf, verbose=True):
     """
     Function to run different setups and compute accuracy for different model 
-    setups sepcified in the project guidelines.
+    setups sepcified in the project guidelines. Stores the parameters, 
+    classifier name and accuracy for each iteration, for future use.
+
 
     Parameters
     ----------
@@ -57,17 +50,28 @@ def run_bow_iterations(params, train, dev, clf, verbose=True):
         of the model
 
     """
-    i = 0
+    # iteration number for verbose output
+    iter_num = 0
+    
+    # list for iteration data
     iters = []
+    # get name of the passed classifier to store
     clf_name = str(type(clf).__name__)
+    
+    # initialize scaling to be used with count-vectorize. with_mean=False reserves sparsity
     scl = StandardScaler(with_mean=False)
+    
+    ## iterate over the parameter grid defined by params dict
     for vec in params['vectorizer']:
         vec_p = str(type(vec()).__name__)
+        #stopwords to pass to the vectorizer item
         for stop_words in params['stopwords']:
-            if str(type(i).__name__)=='list':
+            #for nltk stopwords, a list of stopwords is passed
+            if str(type(stop_words).__name__)=='list':
                 stop_words_p = 'nltk'
             else:
                 stop_words_p = stop_words
+            #get lemmatized or non-lemmatized based on lemmatize boolean
             for lem in params['lemmatize']:
                 if lem:
                     X_tr = train.lem_text
@@ -75,23 +79,40 @@ def run_bow_iterations(params, train, dev, clf, verbose=True):
                 else:
                     X_tr = train.text
                     X_ts = dev.text
+                
+                # max features to pass to the vectorizer item
                 for max_features in params['max_features']:
-                    Vectorizer = vec(stop_words=stop_words, max_features=max_features)
+                    #initialize vectorizer and fit
+                    Vectorizer = vec(stop_words=stop_words,
+                                     max_features=max_features)
                     X_train = Vectorizer.fit_transform(X_tr)
                     X_test = Vectorizer.transform(X_ts)
+                    
+                    # naive-bayes classifier cannot handle sparse input
+                    # matrix produced by vectorizers
                     if clf_name == "GaussianNB":
                         X_train = X_train.toarray()
                         X_test = X_test.toarray()
+                    # some algorithms (e.g. logistic regression, SVC) converge
+                    # better when input produced by CountVectorizer is scaled
                     if str(type(Vectorizer).__name__) == 'CountVectorizer':
                         X_train = scl.fit_transform(X_train)
                         X_test = scl.transform(X_test)
+                    
+                    # fit model and get accuracy score
                     clf.fit(X_train, train.label)
                     score = clf.score(X_test, dev.label)
-                    vals = [vec_p, stop_words_p, lem, max_features, clf_name, score]
-                    iters.append(dict(zip(list(params.keys())+['score'], vals)))
-                    i += 1
+                    
+                    #create dictionary of parameters, classifier and accuracy
+                    vals = [vec_p, stop_words_p, lem,
+                            max_features, clf_name, score]
+                    iters.append(dict(zip(list(params.keys())+['score'],
+                                          vals)))
+                    # print model result and progress
+                    iter_num += 1
                     if verbose:
-                        print(f'Accuracy {score:.3f} for iteration {i} / {num_confs}, ' + clf_name)
+                        print(f'Accuracy {score:.3f} for iteration',
+                              f'{iter_num} / {num_confs},', clf_name)
     return iters
 
 
@@ -99,10 +120,6 @@ def run_bow_iterations(params, train, dev, clf, verbose=True):
 num_cores = multiprocessing.cpu_count()
 
 if __name__ == "__main__":
-    ## Currently ignoring warnings
-    import warnings
-    from sklearn.exceptions import DataConversionWarning
-    warnings.filterwarnings(action='ignore', category=DataConversionWarning)
 
     # import data files
     train = pd.read_csv('../data/train.txt', header=None, names=['text','label'], sep=';')
@@ -122,16 +139,17 @@ if __name__ == "__main__":
     for par in params.values():
         num_confs *= len(par)
         
-    classifiers = [GaussianNB(), LogisticRegression(penalty='none'), SVC(), DecisionTreeClassifier(), 
+    classifiers = [GaussianNB(), LogisticRegression(), SVC(), DecisionTreeClassifier(), 
                    RandomForestClassifier(), GradientBoostingClassifier()]
-    #initialize wordnet lemmatizer
-    wnl = WordNetLemmatizer()
     
+    #initialize wordnet lemmatizer and pre-create lemmatized words
+    wnl = WordNetLemmatizer()
     train['lem_text'] = train.text.str.split(' ').apply(lambda x: ' '.join([wnl.lemmatize(w) for w in x]))
     test['lem_text'] = test.text.str.split(' ').apply(lambda x: ' '.join([wnl.lemmatize(w) for w in x]))
     dev['lem_text'] = dev.text.str.split(' ').apply(lambda x: ' '.join([wnl.lemmatize(w) for w in x]))
  
-    processed_list = Parallel(n_jobs=5)(delayed(run_bow_iterations)(params, train, dev, clf) 
+    #run the iterations with models in parallel
+    processed_list = Parallel(n_jobs=6)(delayed(run_bow_iterations)(params, train, dev, clf) 
                                                         for clf in classifiers)
     if not os.path.exists('results'):
         os.makedirs('results')
