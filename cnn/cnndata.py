@@ -41,7 +41,9 @@ def getVectors(args, data):
     return np.array(vectors)
 
 class TextDataset(data.TabularDataset):
-
+    """
+    Wrapper class to enable the sort_key required by bucketiterator
+    """
     
     @staticmethod
     def sort_key(ex):
@@ -76,7 +78,7 @@ class DATA():
                 								   device=args.device,
                                                    repeat=False)
         self.train_iter, _ = \
-            data.BucketIterator.splits((self.test, self.dev),
+            data.BucketIterator.splits((self.train, self.dev),
                 								   batch_size=args.batch_size,
                 								   device=args.device,
                                                    repeat=True)

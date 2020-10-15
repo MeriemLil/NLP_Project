@@ -40,7 +40,7 @@ def test(model, data, mode='test'):
     criterion = nn.CrossEntropyLoss()
     model.eval()
     acc, loss, size = 0, 0, 0
-    preds = torch.empty(0, 1)
+    preds = torch.empty(0, 2)
     #run test for batch iterators
     for batch in iterator:
         pred = model(batch)
@@ -49,7 +49,9 @@ def test(model, data, mode='test'):
         loss += batch_loss.item()
         #predict and compare to labels to get sum of correct predictions
         _, pred = pred.max(dim=1)
-        preds = torch.cat((preds, pred), 0)
+        pred_label = torch.stack((pred, batch.label), 0)
+        pred_label = torch.transpose(pred_label, 0, 1)
+        preds = torch.cat((preds, pred_label), 0)
         acc += (pred == batch.label).sum().float()
         size += len(pred)
     #divide by n to get accuracy
@@ -67,12 +69,12 @@ def load_args(args):
     args.__dict__.update(arg_dict)
     return args
 
-def load_model(args, data):
+def load_model(args, data, vectors):
     """
     Helper function to load model from file    
     """
     model_path = f'saved_models/CNN_sentence_{args.model_time}.pt'
-    model = CNNSentence(args, data)
+    model = CNNSentence(args, data, vectors)
     model.load_state_dict(torch.load(model_path))
 
     return model
@@ -80,7 +82,8 @@ def load_model(args, data):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model-time', default='08-31-53', type=str)
+    parser.add_argument('--model-time', default='09_02_09', type=str,
+                        help='Input a model-time of a saved model in format HH_MM_SS')
     args = parser.parse_args()
     args = load_args(args)
     print('loading data...')

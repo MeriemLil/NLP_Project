@@ -63,7 +63,7 @@ def train(args, data, vectors):
 			acc /= size
 			acc = acc.cpu().item()
 
-			test_loss, test_acc = test(model, data, mode='dev')
+			test_loss, test_acc, _ = test(model, data, mode='dev')
 			early_stop += 1
 			c = present_epoch
 
@@ -102,7 +102,7 @@ def main():
     parser.add_argument('--num-feature-maps', default=100, type=int)
     parser.add_argument('--embeddings', default='word2vec',
                         help='available vector models: word2vec, fasttext')
-    parser.add_argument('--early-stop', default=5, type=int)
+    parser.add_argument('--early-stop', default=3, type=int)
     parser.add_argument('--regularization', default=0.0, type=float)
     
     args = parser.parse_args()
