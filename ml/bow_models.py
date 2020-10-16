@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 15 16:49:46 2020
-
-@author: lauri
-"""
 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
@@ -11,6 +5,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.feature_extraction import text 
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 from nltk.corpus import stopwords
@@ -21,6 +16,27 @@ from joblib import Parallel, delayed
 import json
 import os
 
+def preprocess_df(df):
+    """
+    Pre-create different versions of text input
+    with stop word and lemmatizations to pass on to tokenizer.
+    
+    Takes in a df and returns a df with added columns.
+
+    """
+    df['sk'] = df.text.str.split(' ').apply(\
+            lambda x:' '.join([w for w in x if w not in text.ENGLISH_STOP_WORDS])) 
+    df['nltk'] = df.text.str.split(' ').apply(\
+            lambda x:' '.join([w for w in x if w not in stopwords.words('english')])) 
+    # initialize wordnet lemmatizer and pre-create lemmatized words
+    wnl = WordNetLemmatizer()
+    df['text_lem'] = df.text.str.split(' ').apply(lambda x:\
+                                ' '.join([wnl.lemmatize(w) for w in x]))
+    df['sk_lem'] = df.sk.str.split(' ').apply(lambda x:\
+                                ' '.join([wnl.lemmatize(w) for w in x]))
+    df['nltk_lem'] = df.nltk.str.split(' ').apply(lambda x:\
+                                ' '.join([wnl.lemmatize(w) for w in x]))
+    return df
 
 def run_bow_iterations(params, train, dev, clf, verbose=True):
     """
@@ -66,24 +82,19 @@ def run_bow_iterations(params, train, dev, clf, verbose=True):
         vec_p = str(type(vec()).__name__)
         #stopwords to pass to the vectorizer item
         for stop_words in params['stopwords']:
-            #for nltk stopwords, a list of stopwords is passed
-            if str(type(stop_words).__name__)=='list':
-                stop_words_p = 'nltk'
-            else:
-                stop_words_p = stop_words
+            col = stop_words
+            if stop_words == 'none':
+                col = 'text'
             #get lemmatized or non-lemmatized based on lemmatize boolean
             for lem in params['lemmatize']:
                 if lem:
-                    X_tr = train.lem_text
-                    X_ts = dev.lem_text
-                else:
-                    X_tr = train.text
-                    X_ts = dev.text
-                
+                    col += '_lem'
+                X_tr = train[col]
+                X_ts = dev[col]
                 # max features to pass to the vectorizer item
                 for max_features in params['max_features']:
                     #initialize vectorizer and fit
-                    Vectorizer = vec(stop_words=stop_words,
+                    Vectorizer = vec(stop_words=None,
                                      max_features=max_features)
                     X_train = Vectorizer.fit_transform(X_tr)
                     X_test = Vectorizer.transform(X_ts)
@@ -95,7 +106,8 @@ def run_bow_iterations(params, train, dev, clf, verbose=True):
                         X_test = X_test.toarray()
                     # some algorithms (e.g. logistic regression, SVC) converge
                     # better when input produced by CountVectorizer is scaled
-                    if str(type(Vectorizer).__name__) == 'CountVectorizer':
+                    if (str(type(Vectorizer).__name__) == 'CountVectorizer') \
+                    and (clf_name in ['LogisticRegression','SVC']):
                         X_train = scl.fit_transform(X_train)
                         X_test = scl.transform(X_test)
                     
@@ -104,9 +116,9 @@ def run_bow_iterations(params, train, dev, clf, verbose=True):
                     score = clf.score(X_test, dev.label)
                     
                     #create dictionary of parameters, classifier and accuracy
-                    vals = [vec_p, stop_words_p, lem,
+                    vals = [vec_p, stop_words, lem,
                             max_features, clf_name, score]
-                    iters.append(dict(zip(list(params.keys())+['score'],
+                    iters.append(dict(zip(list(params.keys())+['clf_name', 'score'],
                                           vals)))
                     # print model result and progress
                     iter_num += 1
@@ -126,11 +138,16 @@ if __name__ == "__main__":
     dev = pd.read_csv('../data/test.txt', header=None, names=['text','label'], sep=';')
     test = pd.read_csv('../data/val.txt', header=None, names=['text','label'], sep=';')
     
+    print('processing data ...')
+    train = preprocess_df(train)
+    dev = preprocess_df(dev)
+    test = preprocess_df(test)
     
+    print(train.sk)
     # define the set of configurations to run
     params = {
         'vectorizer':[CountVectorizer, TfidfVectorizer],
-        'stopwords':[None, 'english', stopwords.words('english')],
+        'stopwords':['none', 'sk', 'nltk'],
         'lemmatize':[True, False],
         'max_features':[None, 3000, 2000, 1000, 500, 100]
         }
@@ -142,15 +159,14 @@ if __name__ == "__main__":
     classifiers = [GaussianNB(), LogisticRegression(), SVC(), DecisionTreeClassifier(), 
                    RandomForestClassifier(), GradientBoostingClassifier()]
     
-    #initialize wordnet lemmatizer and pre-create lemmatized words
-    wnl = WordNetLemmatizer()
-    train['lem_text'] = train.text.str.split(' ').apply(lambda x: ' '.join([wnl.lemmatize(w) for w in x]))
-    test['lem_text'] = test.text.str.split(' ').apply(lambda x: ' '.join([wnl.lemmatize(w) for w in x]))
-    dev['lem_text'] = dev.text.str.split(' ').apply(lambda x: ' '.join([wnl.lemmatize(w) for w in x]))
+   
  
-    #run the iterations with models in parallel
+    # run the iterations with models in parallel
     processed_list = Parallel(n_jobs=6)(delayed(run_bow_iterations)(params, train, dev, clf) 
-                                                        for clf in classifiers)
+                                                      for clf in classifiers)
+    # flatten nested list structure
+    processed_list = [obj for subobj in processed_list for obj in subobj]
+    
     if not os.path.exists('results'):
         os.makedirs('results')
     with open('results/results.json', 'w') as f:
