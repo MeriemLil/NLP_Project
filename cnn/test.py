@@ -101,6 +101,7 @@ if __name__ == '__main__':
     model = load_model(args, data, vectors)
     #get loss, acc and preds from test util
     loss, acc, preds = test(model, data)
+    dev_loss, dev_acc = test(model, data)
     
     #transform from torch tensor to array and compute required metrics
     preds = preds.numpy().astype(int)
@@ -112,7 +113,8 @@ if __name__ == '__main__':
     conf = [[conf[i,:,:].tolist(),data.LABEL.vocab.itos[i]] for i in range(conf.shape[0])]
     #dump to json
     with open(f'saved_models/test_res{args.model_time}.txt', 'w') as f:
-         json.dump({'conf':conf,'acc':acc,'loss':loss, 'prec':prec,'rec':rec}, f, indent=2)
+         json.dump({'conf':conf,'acc':acc,'loss':loss, 'prec':prec,'rec':rec,
+			'dev_loss':dev_loss, 'dev_acc':dev_acc}, f, indent=2)
     
     print(f'test acc: {acc:.3f}')    
     print(f'test loss: {loss:.3f}')

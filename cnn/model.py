@@ -39,7 +39,7 @@ class CNNSentence(nn.Module):
 			conv = nn.Conv1d(self.in_channels, args.num_feature_maps, args.word_dim * filter_size, stride=args.word_dim)
 			setattr(self, 'conv_' + str(filter_size), conv)
 
-		self.fc = nn.Linear(len(args.FILTER_SIZES) * 100, args.class_size)
+		self.fc = nn.Linear(len(args.FILTER_SIZES) * args.num_feature_maps, args.class_size)
 
 	def forward(self, batch):
 		x = batch.text

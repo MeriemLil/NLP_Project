@@ -157,7 +157,7 @@ if __name__ == "__main__":
         num_confs *= len(par)
         
     classifiers = [GaussianNB(), LogisticRegression(), SVC(), DecisionTreeClassifier(), 
-                   RandomForestClassifier(), GradientBoostingClassifier()]
+                   RandomForestClassifier()]
     
    
  
@@ -166,7 +166,6 @@ if __name__ == "__main__":
                                                       for clf in classifiers)
     # flatten nested list structure
     processed_list = [obj for subobj in processed_list for obj in subobj]
-    
     if not os.path.exists('results'):
         os.makedirs('results')
     with open('results/results.json', 'w') as f:
