@@ -1,0 +1,6 @@
+*.bin
+*.vec
+/cnn/saved_models/*
+/cnn/runs/*
+/cnn/ml_steps.py
+*.pyc
