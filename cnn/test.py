@@ -101,7 +101,7 @@ if __name__ == '__main__':
     model = load_model(args, data, vectors)
     #get loss, acc and preds from test util
     loss, acc, preds = test(model, data)
-    dev_loss, dev_acc = test(model, data)
+    dev_loss, dev_acc, _ = test(model, data, mode='dev')
     
     #transform from torch tensor to array and compute required metrics
     preds = preds.numpy().astype(int)

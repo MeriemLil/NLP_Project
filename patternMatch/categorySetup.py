@@ -26,7 +26,6 @@ def get_category(label, harvard_inquirer, include_categories, exclude_categories
 def assign_category(category_list, harvard_inquirer):
     dataFrame = pd.DataFrame(columns=['entry','emotion_type'])
     for emotion_type, categories in category_list.items():
-        dataFrame = dataFrame.append(get_category(emotion_type, harvard_inquirer, categories['include'], categories['exclude']))
-    print(dataFrame)
+        dataFrame = dataFrame.append(get_category(emotion_type, harvard_inquirer, categories['include'], categories['exclude'])
     dataFrame.to_sql('harvardWords', con=engine, index=False, if_exists='replace')
     return True
