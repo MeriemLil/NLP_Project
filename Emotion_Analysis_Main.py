@@ -4,6 +4,10 @@ from nltk.corpus import wordnet as wn, stopwords
 import pandas as pd
 import re
 from empath import Empath
+from patternMatch.categorySetup import * 
+from constants import *
+from patternMatch.stringMatching import *
+from database.databaseConnection import *
 
 #These are our six categories
 anger = wn.synset("anger.n.01")
@@ -22,3 +26,22 @@ val = pd.read_csv('./data/val.txt', header=None, names=['text','label'], sep=';'
 
 #Here we open the Harvard inquirer XL file
 harvardInquirer = pd.read_excel('./data/inquirerbasic.xls')
+
+# task1
+if not is_database_exist():
+    is_database_created = assign_category(category_list, harvardInquirer)
+    print('Database created successfully')
+else:
+    print("Database creation Done")
+
+
+# task2
+
+# get harvard list from database
+if is_database_exist():
+    result = get_data()
+    string_match(result)
+else:
+    print('Database is not exist')
+
+
