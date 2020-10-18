@@ -18,6 +18,7 @@ def preprocess(sentence):
     tagged1 = nltk.pos_tag(words)
     tagged2 = nltk.pos_tag(filtered_words)
     return words, filtered_words, stemmed, tagged1, tagged2 #depending on the use select from the return list
+
 #function that calculates similarity : sim(sentence, category) = average(wup similarity between each noun in a sentence and a category)
 def semantic_similarity(sentence, category):
     sum = 0
@@ -36,6 +37,7 @@ def semantic_similarity(sentence, category):
         #print("Error! division by 0 becuase there are no nouns in the sentence")
         sim = 0
         return sim
+
 #function that calculates the similarity between every category (as one synset) and every sentence (each noun as one synset) in input file, and creates output result file
 def find_sims_all(file, df_file, result):
     # These are our six categories
@@ -93,6 +95,7 @@ def find_sims_all(file, df_file, result):
         df_file.loc[i, ['Predicted Label']] = cat
 
     df_file.to_csv(result, sep=',')
+
 #function that calculates the similarity between every category (taking the average of all its synsets) and every sentence (each noun as one synset) in input file, and creates output result file
 def find_sims_one(file, df_file, result):
     # These are our six categories
@@ -148,61 +151,47 @@ df_train = pd.DataFrame(columns=['Original Label','ANGER', 'LOVE', 'SADNESS', 'S
 df_test = pd.DataFrame(columns=['Original Label','ANGER', 'LOVE', 'SADNESS', 'SURPRISE', 'JOY', 'FEAR', 'Predicted Label'])
 df_val = pd.DataFrame(columns=['Original Label','ANGER', 'LOVE', 'SADNESS', 'SURPRISE', 'JOY', 'FEAR', 'Predicted Label'])
 
-#here we generate output files that contain semantic similarity between each sentence in the input file with each of our six categories, First: one synset of a category approach
-find_sims_one(train, df_train, "train_one.csv")
-find_sims_one(test, df_test, "test_one.csv")
-find_sims_one(val, df_val, "val_one.csv")
-
-#here we generate output files that contain semantic similarity between each sentence in the input file with each of our six categories, Second: average of all synsets of a category approach
-find_sims_all(train, df_train, "train_all.csv")
-find_sims_all(test, df_test, "test_all.csv")
-find_sims_all(val, df_val, "val_all.csv")
+# #here we generate output files that contain semantic similarity between each sentence in the input file with each of our six categories, First: one synset of a category approach
+# find_sims_one(train, df_train, "train_one.csv")
+# find_sims_one(test, df_test, "test_one.csv")
+# find_sims_one(val, df_val, "val_one.csv")
+#
+# #here we generate output files that contain semantic similarity between each sentence in the input file with each of our six categories, Second: average of all synsets of a category approach
+# find_sims_all(train, df_train, "train_all.csv")
+# find_sims_all(test, df_test, "test_all.csv")
+# find_sims_all(val, df_val, "val_all.csv")
 
 #here we read our generated output files
-trained_one = pd.read_csv('./train_one.csv')
-tested_one = pd.read_csv('./test_one.csv')
-validated_one = pd.read_csv('./val_one.csv')
+trained_one = pd.read_csv('./one_synset_generated_output_file/train_one.csv')
+tested_one = pd.read_csv('./one_synset_generated_output_file/test_one.csv')
+validated_one = pd.read_csv('./one_synset_generated_output_file/val_one.csv')
 
-trained_all = pd.read_csv('./train_all.csv')
-tested_all = pd.read_csv('./test_all.csv')
-validated_all = pd.read_csv('./val_all.csv')
+trained_all = pd.read_csv('./all_synset_generated_output_file/train_all.csv')
+tested_all = pd.read_csv('./all_synset_generated_output_file/test_all.csv')
+validated_all = pd.read_csv('./all_synset_generated_output_file/val_all.csv')
+
+
+#here we join our output data files in one file
+combined_csv_one = pd.concat([trained_one, tested_one, validated_one])
+combined_csv_all = pd.concat([trained_all, tested_all, validated_all])
+#export to csv
+combined_csv_one.to_csv( "combined_one.csv", sep= ',')
+combined_csv_all.to_csv( "combined_all.csv", sep= ',')
+
+csv_one = pd.read_csv( "combined_one.csv")
+csv_all = pd.read_csv( "combined_all.csv")
 
 #variables to count the matching of the original label and the predicted label of a sentence
-count_train_one = 0
-count_test_one = 0
-count_val_one = 0
-count_train_all = 0
-count_test_all = 0
-count_val_all = 0
+count_one = 0
+count_all = 0
 # This count is needed in the calculation of accuracy
-#train dataset
-for i in range(len(train)):
-    if trained_one['Original Label'][i] == trained_one['Predicted Label'][i]:
-        count_train_one += 1
-    if trained_all['Original Label'][i] == trained_all['Predicted Label'][i]:
-        count_train_all += 1
+for i in range(len(combined_csv_all)):
+    if csv_one['Original Label'][i] == csv_one['Predicted Label'][i]:
+        count_one += 1
+    if csv_all['Original Label'][i] == csv_all['Predicted Label'][i]:
+        count_all += 1
 
-accuracy_train_one = count_train_one/len(train)
-accuracy_train_all = count_train_all/len(train)
-#test and validation datasets
-for i in range(len(test)):
-    if tested_one['Original Label'][i] == tested_one['Predicted Label'][i]:
-        count_test_one += 1
-    if tested_all['Original Label'][i] == tested_all['Predicted Label'][i]:
-        count_test_all += 1
+accuracy_combined_one = count_one/len(combined_csv_one)
+accuracy_combined_all = count_all/len(combined_csv_all)
 
-    if validated_one['Original Label'][i] == validated_one['Predicted Label'][i]:
-            count_val_one += 1
-    if validated_all['Original Label'][i] == validated_all['Predicted Label'][i]:
-            count_val_all += 1
-
-accuracy_test_one = count_test_one/len(test)
-accuracy_test_all = count_test_all/len(test)
-accuracy_val_one = count_val_one/len(val)
-accuracy_val_all = count_val_all/len(val)
-
-print(accuracy_train_one, accuracy_train_all) # 0.2693125, 0.241375
-print(accuracy_test_one, accuracy_test_all) # 0.276,  0.2315
-print(accuracy_val_one, accuracy_val_all) # 0.2545,  0.233
-
-# using one synset approach is better than using all synsets approach, still accuracy is low
+print(accuracy_combined_one, accuracy_combined_all) # 0.2685, 0.23955
