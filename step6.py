@@ -26,8 +26,11 @@ def preprocess(sentence):
 
 #split the original data into 70% training and 30% testing
 dataset = pd.read_csv('./data/all_data.txt', header=None, names=['text','label'], sep=';')
-dataset.to_csv("./data/all_data.csv")
-x = dataset['text']
-y = dataset['label']
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+
+train_dataset = dataset.head(int(0.7*len(dataset)))
+test_dataset = dataset.tail(len(dataset) - len(train_dataset))
+
+train_dataset.to_csv('./data/splitTrain70.csv')
+test_dataset.to_csv('./data/splitTest30.csv')
+
 
