@@ -36,7 +36,13 @@ def string_match(result):
         generate_full_data_file()
 
     # read and format data
-    data = pd.read_csv('./data/all_data.txt', header=None, names=['text','emotion_type'], sep=';')
+    data = read_all_data()
     matches = evaluate_matches(data, df)
     accuracy = (matches == data.emotion_type).mean().round(5)
     print('Accuracy of string matching: ', accuracy)
+
+
+
+def read_all_data():
+    data = pd.read_csv('./data/all_data.txt', header=None, names=['text','emotion_type'], sep=';')
+    return data
