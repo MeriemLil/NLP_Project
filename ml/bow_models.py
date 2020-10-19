@@ -171,5 +171,4 @@ if __name__ == "__main__":
     # flatten nested list structure
     processed_list = [obj for subobj in processed_list for obj in subobj]
     df = pd.DataFrame(processed_list)
-    print(df)
-    #df.to_sql('bowModels', con=engine, index=False, if_exists='replace')
+    df.to_sql('bowModels', con=engine, index=False, if_exists='replace')
