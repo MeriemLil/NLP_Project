@@ -79,4 +79,4 @@ if __name__ == '__main__':
         res.append(get_results(model)) 
     res = pd.DataFrame(res)
 
-    res.to_json('detailed_res.json')
+    res.to_json('results/detailed_res.json')

@@ -10,7 +10,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 class PlotWidget(QWidget):
     def __init__(self):
         super(PlotWidget, self).__init__()
-        self.df = pd.read_json('../ml/results/results.json')
+        self.df = pd.read_json('ml/results/results.json')
         self.df['max_features'] = self.df.max_features.fillna('Full  ').astype(str).str[:-2]
         self.initUI()
 
