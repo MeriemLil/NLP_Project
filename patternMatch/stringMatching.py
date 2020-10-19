@@ -37,7 +37,6 @@ def string_match(result):
 
     # read and format data
     data = read_all_data()
-    # print(df)
     matches = evaluate_matches(data, df)
     accuracy = (matches == data.emotion_type).mean().round(5)
     print('Accuracy of string matching: ', accuracy)

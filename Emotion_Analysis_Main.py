@@ -4,6 +4,8 @@ from patternMatch.constants import *
 from patternMatch.stringMatching import *
 from database.databaseConnection import engine
 from patternMatch.empathClient import *
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///./data/project.db', echo=False)
 
 #Here we open the Harvard inquirer XL file
 harvardInquirer = pd.read_excel('./data/inquirerbasic.xls')

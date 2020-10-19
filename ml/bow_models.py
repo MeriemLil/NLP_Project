@@ -7,9 +7,14 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.feature_extraction import text 
 from sklearn.preprocessing import StandardScaler
-import pandas as pd
+
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
+import pandas as pd
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///./data/project.db', echo=False)
+
 
 import multiprocessing
 from joblib import Parallel, delayed
@@ -143,7 +148,6 @@ if __name__ == "__main__":
     dev = preprocess_df(dev)
     test = preprocess_df(test)
     
-    print(train.sk)
     # define the set of configurations to run
     params = {
         'vectorizer':[CountVectorizer, TfidfVectorizer],
@@ -166,7 +170,5 @@ if __name__ == "__main__":
                                                       for clf in classifiers)
     # flatten nested list structure
     processed_list = [obj for subobj in processed_list for obj in subobj]
-    if not os.path.exists('results'):
-        os.makedirs('results')
-    with open('results/results.json', 'w') as f:
-        json.dump(processed_list , f)
+    df = pd.DataFrame(processed_list)
+    df.to_sql('bowModels', con=engine, index=False, if_exists='replace')
