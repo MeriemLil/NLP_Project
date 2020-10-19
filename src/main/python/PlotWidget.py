@@ -18,13 +18,9 @@ class PlotWidget(QWidget):
 
     def initUI(self):
         
-        self.setGeometry(100, 100, 1000, 800) 
-        self.setWindowTitle('Plots')
         self.center()
-
         grid = QGridLayout()
         self.setLayout(grid)
-        
         
         dropdown = QComboBox()
         dropdown.addItems(self.df.columns[:-1])
