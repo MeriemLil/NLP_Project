@@ -8,6 +8,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from sqlalchemy import create_engine
 
+
 class PlotWidget(QWidget):
     def __init__(self):
         super(PlotWidget, self).__init__()

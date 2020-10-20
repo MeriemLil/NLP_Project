@@ -1,6 +1,6 @@
 import pandas as pd
 from PyQt5.QtWidgets import *
-from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 from sqlalchemy import create_engine
 
 
@@ -22,25 +22,27 @@ class TableWidget(QWidget):
         
         btn1 = QPushButton('Show table', self)
         btn1.resize(btn1.sizeHint())
-        btn1.clicked.connect(lambda: self.populate(col=dropdown.currentText(), table=table))
+        btn1.clicked.connect(lambda: self.populate(col=dropdown.currentText()))
         grid.addWidget(btn1, 0, 1)
     
         scroll = QScrollArea()
-        layout = QVBoxLayout()
-        table = QTableWidget()
-        scroll.setWidget(table)
-        grid.addWidget(table) 
+        self.table = QTableWidget()
+        self.table.setFixedHeight(300)
+        self.table.setFixedWidth(202)
+        scroll.setWidget(self.table)
+        scroll.setAlignment(Qt.AlignHCenter)
+        
+        grid.addWidget(scroll)
         self.show()
         
      
-    def populate(self, col, table):
+    def populate(self, col):
         dataframe = self.df.groupby(col)['score'].agg('mean') * 100
-        dataframe = dataframe.round(2)
-        table.setColumnCount(2)
-        table.setRowCount(len(dataframe.index)+1)
-        table.setItem(0,0,QTableWidgetItem(col))
-        table.setItem(0,1,QTableWidgetItem('score'))
-        for i in range(1, len(dataframe.index)+1):
-            table.setItem(i,0,QTableWidgetItem(str(dataframe.index[i-1])))
-            table.setItem(i,1,QTableWidgetItem(str(dataframe.iloc[i-1])+'%'))
-        
+        dataframe = dataframe.sort_values(ascending=False).round(2)
+        self.table.setColumnCount(2)
+        self.table.setRowCount(len(dataframe.index))
+        self.table.setHorizontalHeaderLabels([col, 'Accuracy'])
+        self.table.verticalHeader().hide()
+        for i in range(len(dataframe.index)):
+            self.table.setItem(i,0,QTableWidgetItem(str(dataframe.index[i])))
+            self.table.setItem(i,1,QTableWidgetItem(str(dataframe.iloc[i])+'%'))

@@ -2,6 +2,7 @@ from PlotWidget import PlotWidget
 from TableWidget import TableWidget
 from HarvardInqDBWidget import HarvardInqDBWidget
 from accuraciesWidget import accuraciesWidget
+from BowDetailedTable import BowDetailedTable
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
@@ -11,6 +12,7 @@ class changeVisibility(QWidget):
         super(changeVisibility, self).__init__(parent)
         self.pw = PlotWidget()
         self.tw = TableWidget()
+        self.ml = BowDetailedTable()
         self.harvardInqDB = HarvardInqDBWidget()
         self.accuracies = accuraciesWidget()
 
@@ -24,29 +26,36 @@ class changeVisibility(QWidget):
         button_bow2 = QPushButton('Bag of Words model tables')
         button_bow2.clicked.connect(lambda: hide_all_but(self, self.tw))
         
-        button_bow3 = QPushButton('Database created with harvard general inquirer')
-        button_bow3.clicked.connect(lambda: hide_all_but(self, self.harvardInqDB))
+        button_bow3 = QPushButton('Machine learning models table')
+        button_bow3.clicked.connect(lambda: hide_all_but(self, self.ml))
+        
+        button_db = QPushButton('Database created with harvard general inquirer')
+        button_db.clicked.connect(lambda: hide_all_but(self, self.harvardInqDB))
 
         button_all_accuracies = QPushButton('Different Accuracies')
         button_all_accuracies.clicked.connect(lambda: hide_all_but(self, self.accuracies))
-        buttons = [button_bow, button_bow2, button_bow3, button_all_accuracies]
+        buttons = [button_bow, button_bow2, button_bow3, button_db, button_all_accuracies]
         
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(button_home)
-        self.layout.addWidget(button_bow3)
+        self.layout.addWidget(button_db)
         self.layout.addWidget(button_bow)
         self.layout.addWidget(button_bow2)
+        self.layout.addWidget(button_bow3)
         self.layout.addWidget(button_all_accuracies)
 
         self.layout.setAlignment(Qt.AlignTop)
         self.layout.addWidget(self.pw)
         self.layout.addWidget(self.tw)
+        self.layout.addWidget(self.ml)
         self.layout.addWidget(self.harvardInqDB)
         self.layout.addWidget(self.accuracies)
         self.pw.hide()
         self.tw.hide()
+        self.ml.hide()
         self.harvardInqDB.hide()
         self.accuracies.hide()
+        
         
         def hide_all_but(self, widget=None):
             """
