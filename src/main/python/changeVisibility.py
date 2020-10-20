@@ -1,6 +1,7 @@
 from PlotWidget import PlotWidget
 from TableWidget import TableWidget
 from HarvardInqDBWidget import HarvardInqDBWidget
+from StringMatchWidget import StringMatchWidget
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
@@ -11,6 +12,7 @@ class changeVisibility(QWidget):
         self.pw = PlotWidget()
         self.tw = TableWidget()
         self.harvardInqDB = HarvardInqDBWidget()
+        self.stringMatch = StringMatchWidget()
 
 
         button_home = QPushButton('Home')
@@ -25,11 +27,15 @@ class changeVisibility(QWidget):
         button_bow3 = QPushButton('Database created with harvard general inquirer')
         button_bow3.clicked.connect(lambda: hide_all_but(self, self.harvardInqDB))
         
-        buttons = [button_bow, button_bow2, button_bow3]
+        button_bow4 = QPushButton('String Match')
+        button_bow4.clicked.connect(lambda: hide_all_but(self, self.stringMatch))
+        
+        buttons = [button_bow, button_bow2, button_bow3, button_bow4]
         
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(button_home)
         self.layout.addWidget(button_bow3)
+        self.layout.addWidget(button_bow4)
         self.layout.addWidget(button_bow)
         self.layout.addWidget(button_bow2)
         
@@ -37,9 +43,11 @@ class changeVisibility(QWidget):
         self.layout.addWidget(self.pw)
         self.layout.addWidget(self.tw)
         self.layout.addWidget(self.harvardInqDB)
+        self.layout.addWidget(self.stringMatch)
         self.pw.hide()
         self.tw.hide()
         self.harvardInqDB.hide()
+        self.stringMatch.hide()
         
         def hide_all_but(self, widget=None):
             """
