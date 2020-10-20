@@ -29,7 +29,7 @@ class changeVisibility(QWidget):
         button_bow3 = QPushButton('Machine learning models table')
         button_bow3.clicked.connect(lambda: hide_all_but(self, self.ml))
         
-        button_db = QPushButton('Database created with harvard general inquirer')
+        button_db = QPushButton('Show database samples')
         button_db.clicked.connect(lambda: hide_all_but(self, self.harvardInqDB))
 
         button_all_accuracies = QPushButton('Different Accuracies')

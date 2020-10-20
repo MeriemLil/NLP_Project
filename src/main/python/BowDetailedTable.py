@@ -8,9 +8,8 @@ class BowDetailedTable(QWidget):
     def __init__(self): 
         super(BowDetailedTable, self).__init__()
         self.engine = create_engine('sqlite:///data/project.db', echo=False)
-        self.df = pd.read_sql('SELECT * FROM bestModels', con=self.engine, index_col='index')
+        self.df = pd.read_sql('SELECT * FROM bestModels', con=self.engine)
         self.df.set_index('name', inplace=True, drop=True)
-        print(self.df.columns)
         self.initUI()
 
     def initUI(self):

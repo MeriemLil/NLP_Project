@@ -57,5 +57,5 @@ df = df.loc[df.groupby('embeddings')['dev_loss'].idxmin(),:]
 df['name'] = np.where(df.embeddings=='fasttext', 'cnn_word2vec', 'cnn_fasttext')
 
 final_results = pd.concat([bow_detailed, df])
-final_results = flatten_conf(final_results[cols])
+final_results = flatten_conf(final_results[cols]).iloc[:, 1:]
 final_results.to_sql('bestModels', con=engine, index=False, if_exists='replace')
