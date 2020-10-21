@@ -24,6 +24,7 @@ class StringMatchWidget(QWidget):
         table = QTableWidget()
 
         table.setColumnCount(2)
+        # set row count of table
         table.setRowCount(4)
         table.setItem(0,0,QTableWidgetItem('Type'))
         table.setItem(0,1,QTableWidgetItem('Accuracy'))
