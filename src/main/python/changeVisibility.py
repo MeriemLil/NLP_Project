@@ -1,8 +1,7 @@
 from PlotWidget import PlotWidget
 from TableWidget import TableWidget
 from HarvardInqDBWidget import HarvardInqDBWidget
-from StringMatchWidget import StringMatchWidget
-from EmpathClientWidget import EmpathClientWidget
+from accuraciesWidget import accuraciesWidget
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
@@ -13,8 +12,7 @@ class changeVisibility(QWidget):
         self.pw = PlotWidget()
         self.tw = TableWidget()
         self.harvardInqDB = HarvardInqDBWidget()
-        self.stringMatch = StringMatchWidget()
-        self.empathClient = EmpathClientWidget()
+        self.accuracies = accuraciesWidget()
 
 
         button_home = QPushButton('Home')
@@ -28,34 +26,27 @@ class changeVisibility(QWidget):
         
         button_bow3 = QPushButton('Database created with harvard general inquirer')
         button_bow3.clicked.connect(lambda: hide_all_but(self, self.harvardInqDB))
-        
-        button_bow4 = QPushButton('String Matching Accuracy')
-        button_bow4.clicked.connect(lambda: hide_all_but(self, self.stringMatch))
-        
-        button_bow5 = QPushButton('Empath Client Accuracy')
-        button_bow5.clicked.connect(lambda: hide_all_but(self, self.empathClient))
 
-        buttons = [button_bow, button_bow2, button_bow3, button_bow4, button_bow5]
+        button_all_accuracies = QPushButton('Different Accuracies')
+        button_all_accuracies.clicked.connect(lambda: hide_all_but(self, self.accuracies))
+        buttons = [button_bow, button_bow2, button_bow3, button_all_accuracies]
         
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(button_home)
         self.layout.addWidget(button_bow3)
-        self.layout.addWidget(button_bow4)
-        self.layout.addWidget(button_bow5)
         self.layout.addWidget(button_bow)
         self.layout.addWidget(button_bow2)
-        
+        self.layout.addWidget(button_all_accuracies)
+
         self.layout.setAlignment(Qt.AlignTop)
         self.layout.addWidget(self.pw)
         self.layout.addWidget(self.tw)
         self.layout.addWidget(self.harvardInqDB)
-        self.layout.addWidget(self.stringMatch)
-        self.layout.addWidget(self.empathClient)
+        self.layout.addWidget(self.accuracies)
         self.pw.hide()
         self.tw.hide()
         self.harvardInqDB.hide()
-        self.stringMatch.hide()
-        self.empathClient.hide()
+        self.accuracies.hide()
         
         def hide_all_but(self, widget=None):
             """

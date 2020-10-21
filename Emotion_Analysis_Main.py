@@ -41,6 +41,9 @@ print('Accuracy of Empath using exact categories: ', accuracy_exact_category)
 # task 4
 csv_one = pd.read_csv( "data/combined_cvs/combined_one.csv")
 csv_all = pd.read_csv( "data/combined_cvs/combined_all.csv")
+#migrate to sql database
+csv_one.to_sql('Semantic Similarities, category first synset', con=engine, if_exists='replace')
+csv_one.to_sql('Semantic Similarities, category all synsets av', con=engine, if_exists='replace')
 
 #variables to count the matching of the original label and the predicted label of a sentence
 count_one = 0
@@ -60,4 +63,6 @@ print("Accuracy of semantic similarity, all synsets of a category approach: ", a
 
 # task 5
 senti = pd.read_csv('data\sentistrength\sentistrength_results.csv')
+#migrate to sql database
+senti.to_sql('SentiStrength Scores', con=engine, if_exists='replace')
 
