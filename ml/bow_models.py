@@ -1,5 +1,5 @@
 
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
@@ -13,7 +13,7 @@ from nltk.stem import WordNetLemmatizer
 
 import pandas as pd
 from sqlalchemy import create_engine
-engine = create_engine('sqlite:///./data/project.db', echo=False)
+engine = create_engine('sqlite:///../data/project.db', echo=False)
 
 
 import multiprocessing
@@ -137,7 +137,6 @@ def run_bow_iterations(params, train, dev, clf, verbose=True):
 num_cores = multiprocessing.cpu_count()
 
 if __name__ == "__main__":
-
     # import data files
     train = pd.read_csv('../data/train.txt', header=None, names=['text','label'], sep=';')
     dev = pd.read_csv('../data/test.txt', header=None, names=['text','label'], sep=';')
@@ -160,11 +159,11 @@ if __name__ == "__main__":
     for par in params.values():
         num_confs *= len(par)
         
-    classifiers = [GaussianNB(), LogisticRegression(), SVC(), DecisionTreeClassifier(), 
-                   RandomForestClassifier()]
+    classifiers = [MultinomialNB(), LogisticRegression(), SVC(), DecisionTreeClassifier(), 
+                   RandomForestClassifier(), GradientBoostingClassifier()]
     
    
- 
+    print('running iterations...')
     # run the iterations with models in parallel
     processed_list = Parallel(n_jobs=6)(delayed(run_bow_iterations)(params, train, dev, clf) 
                                                       for clf in classifiers)

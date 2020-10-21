@@ -1,7 +1,7 @@
 import pandas as pd
 
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import RandomizedSearchCV
@@ -53,11 +53,11 @@ if __name__ == '__main__':
     #initialize vectorizer and objects
     tf_idf = TfidfVectorizer(stop_words='english')
     
-    gnb = GaussianNB()
+    gnb = MultinomialNB()
     logreg = LogisticRegression(max_iter=3000)
     rf_random = RandomizedSearchCV(estimator = RandomForestClassifier(),
                                    param_distributions = param_grid,
-                                   n_iter = 20, cv = pdsplit, verbose=True,
+                                   n_iter = 36, cv = pdsplit, verbose=True,
                                    random_state=42, n_jobs = 6,
                                    scoring='accuracy')    
     
