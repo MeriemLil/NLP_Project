@@ -178,20 +178,3 @@ combined_csv_all = pd.concat([trained_all, tested_all, validated_all])
 combined_csv_one.to_csv( "combined_one.csv", sep= ',')
 combined_csv_all.to_csv( "combined_all.csv", sep= ',')
 
-csv_one = pd.read_csv( "combined_one.csv")
-csv_all = pd.read_csv( "combined_all.csv")
-
-#variables to count the matching of the original label and the predicted label of a sentence
-count_one = 0
-count_all = 0
-# This count is needed in the calculation of accuracy
-for i in range(len(combined_csv_all)):
-    if csv_one['Original Label'][i] == csv_one['Predicted Label'][i]:
-        count_one += 1
-    if csv_all['Original Label'][i] == csv_all['Predicted Label'][i]:
-        count_all += 1
-
-accuracy_combined_one = count_one/len(combined_csv_one)
-accuracy_combined_all = count_all/len(combined_csv_all)
-#
-print(accuracy_combined_one, accuracy_combined_all) # 0.2685, 0.23955
