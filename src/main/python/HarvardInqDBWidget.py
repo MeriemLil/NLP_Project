@@ -24,13 +24,10 @@ class HarvardInqDBWidget(QWidget):
         btn1.clicked.connect(lambda: self.populate(dropdown.currentText()))
         grid.addWidget(btn1, 0, 1)
 
-        scroll = QScrollArea()
         self.table = QTableWidget()
         self.table.setFixedWidth(749)
         self.table.setFixedHeight(656)
-        scroll.setWidget(self.table)
-        scroll.setAlignment(Qt.AlignHCenter)
-        grid.addWidget(scroll) 
+        grid.addWidget(self.table) 
         self.show()
         
      

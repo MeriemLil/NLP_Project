@@ -10,6 +10,7 @@ from PyQt5.QtCore import Qt
 class changeVisibility(QWidget):    
     def __init__(self, parent=None):        
         super(changeVisibility, self).__init__(parent)
+        self.setGeometry(200, 200, 1024, 768)
         self.pw = PlotWidget()
         self.tw = TableWidget()
         self.ml = BowDetailedTable()
