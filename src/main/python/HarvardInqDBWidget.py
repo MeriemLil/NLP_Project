@@ -2,18 +2,11 @@ import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
 from sqlalchemy import create_engine
-# from patternMatch.categorySetup import * 
 
 class HarvardInqDBWidget(QWidget): 
     def __init__(self): 
         super(HarvardInqDBWidget, self).__init__()
         self.engine = create_engine('sqlite:///data/project.db', echo=False)
-        # if not engine.has_table('harvardWords'):
-        #     self.df = assign_category(category_list, harvardInquirer)
-        #     print('Database created successfully')
-        # else:
-        #     print("Database creation Done")
-        #     self.df = pd.read_sql('SELECT * FROM bowModels', con=self.engine)
         self.df = pd.read_sql('SELECT * FROM harvardWords', con=self.engine)
         self.initUI()
 
