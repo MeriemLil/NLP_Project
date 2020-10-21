@@ -64,5 +64,4 @@ print("Accuracy of semantic similarity, all synsets of a category approach: ", a
 # task 5
 senti = pd.read_csv('data\sentistrength\sentistrength_results.csv')
 #migrate to sql database
-senti.to_sql('SentiStrength Scores', con=engine, if_exists='replace')
-
+senti.to_sql('SentiStrengthScores', con=engine, if_exists='replace')
