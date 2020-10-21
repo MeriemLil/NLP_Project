@@ -2,7 +2,6 @@ import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from sqlalchemy import create_engine
-# from patternMatch.categorySetup import * 
 
 class HarvardInqDBWidget(QWidget): 
     def __init__(self): 

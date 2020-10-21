@@ -7,20 +7,43 @@ from sqlalchemy import create_engine
 class StringMatchWidget(QWidget): 
     def __init__(self): 
         super(StringMatchWidget, self).__init__()
-        # self.engine = create_engine('sqlite:///data/project.db', echo=False)
-        # self.df = pd.read_sql('SELECT * FROM harvardWords', con=self.engine)
         self.initUI()
 
 
     def initUI(self):
-        self.layout = QVBoxLayout()
-        self.label = QLabel("String matching Accuracy: "+'50')
-        self.layout.addWidget(self.label)
 
-        self.setWindowTitle("String Matching Accuracy")
-        self.setLayout(self.layout)
+        stringMatchingAccuracy = 0.33575
+        empathAccuracy = 0.14305
+        empathExactCategoryAccuracy = 0.18285
+
+        grid = QGridLayout()
+        self.setLayout(grid)
+        
+        scroll = QScrollArea()
+        layout = QVBoxLayout()
+        table = QTableWidget()
+
+        table.setColumnCount(2)
+
+        # set row count of table
+        table.setRowCount(4)
+        
+        table.setItem(0,0,QTableWidgetItem('Type'))
+        table.setItem(0,1,QTableWidgetItem('Accuracy'))
+
+        table.setItem(1,0,QTableWidgetItem('String Matching'))
+        table.setItem(1,1,QTableWidgetItem(str(stringMatchingAccuracy)))
+
+        table.setItem(2,0,QTableWidgetItem('Empath client prediction'))
+        table.setItem(2,1,QTableWidgetItem(str(empathAccuracy)))
+
+        table.setItem(3,0,QTableWidgetItem('Empath using exact categories'))
+        table.setItem(3,1,QTableWidgetItem(str(empathExactCategoryAccuracy)))
+        
+        scroll.setWidget(table)
+        grid.addWidget(table) 
         self.show()
-      
+
 
         
    
