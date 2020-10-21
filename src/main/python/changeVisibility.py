@@ -75,5 +75,3 @@ class changeVisibility(QWidget):
                 item = self.layout.itemAt(i)
                 if isinstance(item, QWidgetItem):
                     item.widget().show()
-                        
-          

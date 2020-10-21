@@ -33,4 +33,3 @@ class accuraciesWidget(QWidget):
         self.setWindowTitle("Accuracies")
         self.setLayout(self.layout)
         self.show()
-
