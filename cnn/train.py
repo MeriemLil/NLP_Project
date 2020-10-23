@@ -101,7 +101,7 @@ def main():
                         help="available models: rand, static, non-static, multichannel")
     parser.add_argument('--num-feature-maps', default=100, type=int)
     parser.add_argument('--embeddings', default='word2vec',
-                        help='available vector models: word2vec, fasttext')
+                        help='available vector models: word2vec, fasttext, own')
     parser.add_argument('--early-stop', default=3, type=int)
     parser.add_argument('--regularization', default=0.0, type=float)
     

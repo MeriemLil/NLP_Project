@@ -31,31 +31,35 @@ def flatten_conf(data):
         conf_dfs.append(sub_dfs)
     return data.join(pd.concat(conf_dfs, axis=1)).drop('conf', axis=1)
 
-engine = create_engine('sqlite:///project.db', echo=False)
-bow_detailed = pd.read_json('../ml/results/detailed_res.json')
-bow_detailed['conf'] = bow_detailed.conf.apply(lambda l: [item for sublist in l for item in sublist])
+if __name__ == '__main__':
+    engine = create_engine('sqlite:///project.db', echo=False)
+    bow_detailed = pd.read_json('../ml/results/detailed_res.json')
+    bow_detailed['conf'] = bow_detailed.conf.apply(lambda l: [item for sublist in l for item in sublist])
+    
+    cnns = glob.glob('../cnn/saved_models/test_res*')
+    dfs = []
+    args = []
+    cols = ['conf', 'acc', 'loss', 'prec', 'rec', 'dev_loss', 'dev_acc', 'name',
+           'batch_size', 'dropout', 'mode', 'num_feature_maps', 'embeddings',
+           'regularization']
+    for cnn in cnns:
+        arg = cnn.replace('test_res','args')
+        t_df = pd.read_json(cnn)
+        t_df['iter'] = cnn[-12:-4]
+        t_df['conf'] = t_df.groupby('iter')['conf'].transform('sum')
+        t_df = t_df.groupby('iter').first().reset_index(drop=True)
+        arg = pd.read_json(arg).groupby('model_time').first().reset_index(drop=True)
+        dfs.append(t_df.join(arg))
+    
+    df = pd.concat(dfs).reset_index(drop=True)
 
-cnns = glob.glob('../cnn/saved_models/test_res*')
-dfs = []
-args = []
-cols = ['conf', 'acc', 'loss', 'prec', 'rec', 'dev_loss', 'dev_acc', 'name',
-       'batch_size', 'dropout', 'mode', 'num_feature_maps', 'embeddings',
-       'regularization']
-for cnn in cnns:
-    arg = cnn.replace('test_res','args')
-    t_df = pd.read_json(cnn)
-    t_df['iter'] = cnn[-12:-4]
-    t_df['conf'] = t_df.groupby('iter')['conf'].transform('sum')
-    t_df = t_df.groupby('iter').first().reset_index(drop=True)
-    arg = pd.read_json(arg).groupby('model_time').first().reset_index(drop=True)
-    dfs.append(t_df.join(arg))
+    
+    df['name'] = np.select([df.embeddings=='fasttext', df.embeddings=='word2vec'],
+                           ['cnn_fasttext', 'cnn_word2vec'], default='cnn_own')
 
-df = pd.concat(dfs).reset_index(drop=True)
-#get best models by dev loss
-df = df.loc[df.groupby('embeddings')['dev_loss'].idxmin(),:]
-
-df['name'] = np.where(df.embeddings=='fasttext', 'cnn_word2vec', 'cnn_fasttext')
-
-final_results = pd.concat([bow_detailed, df])
-final_results = flatten_conf(final_results[cols]).iloc[:, 1:]
-final_results.to_sql('bestModels', con=engine, index=False, if_exists='replace')
+    #get best models by dev loss
+    final_results = pd.concat([bow_detailed, df.loc[df.groupby('embeddings')['dev_loss'].idxmin(),:]])
+    final_results = flatten_conf(final_results[cols]).iloc[:, 1:]
+    finel_results_cnn = flatten_conf(df[cols]).iloc[:, 1:]
+    final_results.to_sql('bestModels', con=engine, index=False, if_exists='replace')
+    finel_results_cnn.to_sql('cnnModels', con=engine, index=False, if_exists='replace')

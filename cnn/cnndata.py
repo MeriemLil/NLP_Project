@@ -5,7 +5,7 @@ Adapted from https://github.com/baaesh/CNN-sentence-classification-pytorch/
 from torchtext import data
 import numpy as np
 
-from gensim.models import KeyedVectors, fasttext
+from gensim.models import KeyedVectors, Word2Vec
 
 def getVectors(args, data):
     """
@@ -24,10 +24,14 @@ def getVectors(args, data):
     vectors = []
 
     if args.mode != 'rand':
-        if args.embeddings != 'fasttext':
+        if args.embeddings == 'word2vec':
             embed = KeyedVectors.load_word2vec_format('../data/GoogleNews-vectors-negative300.bin', binary=True)
-        else:
+        if args.embeddings == 'fasttext':
             embed = KeyedVectors.load_word2vec_format('../data/wiki-news-300d-1M.vec', encoding='utf-8')
+        else:
+            embed = KeyedVectors.load('../data/own_vec.vec', mmap='r')
+            args.word_dim = 100
+            
         for i in range(len(data.TEXT.vocab)):
             word = data.TEXT.vocab.itos[i]
             if word in embed.vocab:
