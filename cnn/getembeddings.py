@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct 23 12:54:02 2020
-
-@author: lauri
+Runs a word2vec model on the training data with vector size 100.
 """
 import pandas as pd
 from gensim.models import Word2Vec
