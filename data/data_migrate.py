@@ -41,7 +41,7 @@ if __name__ == '__main__':
     args = []
     cols = ['conf', 'acc', 'loss', 'prec', 'rec', 'dev_loss', 'dev_acc', 'name',
            'batch_size', 'dropout', 'mode', 'num_feature_maps', 'embeddings',
-           'regularization']
+           'regularization', 'word_dim']
     for cnn in cnns:
         arg = cnn.replace('test_res','args')
         t_df = pd.read_json(cnn)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
                            ['cnn_fasttext', 'cnn_word2vec'], default='cnn_own')
 
     #get best models by dev loss
-    final_results = pd.concat([bow_detailed, df.loc[df.groupby('embeddings')['dev_loss'].idxmin(),:]])
+    final_results = pd.concat([bow_detailed, df.loc[df.groupby('embeddings')['dev_acc'].idxmax(),:]])
     final_results = flatten_conf(final_results[cols]).iloc[:, 1:]
     finel_results_cnn = flatten_conf(df[cols]).iloc[:, 1:]
     final_results.to_sql('bestModels', con=engine, index=False, if_exists='replace')

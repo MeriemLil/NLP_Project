@@ -28,9 +28,10 @@ def getVectors(args, data):
             embed = KeyedVectors.load_word2vec_format('../data/GoogleNews-vectors-negative300.bin', binary=True)
         if args.embeddings == 'fasttext':
             embed = KeyedVectors.load_word2vec_format('../data/wiki-news-300d-1M.vec', encoding='utf-8')
+        if args.embeddings == 'ownfast':
+            embed = KeyedVectors.load(f'../data/own_fast_{args.word_dim}.vec', mmap='r')
         else:
-            embed = KeyedVectors.load('../data/own_vec.vec', mmap='r')
-            args.word_dim = 100
+            embed = KeyedVectors.load(f'../data/own_vec_{args.word_dim}.vec', mmap='r')
             
         for i in range(len(data.TEXT.vocab)):
             word = data.TEXT.vocab.itos[i]

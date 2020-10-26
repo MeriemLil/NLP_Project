@@ -4,3 +4,6 @@
 /cnn/runs/*
 /cnn/ml_steps.py
 *.pyc
+latex_tables.ipynb
+/.ipynb_checkpoints/*
+/data/*.npy

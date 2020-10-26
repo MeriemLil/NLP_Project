@@ -39,7 +39,7 @@ if __name__ == '__main__':
     dev = pd.read_csv('../data/test.txt', header=None, names=['text','label'], sep=';')
     test = pd.read_csv('../data/val.txt', header=None, names=['text','label'], sep=';')
     
-    # create a sklearn CV object to use for hyperparametere tuning
+    # create a sklearn CV object to use for hyperparameter tuning
     traindev = pd.concat([train, dev]).reset_index(drop=True)
     split_index = [-1 if x in train.index else 0 for x in traindev.index]
     pdsplit = PredefinedSplit(test_fold = split_index)
@@ -50,11 +50,9 @@ if __name__ == '__main__':
      'min_samples_split': [2, 4, 6, 10, 15, 20],
      'n_estimators': [500, 600, 800, 1000, 1400, 1700, 2000]}
     
-    #initialize vectorizer and objects
+    #initialize vectorizer and hyperparameter tuning
     tf_idf = TfidfVectorizer(stop_words='english')
     
-    gnb = MultinomialNB()
-    logreg = LogisticRegression(max_iter=3000)
     rf_random = RandomizedSearchCV(estimator = RandomForestClassifier(),
                                    param_distributions = param_grid,
                                    n_iter = 36, cv = pdsplit, verbose=True,
@@ -62,16 +60,24 @@ if __name__ == '__main__':
                                    scoring='accuracy')    
     
     
-    X_tr = tf_idf.fit_transform(traindev.text)
+    X_tr = tf_idf.fit_transform(train.text)
+    X_trdev = tf_idf.transform(traindev.text)
     X_ts = tf_idf.transform(test.text)
     X_dev = tf_idf.transform(dev.text)
     
-    rf_random.fit(X_tr, traindev.label)
+    print('Tuning hyperparameters for RandomForest')
+    rf_random.fit(X_trdev, traindev.label)
     print(f'Best dev set score for RandomForest: {rf_random.best_score_}')
-    gnb.fit(X_tr.toarray(), traindev.label)
-    logreg.fit(X_tr, traindev.label)
+    #initialize and fit final models
+    rf = RandomForestClassifier(**rf_random.best_params_)
+    rf.fit(X_tr, train.label)
     
-    models = [gnb, logreg, rf_random.best_estimator_]
+    gnb = MultinomialNB()
+    logreg = LogisticRegression(max_iter=3000)
+    gnb.fit(X_tr.toarray(), train.label)
+    logreg.fit(X_tr, train.label)
+    
+    models = [gnb, logreg, rf]
     labels = ['joy','sadness','anger','fear','love','surprise']
     res = []
     i = 0
