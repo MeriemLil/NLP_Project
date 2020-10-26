@@ -1,0 +1,363 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Emotion analysis in dataset}
+
+
+\author{\IEEEauthorblockN{Meriem Aggoune}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{ Lauri Heikka}
+\IEEEauthorblockA{\textit{Faculty of Information Technology and Electrical Engineering} \\
+\textit{Univ. of Oulu}\\
+Oulu, Finland \\
+lauri.heikka@student.oulu.fi}
+\and
+\IEEEauthorblockN{Anusha Ihalapathiranae}
+\IEEEauthorblockA{\centerline{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+
+}
+
+\maketitle
+
+\begin{abstract}
+We document a series of experiments on using a variety of natural language processing methods to classify emotions conveyed by sentences. In particular, we compare word categorizations, semantic similarity approaches and machine learning approaches. The machine learning approaches consist of classification models based on bag-of-words representations and convolutional neural networks applied on word embeddings. Our results indicate that machine learning approaches outperform string matching and semantic similarity with a considerable margin. Within the machine learning approaches, convolutional neural networks with word embeddings provide an improvement in accuracy of around 3-5 percentage points over bag-of-words models. The best accuracy on a hold-out validation set, around 93\%, is achieved with a CNN approach using pre-trained word2vec embeddings. However, custom-trained word embeddings provide similar performance with less computational overhead.
+\end{abstract}
+
+\begin{IEEEkeywords}
+natural language processing, text classification, sentiment analysis
+\end{IEEEkeywords}
+
+\section{Group info}
+Group 10.
+
+Members: Meriem Aggoune, Lauri Heikka, Anusha Ihalapathiranae
+
+Title: Emotion Analysis in Dataset
+
+Github: https://github.com/MeriemLil/NLP\_Project
+
+\section{Introduction}
+Introduction here...
+
+\section{Data and Methodologies}
+\subsection{Datasets and sources}
+Our main dataset of interest is a labeled dataset of 20 000 sentences with between 3 and 66 words. The dataset is provided by \cite{kaggledata}. The sentences are labeled to convey one of six different emotions: fear, anger, joy, love, surprise and sadness. The dataset is collected following the approach of \cite{saravia-etal-2018-carer}. The sentences are tweets, and the emotion labels are hashtags at the end of the tweet. The sentences are preprocessed in that they contain no punctuation or special characters and all words are lowercase.
+
+The dataset has a predefined split into training, test and validation samples, with 16 000, 2 000 and 2 000, respectively. Because the semantic similarity and string matching approaches do not employ any predictive modeling, in these sections we use the all 20 000 sentences to measure prediction accuracy. For the machine learning approaches, we use the training set for model training, the test set for model selection and hyperparameter tuning, and reserve the validation dataset as a final benchmark, to ensure a fair comparison accross approaches.
+
+In addition, we use pre-trained, 300-dimensional word2vec embeddings  from \cite{mikolov2013distributed} and pre-trained fastText embeddings from \cite{bojanowski2016enriching}. Both datasets consist of 300-dimensional word embeddings, with embeddings for 3 and 1 million english words, respectively. For the string matching, we use the Harvard General Inquirer dataset, which contains categorizations for around 11 000 english words.
+
+\subsubsection{Harvard Inquirer and String Matching}
+The first method we explore...
+\subsubsection{Empath Client Categories}
+asdf
+\subsubsection{Semantic Similarity}
+asd
+\subsubsection{SentiStrength sentiment scores}
+As part of the project specification, we also use the SentiStrength client \cite{sentistrength}, to compute sentiment scores. These can be potentially be used as an additional feature in any approach to distinguish between the negative and positive emotions. 
+
+\subsection{Bag-of-Words Models}
+asd
+\subsection{Convolutional Neural Networks}
+
+We replicate the convolutional neural network architecture used in \cite{kim-2014-convolutional}. The architecture is outlined in \ref{fig1}. Sentences are represented as $n\times k$ matrices of word vectors, where \emph{n} refers to the length of the sentences and \emph{k} to the dimension of the word vectors. All sentences are padded to length \emph{n}.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width = 0.5 \textwidth]{fig1.png}}
+\caption{Example of a figure caption.}
+\label{fig1}
+\end{figure}
+
+In \cite{kim-2014-convolutional}, pre-trained Word2Vec embeddings from \cite{mikolov2013distributed} \cite{bojanowski2016enriching} are used. In addition to replicating this approach, we consider a few alternatives. First, we test pretrained fastText embeddings . Second, we explore explore training our own word2vec and fastText embeddings.
+The word2vec model...
+The fasttext model...
+ For both models, we use a maximum distance between predicted words of five, and use early stopping on a word analogy evaluation task. 
+
+We experiment with 50-, 100- and 300-dimensional word embeddings for the custom-trained word embeddings. With the pre-trained embeddings, we are restricted to the commonly available 300-dimensional word embeddings.
+
+
+\section{Results and Discussion}
+
+\subsection{Model selection for bag-of-words}
+Table~\ref{tab5} reports the accuracies on the test dataset used for model selection.
+\begin{table}[htbp]
+\caption{Maximum accuracy on the test dataset across different bag-of-words setups}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{}} \\ 
+\cline{2-3}
+\textbf{parameter} & \textbf{\textit{value}}& \textbf{\textit{score}} \\ 
+\hline
+vectorizer & CountVectorizer & 0.886 \\ 
+\cline{2-3}
+ & TfidfVectorizer & 0.888 \\ 
+\hline
+stopwords & nltk & 0.888 \\ 
+\cline{2-3}
+ & none & 0.878 \\ 
+\cline{2-3}
+ & sk & 0.884 \\ 
+\hline
+lemmatize & 0 & 0.888 \\ 
+\cline{2-3}
+ & 1 & 0.886 \\ 
+\hline
+max features  & 100 & 0.396 \\ 
+\cline{2-3}
+  & 500 & 0.728 \\ 
+\cline{2-3}
+ & 1000 & 0.865 \\ 
+\cline{2-3}
+  & 2000 & 0.880 \\ 
+\cline{2-3}
+  & 3000 & 0.886 \\ 
+\hline
+classifier & DecisionTreeClassifier & 0.866 \\ 
+\cline{2-3}
+ & GradientBoostingClassifier & 0.849 \\ 
+\cline{2-3}
+ & LogisticRegression & 0.878 \\ 
+\cline{2-3}
+ & MultinomialNB & 0.859 \\ 
+\cline{2-3}
+ & RandomForestClassifier & 0.888 \\ 
+\cline{2-3}
+ & SVC & 0.876 \\ 
+\hline
+\end{tabular}
+\label{tab5}
+\end{center}
+\end{table}
+
+\subsection{Validation set performance of best models}
+Table~\ref{tab1} reports the accuracies on the test dataset used for model selection.
+
+\begin{table}[htbp]
+\caption{Validation and test set accuracies for best models}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{Accuracy}} \\ 
+\cline{2-3}
+\textbf{Classifier} & \textbf{\textit{Validation}}& \textbf{\textit{Test}} \\ 
+\hline
+MultinomialNB & 0.688 & 0.774 \\ 
+\hline
+LogisticRegression & 0.881 & 0.946 \\ 
+\hline
+RandomForestClassifier & 0.897 & 0.995 \\ 
+\hline
+cnn fasttext & 0.925 & 0.928 \\ 
+\hline
+cnn own & 0.92 & 0.922 \\ 
+\hline
+cnn word2vec & 0.929 & 0.927 \\ 
+\hline
+\end{tabular}
+\label{tab1}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Validation precision and recall for best models}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{Metric}} \\ 
+\cline{2-3}
+\textbf{Classifier} & \textbf{\textit{Precision}}& \textbf{\textit{Recall}} \\ 
+\hline
+MultinomialNB & 0.739 & 0.688 \\ 
+\hline
+LogisticRegression & 0.881 & 0.881 \\ 
+\hline
+RandomForestClassifier & 0.897 & 0.897 \\ 
+\hline
+cnn fasttext & 0.926 & 0.925 \\ 
+\hline
+cnn own & 0.92 & 0.921 \\ 
+\hline
+cnn word2vec & 0.929 & 0.93 \\ 
+\hline
+\end{tabular}
+\label{tab2}
+\end{center}
+\end{table}
+
+
+
+\section{Overall discussion and related literature}
+...
+
+As mentioned in the introduction, the state of the art for text classification tasks has moved beyond word level embedding representations considered here. For example, \cite{bert}, \cite{xlnet} and \cite{bertclassification} employ pre-trained bidirectional encoder representations to achieve state-of-the-art results in sentence classification. However, constructing a replication and a fair comparison of these models is beyond the scope of this study.
+\footnote{There is a minimal, unofficial implementation of BERT\cite{bert} embeddings on the dataset we study\cite{kaggledata} available at Kaggle by the dataset author. This implementation appears to exceed the accuracy of the best studied CNN model by around 0.3 percentage units.}
+Exploring alternative setups for training the word vectors is likewise beyond the scope of this paper.
+
+The pretrained embeddings are quite large in size, while custom embeddings trained on the emotions dataset are much smaller. Furthermore, because model performance with embeddings trained on the emotions dataset is very close in performance to the pretrained embeddings, the custom models provide a lightweight alternative for model serving. It is important to note, however, that the emotions dataset contains very homogenous sentences across the training, test and validation datasets. This causes the vocabulary of the custom word embeddings to be much smaller than the pretrained word embeddings. Therefore the model is more likely to suffer in performance on out-of-distribution sentences.
+
+...
+\section{Conclusion}
+conclude.
+
+\section{Latex examples}
+
+To be removed.
+
+\subsection{Equations example}
+\begin{equation}
+a+b=\gamma\label{eq}
+\end{equation}
+
+Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
+the beginning of a sentence: ``Equation \eqref{eq} is . . .''
+
+\subsection{Some Common Mistakes}\label{SCM}
+\begin{itemize}
+\item The word ``data'' is plural, not singular.
+\item In your paper title, if the words ``that uses'' can accurately replace the word ``using'', capitalize the ``u''; if not, keep using lower-cased.
+\item Be aware of the different meanings of the homophones ``affect'' and ``effect'', ``complement'' and ``compliment'', ``discreet'' and ``discrete'', ``principal'' and ``principle''.
+\item Do not confuse ``imply'' and ``infer''.
+\item The prefix ``non'' is not a word; it should be joined to the word it modifies, usually without a hyphen.
+\item There is no period after the ``et'' in the Latin abbreviation ``et al.''.
+\item The abbreviation ``i.e.'' means ``that is'', and the abbreviation ``e.g.'' means ``for example''.
+\end{itemize}
+
+
+
+
+\section*{Acknowledgment}
+
+We thank Mourad Oussalah and other seminar participants for their helpful comments during
+ the Natural Language Processing and Text Mining course project seminar.
+
+\bibliographystyle{./IEEEtran}
+\bibliography{./paper}
+
+\appendices
+\section{Additional Tables}
+ \label{FirstAppendix}
+
+\begin{table}[htbp]
+\caption{Average accuracy across different bag-of-words setups}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{}} \\ 
+\cline{2-3}
+\textbf{parameter} & \textbf{\textit{value}}& \textbf{\textit{score}} \\ 
+\hline
+vectorizer & CountVectorizer & 0.719 \\ 
+\cline{2-3}
+ & TfidfVectorizer & 0.727 \\ 
+\hline
+stopwords & nltk & 0.725 \\ 
+\cline{2-3}
+ & none & 0.703 \\ 
+\cline{2-3}
+ & sk & 0.74 \\ 
+\hline
+lemmatize & 0 & 0.723 \\ 
+\cline{2-3}
+ & 1 & 0.723 \\ 
+\hline
+max features & 100.0 & 0.361 \\ 
+\cline{2-3}
+ & 500.0 & 0.631 \\ 
+\cline{2-3}
+ & 1000.0 & 0.830 \\ 
+\cline{2-3}
+ & 2000.0 & 0.844 \\ 
+\cline{2-3}
+ & 3000.0 & 0.845 \\ 
+\hline
+classifier & DecisionTreeClassifier & 0.702 \\ 
+\cline{2-3}
+ & GradientBoostingClassifier & 0.729 \\ 
+\cline{2-3}
+ & LogisticRegression & 0.733 \\ 
+\cline{2-3}
+ & MultinomialNB & 0.704 \\ 
+\cline{2-3}
+ & RandomForestClassifier & 0.744 \\ 
+\cline{2-3}
+ & SVC & 0.723 \\ 
+\hline
+\end{tabular}
+\label{tab5}
+\end{center}
+\end{table}
+
+
+\begin{table}[htbp]
+\caption{Best CNN Model by Mode}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{}&\multicolumn{3}{|c|}{\textbf{Metric}} \\ 
+\cline{2-4}
+\textbf{embeddings} & \textbf{\textit{mode}}& \textbf{\textit{Accuracy}}& \textbf{\textit{Loss}} \\ 
+\hline
+fasttext & multichannel & 0.928 & 6.75 \\ 
+\hline
+fasttext & non-static & 0.928 & 7.047 \\ 
+\hline
+fasttext & static & 0.908 & 8.805 \\ 
+\hline
+own & multichannel & 0.909 & 12.734 \\ 
+\hline
+own & non-static & 0.927 & 9.752 \\ 
+\hline
+own & static & 0.885 & 12.459 \\ 
+\hline
+word2vec & multichannel & 0.928 & 11.086 \\ 
+\hline
+word2vec & non-static & 0.927 & 6.668 \\ 
+\hline
+word2vec & static & 0.906 & 9.025 \\ 
+\hline
+\end{tabular}
+\label{tab2}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Hyperparameters for the best CNN Models}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{}&\multicolumn{3}{|c|}{\textbf{Metric}} \\ 
+\cline{2-4}
+\textbf{index} & \textbf{\textit{fasttext}}& \textbf{\textit{own}}& \textbf{\textit{word2vec}} \\ 
+\hline
+Test Accuracy & 0.928 & 0.927 & 0.928 \\ 
+\hline
+Dropout & 0.8 & 0.8 & 0.8 \\ 
+\hline
+Num. of Convolutions & 250 & 250 & 250 \\ 
+\hline
+Regularization & 0.001 & 0.001 & 0.001 \\ 
+\hline
+\end{tabular}
+\label{tab4}
+\end{center}
+\end{table}
+
+\end{document}

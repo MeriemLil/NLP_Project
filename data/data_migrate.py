@@ -54,8 +54,8 @@ if __name__ == '__main__':
     df = pd.concat(dfs).reset_index(drop=True)
 
     
-    df['name'] = np.select([df.embeddings=='fasttext', df.embeddings=='word2vec'],
-                           ['cnn_fasttext', 'cnn_word2vec'], default='cnn_own')
+    df['name'] = np.select([df.embeddings=='fasttext', df.embeddings=='word2vec', df.embeddings =='ownfast'],
+                           ['cnn_fasttext', 'cnn_word2vec', 'cnn_own_fasttext], default='cnn_own')
 
     #get best models by dev loss
     final_results = pd.concat([bow_detailed, df.loc[df.groupby('embeddings')['dev_acc'].idxmax(),:]])
