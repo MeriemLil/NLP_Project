@@ -309,6 +309,70 @@ classifier & DecisionTreeClassifier & 0.702 \\
 \end{center}
 \end{table}
 
+
+
+\begin{table}[htbp]
+\caption{Best CNN Model by Mode}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{}&\multicolumn{3}{|c|}{\textbf{Metric}} \\ 
+\cline{2-4}
+\textbf{name} & \textbf{\textit{mode}}& \textbf{\textit{Accuracy}}& \textbf{\textit{Loss}} \\ 
+\hline
+CNN Word2Vec own & multichannel & 0.927 & 6.404 \\ 
+\cline{2-4}
+ & non-static & 0.929 & 6.44 \\ 
+\cline{2-4}
+ & static & 0.900 & 10.404 \\ 
+\hline
+CNN fastText own & multichannel & 0.921 & 9.463 \\ 
+\cline{2-4}
+ & non-static & 0.931 & 6.599 \\ 
+\cline{2-4}
+& static & 0.770 & 25.254 \\ 
+\hline
+CNN fastText pretrained & multichannel & 0.928 & 6.326 \\ 
+\cline{2-4}
+ & non-static & 0.928 & 6.133 \\ 
+\cline{2-4}
+ & static & 0.908 & 8.786 \\ 
+\hline
+CNN word2vec pretrained & multichannel & 0.928 & 6.583 \\ 
+\cline{2-4}
+& non-static & 0.927 & 6.668 \\ 
+\cline{2-4}
+& static & 0.906 & 9.025 \\ 
+\hline
+\end{tabular}
+\label{tab2}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Hyperparameters for the best CNN Models}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{}&\multicolumn{4}{|c|}{\textbf{Metric}} \\ 
+\cline{2-5}
+\textbf{Hyperparameter} & \textbf{\textit{CNN fastText pretrained}}& \textbf{\textit{CNN Word2Vec own}}& \textbf{\textit{CNN fastText own}}& \textbf{\textit{CNN word2vec pretrained}} \\ 
+\hline
+dev acc & 0.928 & 0.929 & 0.931 & 0.928 \\ 
+\hline
+dropout & 0.5 & 0.75 & 0.75 & 0.7 \\ 
+\hline
+num feature maps & 100.0 & 150.0 & 100.0 & 100.0 \\ 
+\hline
+regularization & 0.0 & 0.001 & 0.001 & 0.0 \\ 
+\hline
+word dim & 300.0 & 50.0 & 50.0 & 300.0 \\ 
+\hline
+\end{tabular}
+\label{tab4}
+\end{center}
+\end{table}
+
 \begin{table}[htbp]
 \caption{Confusion matrices}
 \begin{center}
@@ -334,75 +398,22 @@ CNN word2vec & 673    36 & 524    29 & 255    15 & 189    27 & 156    23 & 64   
 
 pretrained & 31    1260 & 26    1421 & 20    1710 & 23    1761 & 22    1799 & 17    1910 \\ 
 \hline
-Logistic & 672    119 & 516    73 & 229    23 & 155    23 & 122    10 & 51    7 \\ 
+LogisticRegression & 672    119 & 516    73 & 229    23 & 155    23 & 122    10 & 51    7 \\ 
 
-Regression & 32    1177 & 34    1377 & 46    1702 & 57    1765 & 56    1812 & 30    1912 \\ 
+ & 32    1177 & 34    1377 & 46    1702 & 57    1765 & 56    1812 & 30    1912 \\ 
 \hline
-Multinomial & 683    364 & 514    268 & 93    3 & 60    3 & 12    0 & 0    0 \\ 
+MultinomialNB & 683    364 & 514    268 & 93    3 & 60    3 & 12    0 & 0    0 \\ 
 
-Naive Bayes & 21    932 & 36    1182 & 182    1722 & 152    1785 & 166    1822 & 81    1919 \\ 
+ & 21    932 & 36    1182 & 182    1722 & 152    1785 & 166    1822 & 81    1919 \\ 
 \hline
-Random & 659    72 & 508    43 & 241    21 & 185    36 & 142    21 & 62    10 \\ 
+RandomForestClassifier & 659    72 & 508    43 & 241    21 & 185    36 & 142    21 & 62    10 \\ 
 
-Forest & 45    1224 & 42    1407 & 34    1704 & 27    1752 & 36    1801 & 19    1909 \\ 
+ & 45    1224 & 42    1407 & 34    1704 & 27    1752 & 36    1801 & 19    1909 \\ 
 \hline
 \end{tabular}
 \label{tab2}
 \end{center}
 \end{table}
 
-\begin{table}[htbp]
-\caption{Best CNN Model by Mode}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{}&\multicolumn{3}{|c|}{\textbf{Metric}} \\ 
-\cline{2-4}
-\textbf{embeddings} & \textbf{\textit{mode}}& \textbf{\textit{Accuracy}}& \textbf{\textit{Loss}} \\ 
-\hline
-fasttext & multichannel & 0.928 & 6.75 \\ 
-\hline
-fasttext & non-static & 0.928 & 7.047 \\ 
-\hline
-fasttext & static & 0.908 & 8.805 \\ 
-\hline
-own & multichannel & 0.909 & 12.734 \\ 
-\hline
-own & non-static & 0.927 & 9.752 \\ 
-\hline
-own & static & 0.885 & 12.459 \\ 
-\hline
-word2vec & multichannel & 0.928 & 11.086 \\ 
-\hline
-word2vec & non-static & 0.927 & 6.668 \\ 
-\hline
-word2vec & static & 0.906 & 9.025 \\ 
-\hline
-\end{tabular}
-\label{tab2}
-\end{center}
-\end{table}
-
-\begin{table}[htbp]
-\caption{Hyperparameters for the best CNN Models}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{}&\multicolumn{3}{|c|}{\textbf{Metric}} \\ 
-\cline{2-4}
-\textbf{index} & \textbf{\textit{fasttext}}& \textbf{\textit{own}}& \textbf{\textit{word2vec}} \\ 
-\hline
-Test Accuracy & 0.928 & 0.927 & 0.928 \\ 
-\hline
-Dropout & 0.8 & 0.8 & 0.8 \\ 
-\hline
-Num. of Convolutions & 250 & 250 & 250 \\ 
-\hline
-Regularization & 0.001 & 0.001 & 0.001 \\ 
-\hline
-\end{tabular}
-\label{tab4}
-\end{center}
-\end{table}
 
 \end{document}
