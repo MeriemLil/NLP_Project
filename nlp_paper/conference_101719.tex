@@ -27,10 +27,10 @@ Oulu, Finland \\
 lauri.heikka@student.oulu.fi}
 \and
 \IEEEauthorblockN{Anusha Ihalapathiranae}
-\IEEEauthorblockA{\centerline{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockA{\centerline{Faculty of Information Technology and Electrical Engineering} \\
+\textit{Univ. of Oulu}\\
+Oulu, Finland \\
+anusha.ihalapathirana@student.oulu.fi}
 
 }
 
@@ -65,9 +65,11 @@ The dataset has a predefined split into training, test and validation samples, w
 In addition, we use pre-trained, 300-dimensional word2vec embeddings  from \cite{mikolov2013distributed} and pre-trained fastText embeddings from \cite{bojanowski2016enriching}. Both datasets consist of 300-dimensional word embeddings, with embeddings for 3 and 1 million english words, respectively. For the string matching, we use the Harvard General Inquirer dataset, which contains categorizations for around 11 000 english words.
 
 \subsubsection{Harvard Inquirer and String Matching}
-The first method we explore...
+The first method we explore is to categorize each word in Harvard General Inquirer[a] to each emotion type. We used filter technique to this categorization, as an example, to identify words related to love emotion, we include Harvard General Inquirer words with Affil label and exclude words associated with Negative label and save data in our SQLite database. 
+
+We combined training, testing and validation data sets together and generate complete dataset to use in future tasks. Use complete dataset to perform string matching between every sentence in the previously created database and each emotion category. 
 \subsubsection{Empath Client Categories}
-asdf
+In next step we used Empath Client[b], a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using hypernyms.
 \subsubsection{Semantic Similarity}
 asd
 \subsubsection{SentiStrength sentiment scores}
