@@ -48,15 +48,15 @@ if __name__ == '__main__':
         t_df['iter'] = cnn[-12:-4]
         t_df['conf'] = t_df.groupby('iter')['conf'].transform('sum')
         t_df = t_df.groupby('iter').first().reset_index(drop=True)
-        arg = pd.read_json(arg).groupby('model_time').first().reset_index(drop=True)
+        arg = pd.read_json(arg).groupby('model_time', as_index=False).first().reset_index(drop=True)
         dfs.append(t_df.join(arg))
-    
     df = pd.concat(dfs).reset_index(drop=True)
-
+    
     
     df['name'] = np.select([df.embeddings=='fasttext', df.embeddings=='word2vec', df.embeddings =='ownfast'],
                            ['CNN fastText pretrained', 'CNN word2vec pretrained', 'CNN fastText own'], default='CNN Word2Vec own')
-
+    
+    print(df.loc[df.groupby('embeddings')['dev_acc'].idxmax(),['name','model_time', 'dev_acc']])
     #get best models by dev loss
     final_results = pd.concat([bow_detailed, df.loc[df.groupby('embeddings')['dev_acc'].idxmax(),:]])
     final_results = flatten_conf(final_results[cols]).iloc[:, 1:]
