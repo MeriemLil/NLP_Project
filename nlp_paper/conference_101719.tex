@@ -159,17 +159,19 @@ Table~\ref{tab1} reports the accuracies on the test dataset used for model selec
 \cline{2-3}
 \textbf{Classifier} & \textbf{\textit{Validation}}& \textbf{\textit{Test}} \\ 
 \hline
-MultinomialNB & 0.688 & 0.774 \\ 
+MultinomialNB & 0.681 & 0.694 \\ 
 \hline
-LogisticRegression & 0.881 & 0.946 \\ 
+LogisticRegression & 0.872 & 0.864 \\ 
 \hline
-RandomForestClassifier & 0.897 & 0.995 \\ 
+RandomForestClassifier & 0.899 & 0.89 \\ 
 \hline
-cnn fasttext & 0.925 & 0.928 \\ 
+CNN fastText pretrained & 0.925 & 0.928 \\ 
 \hline
-cnn own & 0.92 & 0.922 \\ 
+CNN Word2Vec own & 0.928 & 0.929 \\ 
 \hline
-cnn word2vec & 0.929 & 0.927 \\ 
+CNN fastText own & 0.928 & 0.931 \\ 
+\hline
+CNN Word2Vec pretrained & 0.930 & 0.928 \\ 
 \hline
 \end{tabular}
 \label{tab1}
@@ -185,17 +187,19 @@ cnn word2vec & 0.929 & 0.927 \\
 \cline{2-3}
 \textbf{Classifier} & \textbf{\textit{Precision}}& \textbf{\textit{Recall}} \\ 
 \hline
-MultinomialNB & 0.739 & 0.688 \\ 
+MultinomialNB & 0.734 & 0.681 \\ 
 \hline
-LogisticRegression & 0.881 & 0.881 \\ 
+LogisticRegression & 0.875 & 0.872 \\ 
 \hline
-RandomForestClassifier & 0.897 & 0.897 \\ 
+RandomForestClassifier & 0.898 & 0.899 \\ 
 \hline
-cnn fasttext & 0.926 & 0.925 \\ 
+CNN fastText pretrained & 0.926 & 0.925 \\ 
 \hline
-cnn own & 0.92 & 0.921 \\ 
+CNN Word2Vec own & 0.93 & 0.928 \\ 
 \hline
-cnn word2vec & 0.929 & 0.93 \\ 
+CNN fastText own & 0.928 & 0.928 \\ 
+\hline
+CNN word2vec pretrained & 0.930 & 0.930 \\ 
 \hline
 \end{tabular}
 \label{tab2}
@@ -305,6 +309,47 @@ classifier & DecisionTreeClassifier & 0.702 \\
 \end{center}
 \end{table}
 
+\begin{table}[htbp]
+\caption{Confusion matrices}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{}&\multicolumn{6}{|c|}{\textbf{Label}} \\ 
+\cline{2-7}
+\textbf{Classifier} & \textbf{\textit{joy}}& \textbf{\textit{sadness}}& \textbf{\textit{anger}}& \textbf{\textit{fear}}& \textbf{\textit{love}}& \textbf{\textit{surprise}} \\ 
+\hline
+CNN Word2Vec & 664    32 & 525    26 & 254    16 & 196    34 & 158    30 & 60    5 \\ 
+
+own & 40    1264 & 25    1424 & 21    1709 & 16    1754 & 20    1792 & 21    1914 \\ 
+\hline
+CNN fastText & 674    38 & 531    32 & 258    25 & 171    12 & 155    22 & 67    15 \\ 
+
+own & 30    1258 & 19    1418 & 17    1700 & 41    1776 & 23    1800 & 14    1904 \\ 
+\hline
+CNN fastText & 664    36 & 520    17 & 259    24 & 195    35 & 148    27 & 64    11 \\ 
+
+pretrained & 40    1260 & 30    1433 & 16    1701 & 17    1753 & 30    1795 & 17    1908 \\ 
+\hline
+CNN word2vec & 673    36 & 524    29 & 255    15 & 189    27 & 156    23 & 64    9 \\ 
+
+pretrained & 31    1260 & 26    1421 & 20    1710 & 23    1761 & 22    1799 & 17    1910 \\ 
+\hline
+Logistic & 672    119 & 516    73 & 229    23 & 155    23 & 122    10 & 51    7 \\ 
+
+Regression & 32    1177 & 34    1377 & 46    1702 & 57    1765 & 56    1812 & 30    1912 \\ 
+\hline
+Multinomial & 683    364 & 514    268 & 93    3 & 60    3 & 12    0 & 0    0 \\ 
+
+Naive Bayes & 21    932 & 36    1182 & 182    1722 & 152    1785 & 166    1822 & 81    1919 \\ 
+\hline
+Random & 659    72 & 508    43 & 241    21 & 185    36 & 142    21 & 62    10 \\ 
+
+Forest & 45    1224 & 42    1407 & 34    1704 & 27    1752 & 36    1801 & 19    1909 \\ 
+\hline
+\end{tabular}
+\label{tab2}
+\end{center}
+\end{table}
 
 \begin{table}[htbp]
 \caption{Best CNN Model by Mode}
