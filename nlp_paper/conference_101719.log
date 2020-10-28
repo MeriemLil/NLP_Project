@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.27)  28 OCT 2020 16:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.27)  28 OCT 2020 21:50
 entering extended mode
 **./conference_101719.tex
 (conference_101719.tex
@@ -317,37 +317,79 @@ Overfull \hbox (3.50006pt too wide) in paragraph at lines 37--37
  []
 
 
-LaTeX Warning: Citation `kaggledata' on page 1 undefined on input line 65.
+LaTeX Warning: Citation `emotiondetection' on page 1 undefined on input line 57
+.
 
 
-LaTeX Warning: Citation `saravia-etal-2018-carer' on page 1 undefined on input 
-line 65.
+LaTeX Warning: Citation `unsupervisedemotiondetection' on page 1 undefined on i
+nput line 59.
+
+
+LaTeX Warning: Citation `jan2020emotion' on page 1 undefined on input line 59.
+
+
+LaTeX Warning: Citation `chaffaretal' on page 1 undefined on input line 61.
+
+
+LaTeX Warning: Citation `kim-2014-convolutional' on page 1 undefined on input l
+ine 63.
+
+
+LaTeX Warning: Citation `johnsonetal' on page 1 undefined on input line 63.
+
+
+LaTeX Warning: Citation `dossantosetal' on page 1 undefined on input line 63.
+
+
+LaTeX Warning: Citation `bert' on page 1 undefined on input line 65.
+
+
+LaTeX Warning: Citation `bertclassification' on page 1 undefined on input line 
+65.
+
+
+LaTeX Warning: Citation `xu2020improving' on page 1 undefined on input line 65.
+
 
 [1{C:/Users/user/AppData/Local/MiKTeX/pdftex/config/pdftex.map}
 
 
 ]
 
+LaTeX Warning: Citation `kaggledata' on page 2 undefined on input line 70.
+
+
+LaTeX Warning: Citation `saravia-etal-2018-carer' on page 2 undefined on input 
+line 70.
+
+
 LaTeX Warning: Citation `mikolov2013distributed' on page 2 undefined on input l
-ine 69.
+ine 74.
 
 
 LaTeX Warning: Citation `bojanowski2016enriching' on page 2 undefined on input 
-line 69.
+line 74.
 
 
-LaTeX Warning: Citation `sentistrength' on page 2 undefined on input line 80.
+LaTeX Warning: Citation `harvardgeneralinquirer' on page 2 undefined on input l
+ine 77.
+
+
+LaTeX Warning: Citation `empathclient' on page 2 undefined on input line 81.
+
+
+LaTeX Warning: Citation `sentistrength' on page 2 undefined on input line 85.
 
 
 LaTeX Warning: Citation `kim-2014-convolutional' on page 2 undefined on input l
-ine 86.
+ine 91.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 86.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 91.
 
 ("E:\Msc\Finland\study\Semester 1-1\NLP\latex\tex/latex/amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 86.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 91.
 
 
 ("E:\Msc\Finland\study\Semester 1-1\NLP\latex\tex/latex/amsfonts\umsb.fd"
@@ -356,46 +398,49 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <fig1.png, id=9, 930.47626pt x 318.43968pt>
 File: fig1.png Graphic file (type png)
 <use fig1.png>
-Package pdftex.def Info: fig1.png  used on input line 89.
+Package pdftex.def Info: fig1.png  used on input line 94.
 (pdftex.def)             Requested size: 258.0pt x 88.29274pt.
 
 
 LaTeX Warning: Citation `kim-2014-convolutional' on page 2 undefined on input l
-ine 94.
+ine 99.
 
 
 LaTeX Warning: Citation `mikolov2013distributed' on page 2 undefined on input l
-ine 94.
+ine 99.
 
 
 LaTeX Warning: Citation `bojanowski2016enriching' on page 2 undefined on input 
-line 94.
+line 99.
 
 
-LaTeX Warning: Citation `bert' on page 2 undefined on input line 245.
+LaTeX Warning: Citation `bert' on page 2 undefined on input line 250.
 
 
-LaTeX Warning: Citation `xlnet' on page 2 undefined on input line 245.
+LaTeX Warning: Citation `xlnet' on page 2 undefined on input line 250.
 
 
 LaTeX Warning: Citation `bertclassification' on page 2 undefined on input line 
-245.
+250.
 
 
-LaTeX Warning: Citation `bert' on page 2 undefined on input line 246.
+LaTeX Warning: Citation `bert' on page 2 undefined on input line 251.
 
 
-LaTeX Warning: Citation `kaggledata' on page 2 undefined on input line 246.
+LaTeX Warning: Citation `kaggledata' on page 2 undefined on input line 251.
 
 [2 <./fig1.png>]
+Underfull \vbox (badness 4913) has occurred while \output is active []
+
+
 No file conference_101719.bbl.
 
-Overfull \hbox (170.213pt too wide) in paragraph at lines 386--404
+Overfull \hbox (170.213pt too wide) in paragraph at lines 391--409
  [] 
  []
 
 
-Overfull \hbox (82.01549pt too wide) in paragraph at lines 410--446
+Overfull \hbox (82.01549pt too wide) in paragraph at lines 415--451
  [] 
  []
 
@@ -410,9 +455,7 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[3] [4
-
-] (conference_101719.aux)
+[3] [4] (conference_101719.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -421,13 +464,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3911 strings out of 480236
- 57524 string characters out of 2880996
- 376989 words of memory out of 3000000
- 20434 multiletter control sequences out of 15000+200000
+ 3920 strings out of 480236
+ 57684 string characters out of 2880996
+ 385193 words of memory out of 3000000
+ 20443 multiletter control sequences out of 15000+200000
  576951 words of font info for 105 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,10n,66p,992b,295s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 60i,10n,66p,1013b,297s stack positions out of 5000i,500n,10000p,200000b,50000s
 {E:/Msc/Finland/study/Semester 1-1/NLP/latex/fonts/enc/dvips/base/8r.enc}<E:/
 Msc/Finland/study/Semester 1-1/NLP/latex/fonts/type1/public/amsfonts/cm/cmmi10.
 pfb><E:/Msc/Finland/study/Semester 1-1/NLP/latex/fonts/type1/public/amsfonts/cm
@@ -438,7 +481,7 @@ pe1/urw/times/utmb8a.pfb><E:/Msc/Finland/study/Semester 1-1/NLP/latex/fonts/typ
 e1/urw/times/utmbi8a.pfb><E:/Msc/Finland/study/Semester 1-1/NLP/latex/fonts/typ
 e1/urw/times/utmr8a.pfb><E:/Msc/Finland/study/Semester 1-1/NLP/latex/fonts/type
 1/urw/times/utmri8a.pfb>
-Output written on conference_101719.pdf (4 pages, 139807 bytes).
+Output written on conference_101719.pdf (4 pages, 141480 bytes).
 PDF statistics:
  49 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
