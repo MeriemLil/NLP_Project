@@ -54,7 +54,11 @@ Title: Emotion Analysis in Dataset
 Github: https://github.com/MeriemLil/NLP\_Project
 
 \section{Introduction}
-Introduction here...
+Emotions are feelings that caused by a situation person interact with. It is also associate with person’s character, mood, personality and motivation. People expressed their feelings and emotions using verbally and non-verbally such as words, intonation of voice, facial expressions, gestures, and tears. Nowadays people tend to communicate their ideas, opinions, and feelings through social medias, Such as tweeter, facebook, instergram. People filled with lot emotions and they commonly use written text to express their emotions and feelings through social medias. Categorizing text into emotion types is known as emotion analysis. Sentiment analysis detect positive, negative, and neutral feelings from text and emotion analysis detect the types of feelings, emotion state, in the text. Such as love, anger, joy, sadness, surprise, and fear[c]
+
+A lot of research had been carried out on sentiment analysis and emotion analysis problem in many different languages. Chaffar et al.[d] have demonstrate their work on supervised machine learning approach to recognize the emotion types using emotion annotated dataset which combined news headlines, fairy tales and blogs. They used bag of words and N-grams and proved that support vector machines classifier shows better performance and generalization than the other classifiers they used. 
+
+Johnson et al.[e] introduced a low complexity word level deep convolutional neural network for text categorization and Dos Santos et al. [f] propose new convolutional neural network that exploits from character to sentence level information to perform sentiment analysis of short text such as tweeter messages. And they found that combine small text with prior knowledge is effective.
 
 \section{Data and Methodologies}
 \subsection{Datasets and sources}
@@ -69,7 +73,7 @@ The first method we explore is to categorize each word in Harvard General Inquir
 
 We combined training, testing and validation data sets together and generate complete dataset to use in future tasks. Use complete dataset to perform string matching between every sentence in the previously created database and each emotion category. 
 \subsubsection{Empath Client Categories}
-In next step we used Empath Client[b], a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using hypernyms.
+In next step we used Empath Client[b], a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using hypernyms. We also map using exact empath emotion category.
 \subsubsection{Semantic Similarity}
 asd
 \subsubsection{SentiStrength sentiment scores}
@@ -96,6 +100,31 @@ We experiment with 50-, 100- and 300-dimensional word embeddings for the custom-
 
 
 \section{Results and Discussion}
+
+\subsection{Word categorizations and semantic similarity}
+
+\begin{table}[htbp]
+\caption{Word categorizations and semantic similarity accuracies}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Classifier}&\multicolumn{1}{|c|}{\textbf{Accuracy}} \\ 
+
+\hline
+Harvard String Matching & 0.336 \\ 
+\hline
+Empath Client & 0.160 \\ 
+\hline
+Empath Client with exact categories & 0.183 \\ 
+\hline
+Semantic Similarity - One synset & 0.269 \\ 
+\hline
+Semantic Similarity - All synset & 0.240 \\ 
+\hline
+\end{tabular}
+\label{tab1}
+\end{center}
+\end{table}
 
 \subsection{Model selection for bag-of-words}
 Table~\ref{tab5} reports the accuracies on the test dataset used for model selection.
