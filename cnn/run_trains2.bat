@@ -18,4 +18,4 @@ python train.py --embeddings own --dropout 0.5 --mode multichannel --num-feature
 python train.py --dropout 0.6 --mode multichannel --num-feature-maps 50 --embeddings own --word-dim 300
 python train.py --dropout 0.6 --mode multichannel --num-feature-maps 50 --embeddings own --word-dim 50
 python train.py --dropout 0.6 --mode multichannel --num-feature-maps 50 --embeddings own --word-dim 100
-pauses
+pause
