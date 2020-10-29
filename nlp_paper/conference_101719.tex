@@ -64,7 +64,10 @@ In a seminal, of applying machine learning algorithms using a bag-of-words repre
 
 Research in \cite{bert} introduce a new language representation model, BERT, a pretrained deep bidirectional representations from unlabeled text. They used conditioning on both information before and after a given word in all layers.BERT and successors inspired by it (see e.g. \cite{xlnet}), have massively improved the state-of-the-art in many language understandings tasks. For text classification, \cite{ bertclassification} used BERT provide general solution for BERT fine tuning in a text classification setting. Similarly, research on \cite{xu2020improving} improves the fine tuning of BERT using two effective mechanisms: self-ensemble and self-distillation.
 
-In this research we are focusing on emotion analysis using word categorizations, semantic similarity approaches and machine learning approaches.
+We contribute to this literature on text classification, by providing a comprehensive empirical study of the different approaches suggested in the literature. Specifically, we focus on the task of identifying emotions from sentences, using a labeled dataset of 20 000 sentences spanning six different emotion states. The studied approaches include methods based on word categorization, semantic similarity and a wide range of different bag-of-words machine learning approaches. For these machine learning algorithms we also examine different methods of  preprocessing the sentences and forming bag-of-words representations. Finally we consider more recent advances in text classification by examining convolutional neural networks together with different approaches of forming word vector embeddings. 
+
+In addition to the exhaustive amount of different approaches considered, we aim to provide as fair a comparison as possible across the different approaches. Importantly, we use a separate testing dataset for model selection and hyperparameter tuning, and then compare best performing approaches on a separate validation dataset. This avoids the problem of overfitting a test dataset, which is often bound to happen, when a large amount of candidate models and hyperparameter sets are considered.
+
 \section{Data and Methodologies}
 \subsection{Datasets and sources}
 Our main dataset of interest is a labeled dataset of 20 000 sentences with between 3 and 66 words. The dataset is provided by \cite{kaggledata}. The sentences are labeled to convey one of six different emotions: fear, anger, joy, love, surprise and sadness. The dataset is collected following the approach of \cite{saravia-etal-2018-carer}. The sentences are tweets, and the emotion labels are hashtags at the end of the tweet. The sentences are preprocessed in that they contain no punctuation or special characters and all words are lowercase.
@@ -84,6 +87,8 @@ asd
 As part of the project specification, we also use the SentiStrength client \cite{sentistrength}, to compute sentiment scores. These can be potentially be used as an additional feature in any approach to distinguish between the negative and positive emotions. However, intuitively, the more difficult task is distinguishing between different positive emotions and between different negative emotions. For this purpose, the sentiment scores are unlikely to provide added benefit. Considering this, and the fact that the simple approaches perform quite poorly, we do not explore the effects of these sentiment scores onto the accuracy of different models. Sentiment scores are still delivered as part of the project database, as suggested in the project specification.
 
 \subsection{Bag-of-Words Models}
+
+The full set of different approaches considered for the bag-of-words models is reported in the appendix table~\ref{tababw}.
 
 \subsection{Convolutional Neural Networks}
 
@@ -107,10 +112,9 @@ where $h$ refers to the length of the convolution window, $w$ are the filter wei
 
 Equation \eqref{eq1} describes only one feature map produced by one convolution filter, while the model can consist of an arbitrary number of these feature maps. Then, for each feature map, max-pooling is applied, such that the largest feature value $c_{i-max}$ is selected. This operation produces a vector of final features with dimension equal to the number of feature maps used. These features are then connected to the final, 6-dimensional softmax output with a fully connected layer.
 
+Like in \cite{kim-2014-convolutional}, we study three different variants of input to the CNN model. The first one involves keeping the inputted word embeddings as static. The second one is a model that For selecting the best models, we treat this mode of input as a tunable hyperparameter, but we also report comparisons across accuracies between the different modes.
+
 For regularization the original paper uses dropout on the penultimate layer. Dropout is a commonly used regularization method in neural networks. It hides each of the final features from the output layer with some probability $p$, preventing the co-adaptation of the different features. In addition, we experiment with another common method of avoiding overfitting; an $l_2$-norm regularization across the layer weights. The $l_2$ regularization penalizes large weight vectors, preventing overfitting.  Finally, following \cite{kim-2014-convolutional}, we also constrain the $l_2$ - norms of the weight vectors $w$ to be a maximum of a fixed size $s$. Note that the norm-constraint is most often applied to prevent an exploding gradients problem rather than to prevent overfitting.
-
-Something on the different modes of the model.....
-
 
 \subsubsection{Word Embeddings}
 The purpose of using word embeddings in the CNN model is to provide a $k$ dimensional numerical representation that can be input to the neural network. The general idea of these embedding model is to identify useful word embeddings by training a shallow neural network on a word prediction task using a large text corpus. Model training positions word vectors in the $k$-dimensional vector space such that similarities between word vector embeddings represent the semantic similarity between the words.
@@ -127,7 +131,7 @@ FastText \cite{bojanowski2016enriching} is proposed as an extension to the word2
 
 For all CNN models, we use sentence length $n = 70$ and convolution windows $h$ of 3, 4 and 5.  following the original paper. We use a rectified linear unit (ReLU) activation function for the convolutions, and a softmax activation for the output layer. The original paper uses Adadelta \cite{adadelta} optimization, but we achieve faster convergence with an Adam \cite{adam} update rule. We train using mini-batches of 50 sentences, a learning rate of $10^{-3}$ and the cross-entropy loss function. We also employ early stopping based on the models cross-entropy loss on the test dataset.
 
-For the input mode, we experiment with all three methods, static, non-static and multichannel inputs. As we have a number of other benchmarks, we omit the random initiation of the word embeddings.  The original paper uses a set of 100 convolutions. We treat the number of convolutions as a hypermeter, and experiment with from 50 to 250 convolutions. The original paper uses a dropout probability of 0.5. We tune the dropout parameter with values between 0.4 to 0.8. Note that the number of convolutions is applied for each of the three window lengths resulting in a total of $3 * number of feature maps$ convolutions. For the $l_2$ regularization parameter we try values between 0 and 0.001. The full set and ranges of the hyperparameters that we tune is reported in able~\ref{tabahp}. Note that the hyperparameter values represent the values attempted for any configuration. We do not attempt all possible configurations, but rather tune manually based on results from different model runs.
+For the input mode, we experiment with all three methods, static, non-static and multichannel inputs. As we have a number of other benchmarks, we omit the random initiation of the word embeddings.  The original paper uses a set of 100 convolutions. We treat the number of convolutions as a hypermeter, and experiment with from 50 to 250 convolutions. The original paper uses a dropout probability of 0.5. We tune the dropout parameter with values between 0.4 to 0.8. Note that the number of convolutions is applied for each of the three window lengths resulting in a total of $3 * number of feature maps$ convolutions. For the $l_2$ regularization parameter we try values between 0 and 0.001. The full set and ranges of the hyperparameters that we tune is reported in table~\ref{tabahp}. Note that the hyperparameter values represent the values attempted for any configuration. We do not attempt all possible configurations, but rather tune manually based on results from different model runs.
 
 \section{Results and Discussion}
 
@@ -323,6 +327,30 @@ We thank Mourad Oussalah and other seminar participants for their helpful commen
 \section{Additional Tables}
 \label{FirstAppendix}
 
+\begin{table*}[htbp]
+\caption{Bag-of-Words models considered}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{}&\multicolumn{1}{|c|}{\textbf{}} \\ 
+
+\textbf{Parameter} & \textbf{\textit{Values}} \\ 
+\hline
+vectorizer & Count Vectorization, Tfidf Vectorization \\ 
+\hline
+stopwords & none, scikit-learn, nltk \\ 
+\hline
+Lemmatizing & yes, no \\ 
+\hline
+Max. features & Full, 3000, 2000, 1000, 500, 100 \\ 
+\hline
+Classifier & Naive Bayes, Logistic Regression, Support Vector Classification, Decision Trees, Random Forest, Gradient Boosting \\ 
+\hline
+\end{tabular}
+\label{tababw}
+\end{center}
+\end{table*}
+
 \begin{table}[htbp]
 \caption{Average accuracy across different bag-of-words setups}
 \begin{center}
@@ -330,7 +358,7 @@ We thank Mourad Oussalah and other seminar participants for their helpful commen
 \hline
 \textbf{}&\multicolumn{2}{|c|}{\textbf{}} \\ 
 \cline{2-3}
-\textbf{parameter} & \textbf{\textit{value}}& \textbf{\textit{score}} \\ 
+\textbf{Parameter} & \textbf{\textit{value}}& \textbf{\textit{score}} \\ 
 \hline
 vectorizer & CountVectorizer & 0.719 \\ 
 \cline{2-3}
