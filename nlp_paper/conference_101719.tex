@@ -1,6 +1,4 @@
 \documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
-% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
@@ -58,11 +56,13 @@ Emotions are feelings that caused by a situation person interact with. It is als
 
 Emotion analysis takes major role in some applications which use emotion recognition, and it is a growing research area. There are supervised and unsupervised approaches can be found in this research area. A novel unsupervised context-based approach represents in \cite{unsupervisedemotiondetection} to detect emotions from text in sentence level. Their approached does not need any existing manually created lexicons and they used semantic relation between words and emotion type. They fine tune scores using syntactic dependencies within the sentence structure and proves this model provide more accurate results than other unsupervised approaches. Research carried out in \cite{jan2020emotion} paid their attention towards capturing semantic features in the text. Authors used distributional semantic model to calculate the semantic relatedness of the emotion in the text and they achieved accuracy of 71.79\% without training or annotation of data use.
 
-A lot of research had been carried out on sentiment analysis and emotion analysis problem in many different languages. \cite{chaffaretal}  demonstrate their work on supervised machine learning approach to recognize the emotion types using emotion annotated dataset which combined news headlines, fairy tales and blogs. They use bag of words and N-grams and proved that support vector machines classifier shows better performance and generalization than the other classifiers they used. 
+A lot of research had been carried out on sentiment analysis and emotion analysis problem in many different languages. Bag-of-words representations, first suggested by Luhn in the 1950s \cite{luhn}, are an important advance, and still a commonly applied tool for natural language processing tasks like text classification. In these models, text is represented as a sparse feature matrix, where features represents the occurrences of a given word in a text. Earlier approaches involved counting the occurrences of words. Later, improvements have been suggested that offset the number of occurrences of a word in a given text by the frequency of the word's occurrence in other texts in the corpus \cite{tfidf}. The most notable of these approaches is the term frequency–inverse document frequency (tf-idf) weighting.
 
-\cite{kim-2014-convolutional} introduce convolutional neural networkds for text categorization. Similar concepts are explored by e.g. \cite{johnsonetal} introduced a low complexity word level deep convolutional neural network for text categorization and \cite{dossantosetal} propose new convolutional neural network that exploits from character to sentence level information to perform sentiment analysis of short text such as tweeter messages. They found that combining small text with prior knowledge is effective.
+In a seminal, of applying machine learning algorithms using a bag-of-words representation \cite{joachims-svm} propose the use of support vector regressions with the tf-idf matrix approach. Using this approach, they achieve notable improvements over the state-of-the-art benchmarks at the time. In a more recent example, \cite{chaffaretal}  demonstrate their work on supervised machine learning approach to recognize the emotion types using emotion annotated dataset which combined news headlines, fairy tales and blogs. They use bag of words and N-grams and proved that support vector machines classifier shows better performance and generalization than the other classifiers they used. 
 
-Research in \cite{bert} introduced new language representation model, BERT, a pretrain deep bidirectional representations from unlabeled text. They used conditioning on both left and right context in all layers. BERT has achieved good results in many language understandings tasks. \cite{ bertclassification} used BERT on text classification and provide general solution for BERT fine tuning. Similarly, research on \cite{xu2020improving} improves the fine tuning of BERT using two effective mechanisms: self-ensemble and self-distillation.
+\cite{kim-2014-convolutional} introduce convolutional neural networkds for text categorization. Similar concepts are explored by e.g. \cite{johnsonetal}, with a low complexity word level deep convolutional neural network for text categorization. \cite{dossantosetal} propose a new convolutional neural network that exploits from character to sentence level information to perform sentiment analysis of short texts. They found that combining small text with prior knowledge is effective.
+
+Research in \cite{bert} introduce a new language representation model, BERT, a pretrained deep bidirectional representations from unlabeled text. They used conditioning on both information before and after a given word in all layers.BERT and successors inspired by it (see e.g. \cite{xlnet}), have massively improved the state-of-the-art in many language understandings tasks. For text classification, \cite{ bertclassification} used BERT provide general solution for BERT fine tuning in a text classification setting. Similarly, research on \cite{xu2020improving} improves the fine tuning of BERT using two effective mechanisms: self-ensemble and self-distillation.
 
 In this research we are focusing on emotion analysis using word categorizations, semantic similarity approaches and machine learning approaches.
 \section{Data and Methodologies}
@@ -77,27 +77,32 @@ In addition, we use pre-trained, 300-dimensional word2vec embeddings  from \cite
 The first method we explore is to categorize each word in Harvard General Inquirer \cite{harvardgeneralinquirer} to each emotion type. We use a filtering technique to this categorization. To identify words related to love emotion, we include Harvard General Inquirer words with that are labeled Affil label and exclude words associated with Negative label. The categories used for all six labels is reported in Table~\ref{taba3}. We store this information into a database and then compute the occurrences of words associated with each label for each sentence and predict the label of a sentence to be the category with the highest number of words.
 
 \subsection{Empath Client Categories}
-The next method we explore is to use the Empath Client \cite{empathclient}, a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using the concept of common hypernymy. We also map using exact empath emotion category. However, considering the poor performance of these
+The next method we explore is to use the Empath Client \cite{empathclient}, a text analyzing tool with a pre-buildt category set. We identify categories related to each sentence using the Empath client. Then for all the identified categories, we compute empath category similarity with each label using the concept of lowest common hypernymy. We then associate each category provided by the Empath client with the emotion that has the highest similarity. Then, we use the label assigned to each category of a sentence to identify the label that has the highest number of occurrences. The emotion is predicted to be this label. The empath client categorization has a category for each of our labels as well, so we also experiment using only the exact emotion category.
 \subsection{Semantic Similarity}
 asd
 \subsection{SentiStrength Sentiment Scores}
 As part of the project specification, we also use the SentiStrength client \cite{sentistrength}, to compute sentiment scores. These can be potentially be used as an additional feature in any approach to distinguish between the negative and positive emotions. However, intuitively, the more difficult task is distinguishing between different positive emotions and between different negative emotions. For this purpose, the sentiment scores are unlikely to provide added benefit. Considering this, and the fact that the simple approaches perform quite poorly, we do not explore the effects of these sentiment scores onto the accuracy of different models. Sentiment scores are still delivered as part of the project database, as suggested in the project specification.
 
-\section{Bag-of-Words Models}
-asd
+\subsection{Bag-of-Words Models}
+
 \subsection{Convolutional Neural Networks}
 
-We replicate the convolutional neural network architecture used in \cite{kim-2014-convolutional}. The architecture is outlined in \ref{fig1}. Sentences are represented as $n\times k$ matrices of word vectors, where \emph{n} refers to the length of the sentences and $k$ to the dimension of the word vectors. All sentences are zero-padded to length $n$. Then a set of convolutions are applied on the sentences
+\subsubsection{Model architecture}
+We replicate the convolutional neural network architecture used in \cite{kim-2014-convolutional}. The architecture is outlined in \ref{fig1}. Sentences are represented as $n\times k$ matrices of word vectors, where \emph{n} refers to the length of the sentences and $k$ to the dimension of the word vectors. All sentences are zero-padded to length $n$.
+\footnote{A similar architecture is proposed in \cite{johnsonetal}, but one where sentences are not padded to a fixed length.  Note that, the application of max-pooling is likely to make the zero-padding inconsequential.}
+Then a set of 1-dimensional convolutions are applied on the sentences. For each sentence, a feature $c_i$ is generated by the convolution
 \begin{equation}
-c_i = f(w * x_{i:i+h-1} + b){eq1}
+c_i = f(w * x_{i:i+h-1} + b)\label{eq1}
 \end{equation}
+where $h$ refers to the length of the convolution window, $w$ are the filter weights of the convolution operation, $b$ is an added bias term, and $f$ is a non-linear activation function. A feature map $c$ is then an $n-h+1$-dimensional vector of these features.
 
+Equation \eqref{eq1} describes only one feature map produced by one convolution filter, while the model can consist of an arbitrary number of these feature maps. Then, for each feature map, max-pooling is applied, such that the largest feature value $c_{i-max}$ is selected. This operation produces a vector of final features with dimension equal to the number of feature maps used. These features are then connected to the final, 6-dimensional softmax output with a fully connected layer.
 
-A similar architecture is proposed in \cite{johnsonetal}, but one where sentences are not padded to a fixed length.  Note that, the application of max-pooling is likely to make the zero-padding inconsequential.
+For regularization the original paper uses dropout on the penultimate layer. Dropout is a commonly used regularization method in neural networks. It hides each of the final features from the output layer with some probability $p$, preventing the co-adaptation of the different features. In addition, we experiment with another common method of avoiding overfitting; an $l_2$-norm regularization across the layer weights. The $l_2$ regularization penalizes large weight vectors, preventing overfitting.  Finally, following \cite{kim-2014-convolutional}, we also constrain the $l_2$ - norms of the weight vectors $w$ to be a maximum of a fixed size $s$.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width = 0.5 \textwidth]{fig1.png}}
-\caption{Example of a figure caption.}
+\caption{CNN model architecture}
 \label{fig1}
 \end{figure}
 
@@ -106,8 +111,13 @@ The word2vec model...
 The fasttext model...
  For both models, we use a maximum distance between predicted words of five, and use early stopping on a word analogy evaluation task. 
 
-We use sentence length $n = 70$ experiment with 50-, 100- and 300-dimensional word embeddings for the custom-trained word embeddings. With the pre-trained embeddings, we are restricted to the commonly available 300-dimensional word embeddings. In the convolution windo
+\subsubsection{Hyperparameters and training}
+For all CNN models, we use sentence length $n = 70$ and convolution windows $h$ of 3, 4 and 5.  following the original paper. We use a rectified linear unit (ReLU) activation function for the convolutions, and $p$.
 
+The original paper uses a set of 100 convolutions. We treat the number of convolutions as a hypermeter, and experiment with 50, 100, 150, and 300 convolutions. Note that the number of convolutions is applied for each of the three window lengths resulting in a total of $3 * num. feature maps$ convolutions. 
+As for the dimension of the word embeddings, we experiment with 50-, 100- and 300-dimensional word embeddings for the custom-trained word embeddings. With the pre-trained embeddings, we are restricted to the commonly available 300-dimensional word embeddings. 
+
+The original paper uses Adadelta \cite{adadelta} optimization, but we achieve faster convergence with an Adam \cite{adam} update rule. We train using mini-batches of 50 sentences, a learning rate of $10^{-3}$ and the cross-entropy loss function. We also employ early stopping based on the models cross-entropy loss on the test dataset.
 
 \section{Results and Discussion}
 
@@ -253,12 +263,15 @@ CNN word2vec pretrained & 0.930 & 0.930 \\
 ...
 
 As mentioned in the introduction, the state of the art for text classification tasks has moved beyond word level embedding representations considered here. For example, \cite{bert}, \cite{xlnet} and \cite{bertclassification} employ pre-trained bidirectional encoder representations to achieve state-of-the-art results in sentence classification. However, constructing a replication and a fair comparison of these models is beyond the scope of this study.
-\footnote{There is a minimal, unofficial implementation of BERT\cite{bert} embeddings on the dataset we study\cite{kaggledata} available at Kaggle by the dataset author. This implementation appears to exceed the accuracy of the best studied CNN model by around 0.3 percentage units.}
-Exploring alternative setups for training the word vectors is likewise beyond the scope of this paper.
+\footnote{There is a minimal, unofficial implementation of BERT\cite{bert} embeddings on the dataset we study\cite{kaggledata} available at Kaggle by the dataset author. This implementation appears to slightly exceed the validation accuracy of the best CNN model studied here by around 0.3 percentage units.}
 
-The pretrained embeddings are quite large in size, while custom embeddings trained on the emotions dataset are much smaller. Furthermore, because model performance with embeddings trained on the emotions dataset is very close in performance to the pretrained embeddings, the custom models provide a lightweight alternative for model serving. It is important to note, however, that the emotions dataset contains very homogenous sentences across the training, test and validation datasets. This causes the vocabulary of the custom word embeddings to be much smaller than the pretrained word embeddings. Therefore the model is more likely to suffer in performance on out-of-distribution sentences.
+Our results indicate that the starting point vectors are not of massive importance in tuning to the tasks, as different embedding representations achieve very similar test and validation set performance. Further exploring alternative setups for pre-training the word vectors might nonetheless be an interesting exercise but is beyond the scope of this paper. An important aspect of this observation, is the fact that the pretrained embeddings are quite large in size, while custom embeddings trained on the emotions dataset are much smaller. Furthermore, because model performance with embeddings trained on the emotions dataset is very close in performance to the pretrained embeddings, the custom models provide a lightweight alternative for model serving. 
+
+In terms of the generalizability of the results, it is important to note, however, that the emotions dataset contains very homogenous sentences across the training, test and validation datasets. This causes the vocabulary of the custom word embeddings to be much smaller than the pretrained word embeddings. Therefore the model is more likely to suffer in performance on out-of-distribution sentences. 
+\footnote{While we do not have an out-of-distribution labeled dataset available, unreported, hand-crafted tests support this intuition.}
 
 ...
+
 \section{Conclusion}
 conclude.
 
