@@ -73,22 +73,27 @@ The dataset has a predefined split into training, test and validation samples, w
 
 In addition, we use pre-trained, 300-dimensional word2vec embeddings  from \cite{mikolov2013distributed} and pre-trained fastText embeddings from \cite{bojanowski2016enriching}. Both datasets consist of 300-dimensional word embeddings, with embeddings for 3 and 1 million english words, respectively. For the string matching, we use the Harvard General Inquirer dataset, which contains categorizations for around 11 000 english words.
 
-\subsubsection{Harvard Inquirer and String Matching}
-The first method we explore is to categorize each word in Harvard General Inquirer \cite{harvardgeneralinquirer} to each emotion type. We used filter technique to this categorization, as an example, to identify words related to love emotion, we include Harvard General Inquirer words with Affil label and exclude words associated with Negative label and save data in our SQLite database. 
+\subsection{Harvard Inquirer and String Matching}
+The first method we explore is to categorize each word in Harvard General Inquirer \cite{harvardgeneralinquirer} to each emotion type. We use a filtering technique to this categorization. To identify words related to love emotion, we include Harvard General Inquirer words with that are labeled Affil label and exclude words associated with Negative label. The categories used for all six labels is reported in Table~\ref{taba3}. We store this information into a database and then compute the occurrences of words associated with each label for each sentence and predict the label of a sentence to be the category with the highest number of words.
 
-We combined training, testing and validation data sets together and generate complete dataset to use in future tasks. Use complete dataset to perform string matching between every sentence in the previously created database and each emotion category. 
-\subsubsection{Empath Client Categories}
-In next step we used Empath Client \cite{empathclient}, a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using hypernyms. We also map using exact empath emotion category.
-\subsubsection{Semantic Similarity}
+\subsection{Empath Client Categories}
+The next method we explore is to use the Empath Client \cite{empathclient}, a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using the concept of common hypernymy. We also map using exact empath emotion category. However, considering the poor performance of these
+\subsection{Semantic Similarity}
 asd
-\subsubsection{SentiStrength Sentiment Scores}
-As part of the project specification, we also use the SentiStrength client \cite{sentistrength}, to compute sentiment scores. These can be potentially be used as an additional feature in any approach to distinguish between the negative and positive emotions. 
+\subsection{SentiStrength Sentiment Scores}
+As part of the project specification, we also use the SentiStrength client \cite{sentistrength}, to compute sentiment scores. These can be potentially be used as an additional feature in any approach to distinguish between the negative and positive emotions. However, intuitively, the more difficult task is distinguishing between different positive emotions and between different negative emotions. For this purpose, the sentiment scores are unlikely to provide added benefit. Considering this, and the fact that the simple approaches perform quite poorly, we do not explore the effects of these sentiment scores onto the accuracy of different models. Sentiment scores are still delivered as part of the project database, as suggested in the project specification.
 
-\subsection{Bag-of-Words Models}
+\section{Bag-of-Words Models}
 asd
 \subsection{Convolutional Neural Networks}
 
-We replicate the convolutional neural network architecture used in \cite{kim-2014-convolutional}. The architecture is outlined in \ref{fig1}. Sentences are represented as $n\times k$ matrices of word vectors, where \emph{n} refers to the length of the sentences and \emph{k} to the dimension of the word vectors. All sentences are padded to length \emph{n}.
+We replicate the convolutional neural network architecture used in \cite{kim-2014-convolutional}. The architecture is outlined in \ref{fig1}. Sentences are represented as $n\times k$ matrices of word vectors, where \emph{n} refers to the length of the sentences and $k$ to the dimension of the word vectors. All sentences are zero-padded to length $n$. Then a set of convolutions are applied on the sentences
+\begin{equation}
+c_i = f(w * x_{i:i+h-1} + b){eq1}
+\end{equation}
+
+
+A similar architecture is proposed in \cite{johnsonetal}, but one where sentences are not padded to a fixed length.  Note that, the application of max-pooling is likely to make the zero-padding inconsequential.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width = 0.5 \textwidth]{fig1.png}}
@@ -101,7 +106,7 @@ The word2vec model...
 The fasttext model...
  For both models, we use a maximum distance between predicted words of five, and use early stopping on a word analogy evaluation task. 
 
-We experiment with 50-, 100- and 300-dimensional word embeddings for the custom-trained word embeddings. With the pre-trained embeddings, we are restricted to the commonly available 300-dimensional word embeddings.
+We use sentence length $n = 70$ experiment with 50-, 100- and 300-dimensional word embeddings for the custom-trained word embeddings. With the pre-trained embeddings, we are restricted to the commonly available 300-dimensional word embeddings. In the convolution windo
 
 
 \section{Results and Discussion}
@@ -341,7 +346,7 @@ classifier & DecisionTreeClassifier & 0.702 \\
  & SVC & 0.723 \\ 
 \hline
 \end{tabular}
-\label{tab5}
+\label{taba5}
 \end{center}
 \end{table}
 
@@ -381,7 +386,7 @@ CNN word2vec pretrained & multichannel & 0.928 & 6.583 \\
 & static & 0.906 & 9.025 \\ 
 \hline
 \end{tabular}
-\label{tab2}
+\label{taba1}
 \end{center}
 \end{table}
 
@@ -405,7 +410,7 @@ regularization & 0.0 & 0.001 & 0.001 & 0.0 \\
 word dim & 300.0 & 50.0 & 50.0 & 300.0 \\ 
 \hline
 \end{tabular}
-\label{tab4}
+\label{taba4}
 \end{center}
 \end{table}
 
@@ -447,9 +452,36 @@ RandomForestClassifier & 659    72 & 508    43 & 241    21 & 185    36 & 142    
  & 45    1224 & 42    1407 & 34    1704 & 27    1752 & 36    1801 & 19    1909 \\ 
 \hline
 \end{tabular}
-\label{tab2}
+\label{taba2}
 \end{center}
 \end{table}
 
+\begin{table}[htbp]
+\caption{Harvard General Inquirer Category Selection}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{Inclusion}} \\ 
+\cline{2-3}
+\textbf{Label} & \textbf{\textit{Included}}& \textbf{\textit{Excluded}} \\
+\hline
+surprise & Arousal & \\
+\hline
+joy & Positiv & Affil \\
+\hline
+love & Affil & Negativ\\
+\hline
+anger & Hostile & \\
+\hline
+sadness & Negativ & Hostile\\
+\hline
+fear & Weak & \\
+\hline
+\end{tabular}
+\label{taba3}
+\end{center}
+\end{table}
+
+\label{FirstAppendix}
 
 \end{document}
