@@ -45,7 +45,7 @@ natural language processing, text classification, sentiment analysis
 \end{IEEEkeywords}
 
 \section{Group info}
-Group 10.
+Group 10
 
 Members: Meriem Aggoune, Lauri Heikka, Anusha Ihalapathiranae
 
@@ -54,16 +54,17 @@ Title: Emotion Analysis in Dataset
 Github: https://github.com/MeriemLil/NLP\_Project
 
 \section{Introduction}
-Emotions are feelings that caused by a situation person interact with. It is also associate with person’s character, mood, personality and motivation. People express their feelings and emotions using verbally and non-verbally such as words, intonation of voice, facial expressions, gestures, and tears. Nowadays people tend to communicate their ideas, opinions, and feelings through social medias, Such as tweeter, facebook, instergram. People filled with lot emotions and they commonly use written text to express their emotions and feelings through social medias. Categorizing text into emotion types is known as emotion analysis. Sentiment analysis detect positive, negative, and neutral feelings from text and emotion analysis detect the types of feelings, emotion state, in the text.
+Emotions are feelings that caused by a situation person interact with. It is also associate with person’s character, mood, personality and motivation. People express their feelings and emotions using verbally and non-verbally such as words, intonation of voice, facial expressions, gestures, and tears. Nowadays people tend to communicate their ideas, opinions, and feelings through social medias, Such as tweeter, facebook, instergram. People filled with lot emotions and they commonly use written text to express their emotions and feelings through social medias. Categorizing text into emotion types is known as emotion analysis. Sentiment analysis detect positive, negative, and neutral feelings from text and emotion analysis detect the types of feelings, emotion state, in the text \cite{emotiondetection}.
 
-Something about earlier models...
+Emotion analysis takes major role in some applications which use emotion recognition, and it is a growing research area. There are supervised and unsupervised approaches can be found in this research area. A novel unsupervised context-based approach represents in \cite{unsupervisedemotiondetection} to detect emotions from text in sentence level. Their approached does not need any existing manually created lexicons and they used semantic relation between words and emotion type. They fine tune scores using syntactic dependencies within the sentence structure and proves this model provide more accurate results than other unsupervised approaches. Research carried out in \cite{jan2020emotion} paid their attention towards capturing semantic features in the text. Authors used distributional semantic model to calculate the semantic relatedness of the emotion in the text and they achieved accuracy of 71.79\% without training or annotation of data use.
 
 A lot of research had been carried out on sentiment analysis and emotion analysis problem in many different languages. \cite{chaffaretal}  demonstrate their work on supervised machine learning approach to recognize the emotion types using emotion annotated dataset which combined news headlines, fairy tales and blogs. They use bag of words and N-grams and proved that support vector machines classifier shows better performance and generalization than the other classifiers they used. 
 
 \cite{kim-2014-convolutional} introduce convolutional neural networkds for text categorization. Similar concepts are explored by e.g. \cite{johnsonetal} introduced a low complexity word level deep convolutional neural network for text categorization and \cite{dossantosetal} propose new convolutional neural network that exploits from character to sentence level information to perform sentiment analysis of short text such as tweeter messages. They found that combining small text with prior knowledge is effective.
 
-Something on bert and followers...
+Research in \cite{bert} introduced new language representation model, BERT, a pretrain deep bidirectional representations from unlabeled text. They used conditioning on both left and right context in all layers. BERT has achieved good results in many language understandings tasks. \cite{ bertclassification} used BERT on text classification and provide general solution for BERT fine tuning. Similarly, research on \cite{xu2020improving} improves the fine tuning of BERT using two effective mechanisms: self-ensemble and self-distillation.
 
+In this research we are focusing on emotion analysis using word categorizations, semantic similarity approaches and machine learning approaches.
 \section{Data and Methodologies}
 \subsection{Datasets and sources}
 Our main dataset of interest is a labeled dataset of 20 000 sentences with between 3 and 66 words. The dataset is provided by \cite{kaggledata}. The sentences are labeled to convey one of six different emotions: fear, anger, joy, love, surprise and sadness. The dataset is collected following the approach of \cite{saravia-etal-2018-carer}. The sentences are tweets, and the emotion labels are hashtags at the end of the tweet. The sentences are preprocessed in that they contain no punctuation or special characters and all words are lowercase.
@@ -73,11 +74,11 @@ The dataset has a predefined split into training, test and validation samples, w
 In addition, we use pre-trained, 300-dimensional word2vec embeddings  from \cite{mikolov2013distributed} and pre-trained fastText embeddings from \cite{bojanowski2016enriching}. Both datasets consist of 300-dimensional word embeddings, with embeddings for 3 and 1 million english words, respectively. For the string matching, we use the Harvard General Inquirer dataset, which contains categorizations for around 11 000 english words.
 
 \subsubsection{Harvard Inquirer and String Matching}
-The first method we explore is to categorize each word in Harvard General Inquirer[a] to each emotion type. We used filter technique to this categorization, as an example, to identify words related to love emotion, we include Harvard General Inquirer words with Affil label and exclude words associated with Negative label and save data in our SQLite database. 
+The first method we explore is to categorize each word in Harvard General Inquirer \cite{harvardgeneralinquirer} to each emotion type. We used filter technique to this categorization, as an example, to identify words related to love emotion, we include Harvard General Inquirer words with Affil label and exclude words associated with Negative label and save data in our SQLite database. 
 
 We combined training, testing and validation data sets together and generate complete dataset to use in future tasks. Use complete dataset to perform string matching between every sentence in the previously created database and each emotion category. 
 \subsubsection{Empath Client Categories}
-In next step we used Empath Client[b], a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using hypernyms. We also map using exact empath emotion category.
+In next step we used Empath Client \cite{empathclient}, a text analyzing tool with pre-build category set, to compute empath category similarity by mapping labeled sentences in dataset and empath categories using hypernyms. We also map using exact empath emotion category.
 \subsubsection{Semantic Similarity}
 asd
 \subsubsection{SentiStrength Sentiment Scores}
