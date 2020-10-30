@@ -134,7 +134,7 @@ Classifier & Naive Bayes, Logistic Regression, Support Vector Classification, De
 \end{center}
 \end{table*}
 
-The classification methods discussed above all provide some hyperparameter options for model tuning. Even with parallel training, tuning the hyperparameters for different models becomes computationally costly, when such a large set of candidate models and preprocessing strategies are considered. Furthermore, we do not have a separate dataset for validation and hyperparameter tuning, as the validation dataset is reserved for the comparisons with CNN algorithms later. This can cause the comparison of algorithm performance on the test set to become a comparison of which algorithm is most capable of overfitting the test dataset, when a large set of hyperparameters are considered. For the reasons discussed above we do not perform any hyperparameter tuning in this model selection stage. Instead, for all machine learning algorithms, we use their default scikit-learn implementations with no changes to hyperparameters\footnote{For full information on the default hyperparameters, we direct the reader to the scikit-learn documentation\cite{scikit-learn}. We use scikit-learn version 0.23.2.} To form a meaningful comparison with the CNNs later, we tune the hyperparameters of the best performing algorithm on the test set before comparing with the validation dataset.
+The classification methods discussed above all provide some hyperparameter options for model tuning. Even with parallel training, tuning the hyperparameters for different models becomes computationally costly, when such a large set of candidate models and preprocessing strategies are considered. Furthermore, we do not have a separate dataset for validation and hyperparameter tuning, as the validation dataset is reserved for the comparisons with convolutional neural network algorithms later. This can cause the comparison of algorithm performance on the test set to become a comparison of which algorithm is most capable of overfitting the test dataset, when a large set of hyperparameters are considered. For the reasons discussed above we do not perform any hyperparameter tuning in this model selection stage. Instead, for all machine learning algorithms, we use their default scikit-learn implementations with no changes to hyperparameters.\footnote{For full information on the default hyperparameters, we direct the reader to the scikit-learn documentation\cite{scikit-learn}. We use scikit-learn version 0.23.2.}. To form a meaningful comparison with the CNNs later, we tune the hyperparameters of the best performing algorithm on the test set before comparing with the validation dataset.
 
 \subsection{Convolutional Neural Networks}
 
@@ -322,44 +322,12 @@ CNN word2vec pretrained & 0.930 & 0.930 \\
 \section{Overall discussion and related literature}
 ...
 
-As mentioned in the introduction, the state of the art for text classification tasks has moved beyond word level embedding representations considered here. For example, \cite{bert}, \cite{xlnet} and \cite{bertclassification} employ pre-trained bidirectional encoder representations to achieve state-of-the-art results in sentence classification. However, constructing a replication and a fair comparison of these models is beyond the scope of this study.
-\footnote{There is a minimal, unofficial implementation of BERT\cite{bert} embeddings on the dataset we study\cite{kaggledata} available at Kaggle by the dataset author. This implementation appears to slightly exceed the validation accuracy of the best CNN model studied here by around 0.3 percentage units.}
+As mentioned in the introduction, the state of the art for text classification tasks has moved beyond word level embedding representations considered here. For example, \cite{bert}, \cite{xlnet} and \cite{bertclassification} employ pre-trained bidirectional encoder representations to achieve state-of-the-art results in sentence classification. However, constructing a replication and a fair comparison of these models is beyond the scope of this study.\footnote{There is a minimal, unofficial implementation of BERT\cite{bert} embeddings on the dataset we study\cite{kaggledata} available at Kaggle by the dataset author. This implementation appears to slightly exceed the validation accuracy of the best CNN model studied here by around 0.3 percentage units.}
 
 Our results indicate that the starting point vectors are not of massive importance in tuning to the tasks, as different embedding representations achieve very similar test and validation set performance. Further exploring alternative models and hyperparameters for pre-training the word vectors might nonetheless be an interesting exercise but is beyond the scope of this paper. An important aspect of this observation, is the fact that the pretrained embeddings are quite large in size, while custom embeddings trained on the emotions dataset are much smaller. Furthermore, because model performance with embeddings trained on the emotions dataset is very close in performance to the pretrained embeddings, the custom models provide a lightweight alternative for model serving. 
 
 In terms of the generalizability of the results, it is important to note, however, that the emotions dataset contains very homogenous sentences across the training, test and validation datasets. This causes the vocabulary of the custom word embeddings to be much smaller than the pretrained word embeddings. Therefore the model is more likely to suffer in performance on out-of-distribution sentences. 
 \footnote{While we do not have an out-of-distribution labeled dataset available, unreported, hand-crafted tests support this intuition.}
-
-...
-
-\section{Conclusion}
-conclude.
-
-\section{Latex examples}
-
-To be removed.
-
-\subsection{Equations example}
-\begin{equation}
-a+b=\gamma\label{eq}
-\end{equation}
-
-Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
-the beginning of a sentence: ``Equation \eqref{eq} is . . .''
-
-\subsection{Some Common Mistakes}\label{SCM}
-\begin{itemize}
-\item The word ``data'' is plural, not singular.
-\item In your paper title, if the words ``that uses'' can accurately replace the word ``using'', capitalize the ``u''; if not, keep using lower-cased.
-\item Be aware of the different meanings of the homophones ``affect'' and ``effect'', ``complement'' and ``compliment'', ``discreet'' and ``discrete'', ``principal'' and ``principle''.
-\item Do not confuse ``imply'' and ``infer''.
-\item The prefix ``non'' is not a word; it should be joined to the word it modifies, usually without a hyphen.
-\item There is no period after the ``et'' in the Latin abbreviation ``et al.''.
-\item The abbreviation ``i.e.'' means ``that is'', and the abbreviation ``e.g.'' means ``for example''.
-\end{itemize}
-
-
-
 
 \section*{Acknowledgment}
 
