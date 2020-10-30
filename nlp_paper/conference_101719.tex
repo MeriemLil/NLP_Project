@@ -479,6 +479,30 @@ word dim & 300.0 & 50.0 & 50.0 & 300.0 \\
 \end{center}
 \end{table*}
 
+\begin{table}[htbp]
+\caption{CNN Models by number of convolutions}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{}} \\ 
+\cline{2-3}
+\textbf{Model} & \textbf{\textit{Test Accuracy}}& \textbf{\textit{Number of feature maps}} \\ 
+\hline
+CNN Word2Vec own & 0.924 & 50 \\ 
+\hline
+CNN fastText own & 0.931 & 100 \\ 
+\hline
+CNN fastText own & 0.930& 150 \\ 
+\hline
+CNN fastText pretrained & 0.924 & 200 \\ 
+\hline
+CNN Word2Vec own & 0.927 & 250 \\ 
+\hline
+\end{tabular}
+\label{tabfmaps}
+\end{center}
+\end{table}
+
 \begin{table*}[htbp]
 \caption{Confusion matrices}
 \begin{center}
