@@ -46,6 +46,6 @@ class ModelPredWidget(QWidget):
         self.prediction.setText(pred)
         
     def predict(self, text):
-        pred = len(text)* ['not implemented']
+        pred = len(text) * ['not implemented']
         return '\n'.join(pred)
         
