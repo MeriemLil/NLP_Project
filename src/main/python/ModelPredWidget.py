@@ -1,6 +1,7 @@
 import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
+import requests
 
 class ModelPredWidget(QWidget): 
     def __init__(self): 
@@ -37,15 +38,16 @@ class ModelPredWidget(QWidget):
         grid.addWidget(self.prediction, 3, 1)
      
     def populate(self):
-        text = self.textbox.text().split(';')
-      
+
+        text = self.textbox.text()
         pred = self.predict(text)
-      
+        text = text.split(';')
         text = '\n'.join(text)        
         self.sentences.setText(text)
         self.prediction.setText(pred)
         
     def predict(self, text):
-        pred = len(text) * ['not implemented']
-        return '\n'.join(pred)
+        url = 'http://35.192.56.167/get_preds?msg='
+        pred = requests.get(url+text).json()['response']
+        return pred.replace(';', '\n')
         
