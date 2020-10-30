@@ -20,10 +20,15 @@ class TableWidget(QWidget):
         dropdown.addItems(self.df.columns[:-1])
         grid.addWidget(dropdown, 0, 0)
         
+        dropdown2 = QComboBox()
+        dropdown2.addItems(['max','mean'])
+        grid.addWidget(dropdown2, 0, 1)
+        
         btn1 = QPushButton('Show table', self)
         btn1.resize(btn1.sizeHint())
-        btn1.clicked.connect(lambda: self.populate(col=dropdown.currentText()))
-        grid.addWidget(btn1, 0, 1)
+        btn1.clicked.connect(lambda: self.populate(col=dropdown.currentText(),
+                                                   method=dropdown2.currentText()))
+        grid.addWidget(btn1, 0, 2)
     
         scroll = QScrollArea()
         self.table = QTableWidget()
@@ -36,8 +41,8 @@ class TableWidget(QWidget):
         self.show()
         
      
-    def populate(self, col):
-        dataframe = self.df.groupby(col)['score'].agg('mean') * 100
+    def populate(self, col, method):
+        dataframe = self.df.groupby(col)['score'].agg(method) * 100
         dataframe = dataframe.sort_values(ascending=False).round(2)
         self.table.setColumnCount(2)
         self.table.setRowCount(len(dataframe.index))

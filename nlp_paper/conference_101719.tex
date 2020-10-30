@@ -58,13 +58,13 @@ Emotion analysis takes major role in some applications which use emotion recogni
 
 A lot of research had been carried out on sentiment analysis and emotion analysis problem in many different languages. Bag-of-words representations, first suggested by Luhn in the 1950s \cite{luhn}, are an important advance, and still a commonly applied tool for natural language processing tasks like text classification. In these models, text is represented as a sparse feature matrix, where features represents the occurrences of a given word in a text. Earlier approaches involved counting the occurrences of words. Later, improvements have been suggested that offset the number of occurrences of a word in a given text by the frequency of the word's occurrence in other texts in the corpus \cite{tfidf}. The most notable of these approaches is the term frequency–inverse document frequency (tf-idf) weighting.
 
-In a seminal, of applying machine learning algorithms using a bag-of-words representation \cite{joachims-svm} propose the use of support vector regressions with the tf-idf matrix approach. Using this approach, they achieve notable improvements over the state-of-the-art benchmarks at the time. In a more recent example, \cite{chaffaretal}  demonstrate their work on supervised machine learning approach to recognize the emotion types using emotion annotated dataset which combined news headlines, fairy tales and blogs. They use bag of words and N-grams and proved that support vector machines classifier shows better performance and generalization than the other classifiers they used. 
+In a seminal paper on applying machine learning algorithms using a bag-of-words representation \cite{joachims-svm} propose the use of support vector regressions with the tf-idf matrix approach. Using this approach, they achieve notable improvements over the state-of-the-art benchmarks at the time. In a more recent example, \cite{chaffaretal}  demonstrate their work on supervised machine learning approach to recognize the emotion types using emotion annotated dataset which combined news headlines, fairy tales and blogs. They use bag of words and N-grams and proved that support vector machines classifier shows better performance and generalization than the other classifiers they used. 
 
 \cite{kim-2014-convolutional} introduce convolutional neural networkds for text categorization. Similar concepts are explored by e.g. \cite{johnsonetal}, with a low complexity word level deep convolutional neural network for text categorization. \cite{dossantosetal} propose a new convolutional neural network that exploits from character to sentence level information to perform sentiment analysis of short texts. They found that combining small text with prior knowledge is effective.
 
 Research in \cite{bert} introduce a new language representation model, BERT, a pretrained deep bidirectional representations from unlabeled text. They used conditioning on both information before and after a given word in all layers.BERT and successors inspired by it (see e.g. \cite{xlnet}), have massively improved the state-of-the-art in many language understandings tasks. For text classification, \cite{ bertclassification} used BERT provide general solution for BERT fine tuning in a text classification setting. Similarly, research on \cite{xu2020improving} improves the fine tuning of BERT using two effective mechanisms: self-ensemble and self-distillation.
 
-We contribute to this literature on text classification, by providing a comprehensive empirical study of the different approaches suggested in the literature. Specifically, we focus on the task of identifying emotions from sentences, using a labeled dataset of 20 000 sentences spanning six different emotion states. The studied approaches include methods based on word categorization, semantic similarity and a wide range of different bag-of-words machine learning approaches. For these machine learning algorithms we also examine different methods of  preprocessing the sentences and forming bag-of-words representations. Finally we consider more recent advances in text classification by examining convolutional neural networks together with different approaches of forming word vector embeddings. 
+In this work, we describe and empirically study a variety of approaches suggested in the text classification literature. Specifically, we focus on the task of identifying emotions from sentences, using a labeled dataset of 20 000 sentences spanning six different emotion states. The studied approaches include methods based on word categorization, semantic similarity and a wide range of different bag-of-words machine learning approaches. For these machine learning algorithms we also examine different methods of  preprocessing the sentences and forming bag-of-words representations. Finally we consider more recent advances in text classification by examining convolutional neural networks together with different approaches of forming word vector embeddings. 
 
 In addition to the exhaustive amount of different approaches considered, we aim to provide as fair a comparison as possible across the different approaches. Importantly, we use a separate testing dataset for model selection and hyperparameter tuning, and then compare best performing approaches on a separate validation dataset. This avoids the problem of overfitting a test dataset, which is often bound to happen, when a large amount of candidate models and hyperparameter sets are considered.
 
@@ -88,13 +88,44 @@ As part of the project specification, we also use the SentiStrength client \cite
 
 \subsection{Bag-of-Words Models}
 
-The full set of different approaches considered for the bag-of-words models is reported in the appendix table~\ref{tababw}.
+Next, we conduct an empirical comparison on bag-of-words models. We treat this task as a model-selection and preprocessing strategy -selection exercise, and use the training dataset for training the machine learning algorithms and bag-of-words representations, and the test data for an out-of-sample comparison of models and preprocessing strategies. We then select the best performing preprocessing strategy and the best performing algorithm on the test dataset and further compare it to the CNN models described below, using the hold-out validation dataset. We also include a Logistic Regression and a Naive Bayes classifier as simple benchmark models.
+
+The full set of different approaches considered for the bag-of-words models is reported in table~\ref{tababw}.
+The machine learning algorithms considered 
+Even with parallel training, tuning the hyperparameters for different models becomes computationally costly, when such a large set of candidate models and preprocessing strategies are considered. Furthermore, we do not have a separate dataset for validation and hyperparameter tuning, as the validation dataset is reserved for the comparisons with CNN algorithms later. This can cause the comparison of algorithm performance on the test set to become a comparison of which algorithm is most capable of overfitting the test dataset, when a large set of hyperparameters are considered. For the reasons discussed above we do not perform any hyperparameter tuning in this model selection stage. Instead, for all machine learning algorithms, we use their default scikit-learn\cite{scikit-learn} implementations with no changes to hyperparameters. To form a meaningful comparison with the CNNs later, we tune the hyperparameters of the best performing algorithm on the test set before comparing with the validation dataset.
+
+
+
+\begin{table*}[htbp]
+\caption{Bag-of-Words models considered}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{}&\multicolumn{1}{|c|}{\textbf{}} \\ 
+
+\textbf{Parameter} & \textbf{\textit{Values}} \\ 
+\hline
+vectorizer & Count Vectorization, Tfidf Vectorization \\ 
+\hline
+stopwords & none, scikit-learn, nltk \\ 
+\hline
+Lemmatizing & yes, no \\ 
+\hline
+Max. features & Full, 3000, 2000, 1000, 500, 100 \\ 
+\hline
+Classifier & Naive Bayes, Logistic Regression, Support Vector Classification, Decision Trees, Random Forest, Gradient Boosting \\ 
+\hline
+\end{tabular}
+\label{tababw}
+\end{center}
+\end{table*}
+
 
 \subsection{Convolutional Neural Networks}
 
 \subsubsection{Model architecture}
 
-We replicate the convolutional neural network architecture used in \cite{kim-2014-convolutional}. The architecture is outlined in fig.~\ref{fig1}. Sentences are represented as $n\times k$ matrices of word vector embeddings, where \emph{n} refers to the length of the sentences and $k$ to the dimension of the word vectors.
+In the final stage replicate the convolutional neural network (CNN) architecture used in \cite{kim-2014-convolutional}. In this stage, the only preprocessing necessary for the sentences is tokenization and acquiring word vector embeddings for the tokenized sentences. The CNN architecture is outlined in fig.~\ref{fig1}. Sentences are represented as $n\times k$ matrices of word vector embeddings, where \emph{n} refers to the length of the sentences and $k$ to the dimension of the word vectors
 
 \begin{figure*}[htbp]
 \centerline{\includegraphics[width = \textwidth]{fig1.png}}
@@ -326,30 +357,6 @@ We thank Mourad Oussalah and other seminar participants for their helpful commen
 \appendices
 \section{Additional Tables}
 \label{FirstAppendix}
-
-\begin{table*}[htbp]
-\caption{Bag-of-Words models considered}
-\begin{center}
-\begin{tabular}{|c|c|}
-\hline
-\textbf{}&\multicolumn{1}{|c|}{\textbf{}} \\ 
-
-\textbf{Parameter} & \textbf{\textit{Values}} \\ 
-\hline
-vectorizer & Count Vectorization, Tfidf Vectorization \\ 
-\hline
-stopwords & none, scikit-learn, nltk \\ 
-\hline
-Lemmatizing & yes, no \\ 
-\hline
-Max. features & Full, 3000, 2000, 1000, 500, 100 \\ 
-\hline
-Classifier & Naive Bayes, Logistic Regression, Support Vector Classification, Decision Trees, Random Forest, Gradient Boosting \\ 
-\hline
-\end{tabular}
-\label{tababw}
-\end{center}
-\end{table*}
 
 \begin{table}[htbp]
 \caption{Average accuracy across different bag-of-words setups}
