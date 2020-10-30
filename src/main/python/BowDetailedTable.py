@@ -44,10 +44,10 @@ class BowDetailedTable(QWidget):
             dataframe.acc = dataframe.acc.round(3)
             self.table.setFixedWidth(787) 
         if arg == 'Confusion Matrices':
-            dataframe = self.df.iloc[:,12::4]
-            dataframe2 = self.df.iloc[:,13::4]
-            dataframe3 = self.df.iloc[:,14::4]
-            dataframe4 = self.df.iloc[:,15::4]
+            dataframe = self.df.loc[:,self.df.columns.str.contains('_tn')]
+            dataframe2 = self.df.loc[:,self.df.columns.str.contains('_fp')]
+            dataframe3 = self.df.loc[:,self.df.columns.str.contains('_fn')]
+            dataframe4 = self.df.loc[:,self.df.columns.str.contains('_tp')]
             self.table.setFixedWidth(737)
             self.table.setFixedHeight(350)
             indx = dataframe.index.to_list()

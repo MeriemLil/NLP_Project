@@ -2,6 +2,7 @@ import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 import requests
+from requests.exceptions import ConnectionError
 
 class ModelPredWidget(QWidget): 
     def __init__(self): 
@@ -48,6 +49,10 @@ class ModelPredWidget(QWidget):
         
     def predict(self, text):
         url = 'http://35.192.56.167/get_preds?msg='
-        pred = requests.get(url+text).json()['response']
+        
+        try:
+            pred = requests.get(url+text).json()['response']
+        except ConnectionError:
+            pred='No connection to webservice'
         return pred.replace(';', '\n')
         
