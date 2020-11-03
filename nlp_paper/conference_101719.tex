@@ -207,7 +207,9 @@ Semantic Similarity - All synset & 0.240 \\
 \end{table}
 
 \subsection{Model selection for bag-of-words}
-Table~\ref{tab5} reports the accuracies on the test dataset used for model selection.
+
+Table~\ref{tab5} reports test set accuracies on the best performing iterations for each classifier and preprocessing strategy. For vectorization, we find only a miniscule improvement in accuracy of 0.002, when using tf-idf vectorization. As for the stop words, the best performing classifier uses the smaller nltk set of stop words. However, once again, the  performances are very similar across the stop word setups. Lemmatization does not seem to make much difference either, with no lemmatization achieving an accuracy improvement of 0.002 over lemmatization. The test set accuracy increases monotonically with the maximum size of the vocabulary. Performance is notably worse, when the vocabulary size is decreased below 1000 words, but beyond 2000 most frequent words, improvement in test set accuracy when increasing vocabulary size is miniscule.
+
 \begin{table}[htbp]
 \caption{Maximum accuracy on the test dataset across different bag-of-words setups}
 \begin{center}
@@ -240,6 +242,8 @@ max features  & 100 & 0.396 \\
   & 2000 & 0.880 \\ 
 \cline{2-3}
   & 3000 & 0.886 \\ 
+\cline{2-3}
+ & All & 0.888 \\ 
 \hline
 classifier & DecisionTreeClassifier & 0.866 \\ 
 \cline{2-3}
@@ -258,8 +262,25 @@ classifier & DecisionTreeClassifier & 0.866 \\
 \end{center}
 \end{table}
 
+For the different machine learning algorithms test set performance is quite similar. The random forest algorithm outperforms others the next best classifier, logistic regression with $l_2$ penalty by 0.01. Even simple naivebayes achieves a test set accuracy just under 0.86 for the best iteration. Notably, gradient boosting, which we add beyond the project specification has the worst test set accuracy on the best iteration out of all classifiers. This is interesting, because gradient boosting has been shown to generally outperform other classification algorithms, though this does depend on data characteristics\cite{gbacc}.It also might be that the scikit-learn default hyperparameters are not well suited for our task. As our focus is an out-of-the-box model comparison, we do not do further experiment with alternative specifications for the gradient boosting.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width = 0.5 \textwidth]{fig2.png}}
+\caption{Box plots of accuracies with different classifiers and preprocessing strategies.}
+\label{fig2}
+\end{figure}
+
+To form a fair comparison preprocessing approaches and classifiers, it is important to take into account not just the best iteration, but all iterations that were experimented with. Figure~\ref{fig2}  shows boxplots describing the distribution of accuracies for each model and preprocessing setup. In addition, average accuracies are reported in the Appendix, table~\ref{taba5}. Tf-idf vectorization seems to have slightly higher test set accuracy across all quartiles and stop word specifications, although performance differences are small. For stop words, we see that the largest, scikit-learn set of stop words results in the most stable performance despite nltk stop words having the best performance. Again, lemmatization does not seem to have much effect on test set performance.
+
+For the maximum size of the vocabulary, using the full vocabulary seems to result in less stable performance than using the most frequent 2000 or 3000 words. This is likely due to the fact that the large amount of feature results with the full vocabulary results in overfitting the training data. For example decision tree algorithms, are very prone to overfitting, when the tree depth is not restricted, which the case for deafult scikit-learn parameters. The lower quartiles and bounds shown in Fig.~\ref{fig2} for the decision trees support this intuition.The Random Forest remains the best performing algorithm, with over half of the iterations have an accuracy of around or above 0.85. Gradient boosting  likewise, has good berformance on the median, but it's accuracy seems restricted in the upper bound.
+
+As mentioned, we treat this  bag-of-words model comparison as a model selection exercise, and select the best model to compare to the CNN models on the validation test set. For the preprocessing strategy, we select the scikit-learn stop words due to their more stable performance, despite nltk stop words having slightly higher maximum accuracy. Lemmatization seems to make no difference, so in the interest of parsimony, we do no lemmatization. We use tf-idf vectorization, with a maximum vocabulary size of 3000 words, since it seems to yield the best tradeoff between maximum accuracy and stability of the accuracy.
+
+Random Forest is selected as the best algorithm. To make a fair comparison, we tune hyperparameter of the random forest on the test set. We tune the minimum samples per leaf node (1, 2, 3), minimum samples split by a node (values between 2 and 20) and the number of unique tree estimators (values between 100 and 2000). The parameters selected are, 1700 estimators, 4 minimum samples split, and 1 minimum sample per leaf node. In addition, we use Naive Bayes and Logistic Regression as simple benchmark models for the next step. We use the best selected preprocessing strategy, described above for all three benchmark algorithms.
+
 \subsection{Validation set performance of best models}
-Table~\ref{tab1} reports the accuracies on the test dataset used for model selection.
+
+Table~\ref{tab1} reports the accuracies on the test and validation datasets for the three benchmark models and CNN models with 4 different word embedding configurations.
 
 \begin{table}[htbp]
 \caption{Validation and test set accuracies for best models}
@@ -274,7 +295,7 @@ MultinomialNB & 0.681 & 0.694 \\
 \hline
 LogisticRegression & 0.872 & 0.864 \\ 
 \hline
-RandomForestClassifier & 0.899 & 0.89 \\ 
+RandomForestClassifier & 0.899 & 0.890 \\ 
 \hline
 CNN fastText pretrained & 0.925 & 0.928 \\ 
 \hline
@@ -288,6 +309,8 @@ CNN Word2Vec pretrained & 0.930 & 0.928 \\
 \label{tab1}
 \end{center}
 \end{table}
+
+Table~\ref{tab2} reports the class weighted precision and recall on the validation dataset for the three benchmark models and CNN models with 4 different word embedding configurations.
 
 \begin{table}[htbp]
 \caption{Validation precision and recall for best models}
@@ -310,13 +333,56 @@ CNN Word2Vec own & 0.93 & 0.928 \\
 \hline
 CNN fastText own & 0.928 & 0.928 \\ 
 \hline
-CNN word2vec pretrained & 0.930 & 0.930 \\ 
+CNN word2vec pretrained & 0.93 & 0.93 \\ 
 \hline
 \end{tabular}
 \label{tab2}
 \end{center}
 \end{table}
 
+Validation set confusion matrices for the best models for each emotion are reported in Table~\ref{taba2}. False positives and negatives appear to be spread out quite evenly across the different emotions, somewhat in proportion to the frequency of their appearances in the validation dataset. The only one that all models struggle to identify is the surprise category, which only has 81 appearances in the validation dataset, and more false negatives than false positives across all seven models. Furthermore, the number of false negatives and false positives is quite balanced within different classes for the CNN and random forest models. The label imbalance seems to not be a major issue for the CNN and random forest models. However, the logistic regression and especially naive bayes benchmarks tend to not assign predictions to the less frequent labels, with many falsse negatives for the less frequent classes and many false positives for the majority classes.
+
+\begin{table*}[htbp]
+\caption{Confusion matrices}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{}&\multicolumn{6}{|c|}{\textbf{Label}} \\ 
+\cline{2-7}
+\textbf{Classifier} & \textbf{\textit{joy}}& \textbf{\textit{sadness}}& \textbf{\textit{anger}}& \textbf{\textit{fear}}& \textbf{\textit{love}}& \textbf{\textit{surprise}} \\ 
+\hline
+CNN Word2Vec & 664$\;$$\;$$\;$$\;$  32 & 525$\;$$\;$$\;$$\;$26 & 254$\;$$\;$$\;$$\;$16 & 196$\;$$\;$$\;$$\;$34 & 158$\;$$\;$$\;$$\;$30 & 60$\;$$\;$$\;$$\;$5 \\ 
+
+own & 40$\;$$\;$$\;$$\;$1264 & 25$\;$$\;$$\;$$\;$1424 & 21$\;$$\;$$\;$$\;$1709 & 16$\;$$\;$$\;$$\;$1754 & 20$\;$$\;$$\;$$\;$1792 & 21$\;$$\;$$\;$$\;$1914 \\ 
+\hline
+CNN fastText & 674$\;$$\;$$\;$$\;$38 & 531$\;$$\;$$\;$$\;$32 & 258$\;$$\;$$\;$$\;$25 & 171$\;$$\;$$\;$$\;$12 & 155$\;$$\;$$\;$$\;$22 & 67$\;$$\;$$\;$$\;$15 \\ 
+
+own & 30$\;$$\;$$\;$$\;$1258 & 19$\;$$\;$$\;$$\;$1418 & 17$\;$$\;$$\;$$\;$1700 & 41$\;$$\;$$\;$$\;$1776 & 23$\;$$\;$$\;$$\;$1800 & 14$\;$$\;$$\;$$\;$1904 \\ 
+\hline
+CNN fastText & 664$\;$$\;$$\;$$\;$36 & 520$\;$$\;$$\;$$\;$17 & 259$\;$$\;$$\;$$\;$24 & 195$\;$$\;$$\;$$\;$35 & 148$\;$$\;$$\;$$\;$27 & 64$\;$$\;$$\;$$\;$11 \\ 
+
+pretrained & 40$\;$$\;$$\;$$\;$1260 & 30$\;$$\;$$\;$$\;$1433 & 16$\;$$\;$$\;$$\;$1701 & 17$\;$$\;$$\;$$\;$1753 & 30$\;$$\;$$\;$$\;$1795 & 17$\;$$\;$$\;$$\;$1908 \\ 
+\hline
+CNN word2vec & 673$\;$$\;$$\;$$\;$36 & 524$\;$$\;$$\;$$\;$29 & 255$\;$$\;$$\;$$\;$15 & 189$\;$$\;$$\;$$\;$27 & 156$\;$$\;$$\;$$\;$23 & 64$\;$$\;$$\;$$\;$9 \\ 
+
+pretrained & 31$\;$$\;$$\;$$\;$1260 & 26$\;$$\;$$\;$$\;$1421 & 20$\;$$\;$$\;$$\;$1710 & 23$\;$$\;$$\;$$\;$1761 & 22$\;$$\;$$\;$$\;$1799 & 17$\;$$\;$$\;$$\;$1910 \\ 
+\hline
+LogisticRegression & 672$\;$$\;$$\;$$\;$119 & 516$\;$$\;$$\;$$\;$73 & 229$\;$$\;$$\;$$\;$23 & 155$\;$$\;$$\;$$\;$23 & 122$\;$$\;$$\;$$\;$10 & 51$\;$$\;$$\;$$\;$7 \\ 
+
+ & 32$\;$$\;$$\;$$\;$1177 & 34$\;$$\;$$\;$$\;$1377 & 46$\;$$\;$$\;$$\;$1702 & 57$\;$$\;$$\;$$\;$1765 & 56$\;$$\;$$\;$$\;$1812 & 30$\;$$\;$$\;$$\;$1912 \\ 
+\hline
+MultinomialNB & 683$\;$$\;$$\;$$\;$364 & 514$\;$$\;$$\;$$\;$268 & 93$\;$$\;$$\;$$\;$3 & 60$\;$$\;$$\;$$\;$3 & 12$\;$$\;$$\;$$\;$0 & 0$\;$$\;$$\;$$\;$0 \\ 
+
+ & 21$\;$$\;$$\;$$\;$932 & 36$\;$$\;$$\;$$\;$1182 & 182$\;$$\;$$\;$$\;$1722 & 152$\;$$\;$$\;$$\;$1785 & 166$\;$$\;$$\;$$\;$1822 & 81$\;$$\;$$\;$$\;$1919 \\ 
+\hline
+RandomForestClassifier & 659$\;$$\;$$\;$$\;$72 & 508$\;$$\;$$\;$$\;$43 & 241$\;$$\;$$\;$$\;$21 & 185$\;$$\;$$\;$$\;$36 & 142$\;$$\;$$\;$$\;$21 & 62$\;$$\;$$\;$$\;$10 \\ 
+
+ & 45$\;$$\;$$\;$$\;$1224 & 42$\;$$\;$$\;$$\;$1407 & 34$\;$$\;$$\;$$\;$1704 & 27$\;$$\;$$\;$$\;$1752 & 36$\;$$\;$$\;$$\;$1801 & 19$\;$$\;$$\;$$\;$1909 \\ 
+\hline
+\end{tabular}
+\label{taba2}
+\end{center}
+\end{table*}
 
 
 \section{Overall discussion and related literature}
@@ -503,47 +569,7 @@ CNN Word2Vec own & 0.927 & 250 \\
 \end{center}
 \end{table}
 
-\begin{table*}[htbp]
-\caption{Confusion matrices}
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
-\textbf{}&\multicolumn{6}{|c|}{\textbf{Label}} \\ 
-\cline{2-7}
-\textbf{Classifier} & \textbf{\textit{joy}}& \textbf{\textit{sadness}}& \textbf{\textit{anger}}& \textbf{\textit{fear}}& \textbf{\textit{love}}& \textbf{\textit{surprise}} \\ 
-\hline
-CNN Word2Vec & 664$\;$$\;$$\;$$\;$  32 & 525$\;$$\;$$\;$$\;$26 & 254$\;$$\;$$\;$$\;$16 & 196$\;$$\;$$\;$$\;$34 & 158$\;$$\;$$\;$$\;$30 & 60$\;$$\;$$\;$$\;$5 \\ 
 
-own & 40$\;$$\;$$\;$$\;$1264 & 25$\;$$\;$$\;$$\;$1424 & 21$\;$$\;$$\;$$\;$1709 & 16$\;$$\;$$\;$$\;$1754 & 20$\;$$\;$$\;$$\;$1792 & 21$\;$$\;$$\;$$\;$1914 \\ 
-\hline
-CNN fastText & 674$\;$$\;$$\;$$\;$38 & 531$\;$$\;$$\;$$\;$32 & 258$\;$$\;$$\;$$\;$25 & 171$\;$$\;$$\;$$\;$12 & 155$\;$$\;$$\;$$\;$22 & 67$\;$$\;$$\;$$\;$15 \\ 
-
-own & 30$\;$$\;$$\;$$\;$1258 & 19$\;$$\;$$\;$$\;$1418 & 17$\;$$\;$$\;$$\;$1700 & 41$\;$$\;$$\;$$\;$1776 & 23$\;$$\;$$\;$$\;$1800 & 14$\;$$\;$$\;$$\;$1904 \\ 
-\hline
-CNN fastText & 664$\;$$\;$$\;$$\;$36 & 520$\;$$\;$$\;$$\;$17 & 259$\;$$\;$$\;$$\;$24 & 195$\;$$\;$$\;$$\;$35 & 148$\;$$\;$$\;$$\;$27 & 64$\;$$\;$$\;$$\;$11 \\ 
-
-pretrained & 40$\;$$\;$$\;$$\;$1260 & 30$\;$$\;$$\;$$\;$1433 & 16$\;$$\;$$\;$$\;$1701 & 17$\;$$\;$$\;$$\;$1753 & 30$\;$$\;$$\;$$\;$1795 & 17$\;$$\;$$\;$$\;$1908 \\ 
-\hline
-CNN word2vec & 673$\;$$\;$$\;$$\;$36 & 524$\;$$\;$$\;$$\;$29 & 255$\;$$\;$$\;$$\;$15 & 189$\;$$\;$$\;$$\;$27 & 156$\;$$\;$$\;$$\;$23 & 64$\;$$\;$$\;$$\;$9 \\ 
-
-pretrained & 31$\;$$\;$$\;$$\;$1260 & 26$\;$$\;$$\;$$\;$1421 & 20$\;$$\;$$\;$$\;$1710 & 23$\;$$\;$$\;$$\;$1761 & 22$\;$$\;$$\;$$\;$1799 & 17$\;$$\;$$\;$$\;$1910 \\ 
-\hline
-LogisticRegression & 672$\;$$\;$$\;$$\;$119 & 516$\;$$\;$$\;$$\;$73 & 229$\;$$\;$$\;$$\;$23 & 155$\;$$\;$$\;$$\;$23 & 122$\;$$\;$$\;$$\;$10 & 51$\;$$\;$$\;$$\;$7 \\ 
-
- & 32$\;$$\;$$\;$$\;$1177 & 34$\;$$\;$$\;$$\;$1377 & 46$\;$$\;$$\;$$\;$1702 & 57$\;$$\;$$\;$$\;$1765 & 56$\;$$\;$$\;$$\;$1812 & 30$\;$$\;$$\;$$\;$1912 \\ 
-\hline
-MultinomialNB & 683$\;$$\;$$\;$$\;$364 & 514$\;$$\;$$\;$$\;$268 & 93$\;$$\;$$\;$$\;$3 & 60$\;$$\;$$\;$$\;$3 & 12$\;$$\;$$\;$$\;$0 & 0$\;$$\;$$\;$$\;$0 \\ 
-
- & 21$\;$$\;$$\;$$\;$932 & 36$\;$$\;$$\;$$\;$1182 & 182$\;$$\;$$\;$$\;$1722 & 152$\;$$\;$$\;$$\;$1785 & 166$\;$$\;$$\;$$\;$1822 & 81$\;$$\;$$\;$$\;$1919 \\ 
-\hline
-RandomForestClassifier & 659$\;$$\;$$\;$$\;$72 & 508$\;$$\;$$\;$$\;$43 & 241$\;$$\;$$\;$$\;$21 & 185$\;$$\;$$\;$$\;$36 & 142$\;$$\;$$\;$$\;$21 & 62$\;$$\;$$\;$$\;$10 \\ 
-
- & 45$\;$$\;$$\;$$\;$1224 & 42$\;$$\;$$\;$$\;$1407 & 34$\;$$\;$$\;$$\;$1704 & 27$\;$$\;$$\;$$\;$1752 & 36$\;$$\;$$\;$$\;$1801 & 19$\;$$\;$$\;$$\;$1909 \\ 
-\hline
-\end{tabular}
-\label{taba2}
-\end{center}
-\end{table*}
 
 \begin{table}[htbp]
 \caption{Harvard General Inquirer Category Selection}

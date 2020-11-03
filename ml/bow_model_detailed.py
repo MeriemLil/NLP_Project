@@ -51,7 +51,7 @@ if __name__ == '__main__':
      'n_estimators': [500, 600, 800, 1000, 1400, 1700, 2000]}
     
     #initialize vectorizer and hyperparameter tuning
-    tf_idf = TfidfVectorizer(stop_words='english')
+    tf_idf = TfidfVectorizer(stop_words='english', max_features=3000)
     
     rf_random = RandomizedSearchCV(estimator = RandomForestClassifier(),
                                    param_distributions = param_grid,
@@ -69,6 +69,7 @@ if __name__ == '__main__':
     rf_random.fit(X_trdev, traindev.label)
     print(f'Best dev set score for RandomForest: {rf_random.best_score_}')
     #initialize and fit final models
+    print(rf_random.best_params_)
     rf = RandomForestClassifier(**rf_random.best_params_)
     rf.fit(X_tr, train.label)
     
