@@ -15,28 +15,33 @@ class ModelPredWidget(QWidget):
         grid = QGridLayout()
         self.setLayout(grid)
         
+        l1 = QLabel()
+        l2 = QLabel()
+        l1.setText("This widget shows the predicted emotion categories for input sentnces")
+        grid.addWidget(l1)
+
         self.label = QLabel("Input one or more test sentences, separated by a semicolon (;)\nA CNN model will predict the emotion state.")
-        grid.addWidget(self.label, 0, 0)
+        grid.addWidget(self.label, 2, 0)
         
         self.textbox = QLineEdit(self)
         self.textbox.resize(280,40)
-        grid.addWidget(self.textbox, 1, 0)
+        grid.addWidget(self.textbox, 3, 0)
         
         button = QPushButton('Show text', self)
         button.clicked.connect(self.populate)
-        grid.addWidget(button, 1, 1)
+        grid.addWidget(button, 3, 1)
         
         self.textlabel = QLabel("Sentences provided:")
-        grid.addWidget(self.textlabel, 2, 0)
+        grid.addWidget(self.textlabel, 4, 0)
         
         self.sentences = QLabel("")
-        grid.addWidget(self.sentences, 3, 0)
+        grid.addWidget(self.sentences, 5, 0)
         
         self.predlabel = QLabel("Model predictions:")
         self.prediction = QLabel("")
         
-        grid.addWidget(self.predlabel, 2, 1)
-        grid.addWidget(self.prediction, 3, 1)
+        grid.addWidget(self.predlabel, 4, 1)
+        grid.addWidget(self.prediction, 5, 1)
      
     def populate(self):
 

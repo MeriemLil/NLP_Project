@@ -16,14 +16,22 @@ class BowDetailedTable(QWidget):
         grid = QGridLayout()
         self.setLayout(grid)
         
+        l1 = QLabel()
+        l2 = QLabel()
+        l1.setText("This widget shows machine learning models results.")
+        l2.setText("Select an option from below and click show to view the results.")
+        
+        grid.addWidget(l1)
+        grid.addWidget(l2)
+
         dropdown = QComboBox()
         dropdown.addItems(['Model Statistics','Confusion Matrices', 'CNN Hyperparameters'])
-        grid.addWidget(dropdown, 0, 0)
+        grid.addWidget(dropdown, 2, 0)
         
         btn1 = QPushButton('Show table', self)
         btn1.resize(btn1.sizeHint())
         btn1.clicked.connect(lambda: self.populate(arg=dropdown.currentText()))
-        grid.addWidget(btn1, 0, 1)
+        grid.addWidget(btn1, 2, 1)
     
         scroll = QScrollArea()
         self.table = QTableWidget()

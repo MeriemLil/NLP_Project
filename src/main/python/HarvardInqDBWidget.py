@@ -15,15 +15,23 @@ class HarvardInqDBWidget(QWidget):
         grid = QGridLayout()
         self.setLayout(grid)
         
+        l1 = QLabel()
+        l2 = QLabel()
+        l1.setText("This widget shows databases in the project. Some items are required in the project specification and some are used for displaying results in other widgets.")
+        l2.setText("Select a table from below and click show to view the database table. View is restricted to 1000 items per table.")
+        
+        grid.addWidget(l1)
+        grid.addWidget(l2)
+
         dropdown = QComboBox()
         dropdown.addItems(self.engine.table_names())
-        grid.addWidget(dropdown, 0, 0)
+        grid.addWidget(dropdown, 2, 0)
         
         btn1 = QPushButton('Show database, or sample from database', self)
         btn1.resize(btn1.sizeHint())
         btn1.clicked.connect(lambda: self.populate(dropdown.currentText()))
-        grid.addWidget(btn1, 0, 1)
-
+        grid.addWidget(btn1, 2, 1)
+            
         self.table = QTableWidget()
         self.table.setFixedWidth(749)
         self.table.setFixedHeight(656)

@@ -23,20 +23,28 @@ class PlotWidget(QWidget):
         grid = QGridLayout()
         self.setLayout(grid)
         
+        l1 = QLabel()
+        l2 = QLabel()
+        l1.setText("This widget shows plots of Bag of model pre processing strategies we used in the project.")
+        l2.setText("Select a strategy from below and click plot to view the graph.")
+        
+        grid.addWidget(l1)
+        grid.addWidget(l2)
+
         dropdown = QComboBox()
         dropdown.addItems(self.df.columns[:-1])
-        grid.addWidget(dropdown, 0, 0)
-        
+        grid.addWidget(dropdown, 2, 0)
+
         btn1 = QPushButton('Plot', self)
         btn1.resize(btn1.sizeHint())
         btn1.clicked.connect(lambda: self.plot(estimator=np.mean,
                                 col=dropdown.currentText()))
-        grid.addWidget(btn1, 0, 1)
+        grid.addWidget(btn1, 2, 1)
     
 
         self.figure = Figure(figsize=(10, 5), dpi=100)
         self.canvas = FigureCanvas(self.figure)
-        grid.addWidget(self.canvas, 1, 0, 1, 2)
+        grid.addWidget(self.canvas, 3, 0, 1, 2)
 
 
     def plot(self, estimator, col):

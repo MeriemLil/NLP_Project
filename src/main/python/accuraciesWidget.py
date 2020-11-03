@@ -19,6 +19,10 @@ class accuraciesWidget(QWidget):
         'Semantic Similarity, all synsets']
         accuracies = ['0.16045', '0.18285', '0.33575','0.2685', '0.23955']
     
+        l1 = QLabel()
+        l1.setText("This widget shows accurecies of the five methods we used in the project in table format.")
+        
+        grid.addWidget(l1)
         scroll = QScrollArea()
         self.table = QTableWidget()
         self.table.setFixedWidth(739)
