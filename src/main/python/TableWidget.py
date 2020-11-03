@@ -16,19 +16,27 @@ class TableWidget(QWidget):
         grid = QGridLayout()
         self.setLayout(grid)
         
+        l1 = QLabel()
+        l2 = QLabel()
+        l1.setText("This widget shows accuracies of Bag of model pre processing strategies we used in the project.")
+        l2.setText("Select a strategy from below and click show table to view the accuracy table.")
+        
+        grid.addWidget(l1)
+        grid.addWidget(l2)
+
         dropdown = QComboBox()
         dropdown.addItems(self.df.columns[:-1])
-        grid.addWidget(dropdown, 0, 0)
-        
+        grid.addWidget(dropdown, 2, 0)
+
         dropdown2 = QComboBox()
         dropdown2.addItems(['max','mean'])
-        grid.addWidget(dropdown2, 0, 1)
+        grid.addWidget(dropdown2, 2, 1)
         
         btn1 = QPushButton('Show table', self)
         btn1.resize(btn1.sizeHint())
         btn1.clicked.connect(lambda: self.populate(col=dropdown.currentText(),
                                                    method=dropdown2.currentText()))
-        grid.addWidget(btn1, 0, 2)
+        grid.addWidget(btn1, 2, 2)
     
         scroll = QScrollArea()
         self.table = QTableWidget()
