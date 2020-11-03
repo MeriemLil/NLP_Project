@@ -158,7 +158,7 @@ where $h$ refers to the length of the convolution window, $w$ are the filter wei
 
 Equation \eqref{eq1} describes only one feature map produced by one convolution filter, while the model can consist of an arbitrary number of these feature maps. Then, for each feature map, max-pooling is applied, such that the largest feature value $c_{i-max}$ is selected. This operation produces a vector of final features with dimension equal to the number of feature maps used. These features are then connected to the final, 6-dimensional softmax output with a fully connected layer.
 
-Like in \cite{kim-2014-convolutional}, we study three different variants of input to the CNN model. The first one involves keeping the inputted word embeddings as static. The second one is a model that For selecting the best models, we treat this mode of input as a tunable hyperparameter, but we also report comparisons across accuracies between the different modes.
+Like in \cite{kim-2014-convolutional}, we study three different variants of input to the CNN model. The first one involves keeping the inputted word embeddings as static. The second one is a model that sets the word embeddings as non-static, and the vectors are tuned for the task. The third variant of input is a multichannel, which inputs two sets of the same word embeddings and sets one set as trainable and keeps one set static. For selecting the best models, we treat this mode of input as a tunable hyperparameter and select the mode with best test set performance. However, we also report comparisons of accuracies between the different modes of input.
 
 For regularization the original paper uses dropout on the penultimate layer. Dropout is a commonly used regularization method in neural networks. It hides each of the final features from the output layer with some probability $p$, preventing the co-adaptation of the different features. In addition, we experiment with another common method of avoiding overfitting; an $l_2$-norm regularization across the layer weights. The $l_2$ regularization penalizes large weight vectors, preventing overfitting.  Finally, following \cite{kim-2014-convolutional}, we also constrain the $l_2$ - norms of the weight vectors $w$ to be a maximum of a fixed size $s$. Note that the norm-constraint is most often applied to prevent an exploding gradients problem rather than to prevent overfitting.
 
@@ -280,7 +280,9 @@ Random Forest is selected as the best algorithm. To make a fair comparison, we t
 
 \subsection{Validation set performance of best models}
 
-Table~\ref{tab1} reports the accuracies on the test and validation datasets for the three benchmark models and CNN models with 4 different word embedding configurations.
+Table~\ref{tab1} reports the accuracies on the test and validation datasets for the three benchmark models and CNN models with 4 different word embedding configurations. The CNN models all achieve validation accuracies between 0.925 and 0.93, while the best bag-of-words model, a tuned random forest achieves a 0.899 accuracy. The CNNs clearly outperform bag-of-words models in terms of accuracy. Hyperparameter tuning improves random forest performance on the test set very little, from the best accuracy of 0.888 in the previous section to 0.890. Validation set performance is slightly better, however at 0.899.
+
+Which word embeddings are used, does not seem to matter much. Differences between the different models are very small\footnote{We do not establish statistical significance between the accuracy values. It is, however, likely that these differences are not statistically significant.}. The highest accuracy is achieved by pre-trained word2vec embeddings. However, embeddings trained from scratch on the training dataset achieve similar performance. Interestingly, the word embeddings trained from scratch achieve higher validation accuracy than pre-trained fastText embeddings. 
 
 \begin{table}[htbp]
 \caption{Validation and test set accuracies for best models}
@@ -310,7 +312,13 @@ CNN Word2Vec pretrained & 0.930 & 0.928 \\
 \end{center}
 \end{table}
 
-Table~\ref{tab2} reports the class weighted precision and recall on the validation dataset for the three benchmark models and CNN models with 4 different word embedding configurations.
+In table~\ref{tab1}, it is noteworthy that, the validation accuracy for naive bayes is only 0.681 for the preprocessing strategy selected in the model. This is much smaller than the best performing naive bayes models at the model selection stage. This is likely caused by the use of tf-idf vectorization. The naive bayes algorithm assumes  a multinomial discrete distribution, which count vectorization produces but tf-idf does not. However, a commonly accepted stylized fact is, that tf-idf matrices can also work well with naive bayes. In the interest of simplicity, we elect to use the best performing overall preprocessing strategy from the previous section for all algorithms. Furthermore, considering the test set performances reported in previous section, it is unlikely that naive bayes would have outperformed the CNNs or the tuned random forest. Accuracies on the test and validation datasets are very similar for all models. There seems to be no evidence in overfitting the test dataset. Note that the test dataset is not used for retraining the model, but only for hyperparameter tuning and model selection.
+
+An important aspect to note, is that the word embeddings for all the best performing cnn iterations, reported in table~\ref{tab1} are re-trained in the model training, i.e. using the non-static and multichannel methods. A comparison of test set accuracies and test losses for the CNN models using different types of embeddings: multichannel, non-static and static, is reported in table~\ref{taba1}. The models with pre-trained word embeddings achieve best test set accuracy using to sets of embeddings, trainable and non-trainable, while the word embeddings trained from scratch benefit from using only one set of trainable embeddings. This is an intuitive result in the sense that, considering the small size of the dataset, the custom word embeddings are not likely to contain as semantically relevant information as the pretrained ones, which are trained using massive corpora.
+
+Pre-trained vs. custom embeddings seem to affect the characteristics of an ideal model, even though they do not affect the performance very much. The selected hyperparameters for the CNN models are reported in table~\ref{taba4}. Noteworthy aspects are the fact that, the custom-trained embeddings benefit from a smaller word dimension of 50 compared to the 300, which is mandated by the pretrained vectors. Furthermore, stronger regularization with higher dropout and added $l_2$ regularization is applied on the custom embeddings. Table~\ref{tabfmaps} reports the best model and test set accuracy for different number of convolutions. The ideal number of convolutions seems to be 100 or 150 depending on the embeddings, after which performance slightly drops off.
+
+Table~\ref{tab2} reports the class weighted precision and recall on the validation dataset for the three benchmark models and CNN models with 4 different word embedding configurations. Validation set confusion matrices for the best models for each emotion are reported in table~\ref{taba2}. The overall takeaway from the two tables is, that the model accuracies are not explained by class imbalances.
 
 \begin{table}[htbp]
 \caption{Validation precision and recall for best models}
@@ -340,7 +348,6 @@ CNN word2vec pretrained & 0.93 & 0.93 \\
 \end{center}
 \end{table}
 
-Validation set confusion matrices for the best models for each emotion are reported in Table~\ref{taba2}. False positives and negatives appear to be spread out quite evenly across the different emotions, somewhat in proportion to the frequency of their appearances in the validation dataset. The only one that all models struggle to identify is the surprise category, which only has 81 appearances in the validation dataset, and more false negatives than false positives across all seven models. Furthermore, the number of false negatives and false positives is quite balanced within different classes for the CNN and random forest models. The label imbalance seems to not be a major issue for the CNN and random forest models. However, the logistic regression and especially naive bayes benchmarks tend to not assign predictions to the less frequent labels, with many falsse negatives for the less frequent classes and many false positives for the majority classes.
 
 \begin{table*}[htbp]
 \caption{Confusion matrices}
@@ -384,16 +391,28 @@ RandomForestClassifier & 659$\;$$\;$$\;$$\;$72 & 508$\;$$\;$$\;$$\;$43 & 241$\;$
 \end{center}
 \end{table*}
 
+The precision and recall are mostly in line with the accuracies. False positives and negatives appear to be spread out quite evenly across the different emotions, somewhat in proportion to the frequency of their appearances in the validation dataset. The only one that all models struggle to identify is the surprise category, which only has 81 appearances in the validation dataset, and more false negatives than false positives across all seven models. Furthermore, the number of false negatives and false positives is quite balanced within different classes for the CNN and random forest models. The label imbalance seems to not be a major issue for the CNN and random forest models. However, the logistic regression and especially naive bayes benchmarks tend to not assign predictions to the less frequent labels, with many falsse negatives for the less frequent classes and many false positives for the majority classes.
 
 \section{Overall discussion and related literature}
-...
+
+We mostly contribute to prior literature by conducting an exhaustive empirical examination of popular, and more rarely used methods in sentence classification. A key takeaway, from our results that ad-hoc methods, based on linguistic constructs and identifying key words do not perform well in identifying emotions from sentences. The approaches discussed in this paper, such as keywords and semantic similarity do not provide much value over random guessing. The best performing ad-hoc approach, harvard string matching assigns correct labels to 33,6\% of sentences. By comparison, predicting every label to be the most frequent label, joy, would result in 33.8\% accuracy. 
+
+Machine learning algorithms, . The gap between CNNs and the best bag-of-words models is not very large though. This is understandable, considering the fact that.
 
 As mentioned in the introduction, the state of the art for text classification tasks has moved beyond word level embedding representations considered here. For example, \cite{bert}, \cite{xlnet} and \cite{bertclassification} employ pre-trained bidirectional encoder representations to achieve state-of-the-art results in sentence classification. However, constructing a replication and a fair comparison of these models is beyond the scope of this study.\footnote{There is a minimal, unofficial implementation of BERT\cite{bert} embeddings on the dataset we study\cite{kaggledata} available at Kaggle by the dataset author. This implementation appears to slightly exceed the validation accuracy of the best CNN model studied here by around 0.3 percentage units.}
 
 Our results indicate that the starting point vectors are not of massive importance in tuning to the tasks, as different embedding representations achieve very similar test and validation set performance. Further exploring alternative models and hyperparameters for pre-training the word vectors might nonetheless be an interesting exercise but is beyond the scope of this paper. An important aspect of this observation, is the fact that the pretrained embeddings are quite large in size, while custom embeddings trained on the emotions dataset are much smaller. Furthermore, because model performance with embeddings trained on the emotions dataset is very close in performance to the pretrained embeddings, the custom models provide a lightweight alternative for model serving. 
 
-In terms of the generalizability of the results, it is important to note, however, that the emotions dataset contains very homogenous sentences across the training, test and validation datasets. This causes the vocabulary of the custom word embeddings to be much smaller than the pretrained word embeddings. Therefore the model is more likely to suffer in performance on out-of-distribution sentences. 
-\footnote{While we do not have an out-of-distribution labeled dataset available, unreported, hand-crafted tests support this intuition.}
+In terms of the generalizability of the results, it is important to note a few things on the dataset that we study. First, the emotions dataset contains very homogenous sentences across the training, test and validation datasets. This causes the vocabulary of the custom word embeddings to be much smaller than the pretrained word embeddings. Therefore the model is more likely to suffer in performance on out-of-distribution sentences\footnote{While we do not have an out-of-distribution labeled dataset available, unreported, hand-crafted tests support this intuition.}. Furthermore, the dataset is collected by \cite{kaggledata} from twitter, based on hashtags at the end of tweets. This method of data collection can potentially lead to less accurately assigned labels, which limits the ability of machine learning algorithms to learn from training examples. This intuition is to some extent confirmed by hand-evaluating the mislabeled validation dataset sentences. The sentences include for example the following sentence, emotion pairs:
+\begin{itemize}
+\item feel like im just not passionate about anything anymore, joy
+\item i have a feeling its going to be a little sweet for my tastes, love
+\item i feel they are amazing unique people and i love them so very much, surprise
+\end{itemize}
+These sentences are unlikely to be assigned these emotion labels by a human reading the sentence. We conclude from this that it is difficult to accurately assess the generalizability and tru out-of-sample performance of the models trained in our experiment. Performance could be either better or worse in a live-scenario. However, this highlights a wider issue: it is difficult for even humans to always identify a correct emotion state, and many sentences simply do not convey emotion. An intuitive idea to improve labeled emotion classification would be to have a null-label and training examples for sentences with no emotion state as well.
+
+\section{Conclusion}
+We conclude.
 
 \section*{Acknowledgment}
 
@@ -406,6 +425,58 @@ We thank Mourad Oussalah and other seminar participants for their helpful commen
 \appendices
 \section{Additional Tables}
 \label{FirstAppendix}
+
+\begin{table}[htbp]
+\caption{Harvard General Inquirer Category Selection}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{Inclusion}} \\ 
+\cline{2-3}
+\textbf{Label} & \textbf{\textit{Included}}& \textbf{\textit{Excluded}} \\
+\hline
+surprise & Arousal & \\
+\hline
+joy & Positiv & Affil \\
+\hline
+love & Affil & Negativ\\
+\hline
+anger & Hostile & \\
+\hline
+sadness & Negativ & Hostile\\
+\hline
+fear & Weak & \\
+\hline
+\end{tabular}
+\label{taba3}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\caption{CNN Hyperparams}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{}&\multicolumn{1}{|c|}{\textbf{}} \\ 
+\cline{2-2}
+\textbf{Hyperparameter} & \textbf{\textit{Values}} \\ 
+\hline
+dropout & 0.4, 0.5, 0.55,0.6, 0.7,  0.75, 0.8\\ 
+\hline
+mode & multichannel, non-static,static \\ 
+\hline
+number of feature maps & 50, 150, 100, 250, 200 \\ 
+\hline
+embeddings & ownfast, own, word2vec, fasttext \\ 
+\hline
+regularization & 0, $7*10^-4$ ,$10^-3$, $5*10^-4$ \\ 
+\hline
+word dimension & 50, 100, 300 \\ 
+\hline
+\end{tabular}
+\label{tabahp}
+\end{center}
+\end{table}
 
 \begin{table}[htbp]
 \caption{Average accuracy across different bag-of-words setups}
@@ -458,32 +529,6 @@ classifier & DecisionTreeClassifier & 0.702 \\
 \end{table}
 
 \begin{table}[htbp]
-\caption{CNN Hyperparams}
-\begin{center}
-\begin{tabular}{|c|c|}
-\hline
-\textbf{}&\multicolumn{1}{|c|}{\textbf{}} \\ 
-\cline{2-2}
-\textbf{Hyperparameter} & \textbf{\textit{Values}} \\ 
-\hline
-dropout & 0.4, 0.5, 0.55,0.6, 0.7,  0.75, 0.8\\ 
-\hline
-mode & multichannel, non-static,static \\ 
-\hline
-number of feature maps & 50, 150, 100, 250, 200 \\ 
-\hline
-embeddings & ownfast, own, word2vec, fasttext \\ 
-\hline
-regularization & 0, $7*10^-4$ ,$10^-3$, $5*10^-4$ \\ 
-\hline
-word dimension & 50, 100, 300 \\ 
-\hline
-\end{tabular}
-\label{tabahp}
-\end{center}
-\end{table}
-
-\begin{table}[htbp]
 \caption{Best CNN Model by Mode}
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
@@ -526,7 +571,7 @@ CNN word2vec pretrained & multichannel & 0.928 & 6.583 \\
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{}&\multicolumn{4}{|c|}{\textbf{Metric}} \\ 
+\textbf{}&\multicolumn{4}{|c|}{\textbf{Model}} \\ 
 \cline{2-5}
 \textbf{Hyperparameter} & \textbf{\textit{CNN fastText pretrained}}& \textbf{\textit{CNN Word2Vec own}}& \textbf{\textit{CNN fastText own}}& \textbf{\textit{CNN word2vec pretrained}} \\ 
 \hline
@@ -539,6 +584,8 @@ num feature maps & 100.0 & 150.0 & 100.0 & 100.0 \\
 regularization & 0.0 & 0.001 & 0.001 & 0.0 \\ 
 \hline
 word dim & 300.0 & 50.0 & 50.0 & 300.0 \\ 
+\hline
+mode & non-static & non-static & non-static & multichannel \\ 
 \hline
 \end{tabular}
 \label{taba4}
@@ -569,33 +616,6 @@ CNN Word2Vec own & 0.927 & 250 \\
 \end{center}
 \end{table}
 
-
-
-\begin{table}[htbp]
-\caption{Harvard General Inquirer Category Selection}
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-\textbf{}&\multicolumn{2}{|c|}{\textbf{Inclusion}} \\ 
-\cline{2-3}
-\textbf{Label} & \textbf{\textit{Included}}& \textbf{\textit{Excluded}} \\
-\hline
-surprise & Arousal & \\
-\hline
-joy & Positiv & Affil \\
-\hline
-love & Affil & Negativ\\
-\hline
-anger & Hostile & \\
-\hline
-sadness & Negativ & Hostile\\
-\hline
-fear & Weak & \\
-\hline
-\end{tabular}
-\label{taba3}
-\end{center}
-\end{table}
 
 \label{FirstAppendix}
 
