@@ -35,6 +35,8 @@ class BowDetailedTable(QWidget):
     
         scroll = QScrollArea()
         self.table = QTableWidget()
+        self.table.setFixedWidth(1024)
+        self.table.setFixedHeight(768)
         
         scroll.setWidget(self.table)
         scroll.setAlignment(Qt.AlignHCenter)
@@ -46,18 +48,14 @@ class BowDetailedTable(QWidget):
     def populate(self, arg):
         if arg == 'Model Statistics':
             dataframe = self.df.iloc[:,:6].round(3)
-            self.table.setFixedWidth(737)
         if arg == 'CNN Hyperparameters':
             dataframe = self.df.iloc[-2:,[0]+[i for i in range(6,12)]]
             dataframe.acc = dataframe.acc.round(3)
-            self.table.setFixedWidth(787) 
         if arg == 'Confusion Matrices':
             dataframe = self.df.loc[:,self.df.columns.str.contains('_tn')]
             dataframe2 = self.df.loc[:,self.df.columns.str.contains('_fp')]
             dataframe3 = self.df.loc[:,self.df.columns.str.contains('_fn')]
             dataframe4 = self.df.loc[:,self.df.columns.str.contains('_tp')]
-            self.table.setFixedWidth(737)
-            self.table.setFixedHeight(350)
             indx = dataframe.index.to_list()
             indx = np.repeat(indx, 2)
             self.table.setColumnCount(len(dataframe.columns))

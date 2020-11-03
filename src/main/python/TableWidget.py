@@ -40,8 +40,8 @@ class TableWidget(QWidget):
     
         scroll = QScrollArea()
         self.table = QTableWidget()
-        self.table.setFixedHeight(300)
-        self.table.setFixedWidth(202)
+        self.table.setFixedHeight(600)
+        self.table.setFixedWidth(1024)
         scroll.setWidget(self.table)
         scroll.setAlignment(Qt.AlignHCenter)
         

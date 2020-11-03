@@ -25,7 +25,7 @@ class accuraciesWidget(QWidget):
         grid.addWidget(l1)
         scroll = QScrollArea()
         self.table = QTableWidget()
-        self.table.setFixedWidth(739)
+        self.table.setFixedWidth(1024)
         
         self.table.setColumnCount(len(methods))
         self.table.setRowCount(1)
