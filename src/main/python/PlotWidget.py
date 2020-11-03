@@ -25,7 +25,7 @@ class PlotWidget(QWidget):
         
         l1 = QLabel()
         l2 = QLabel()
-        l1.setText("This widget shows plots of Bag of model pre processing strategies we used in the project.")
+        l1.setText("This widget shows plots of bag-of-words models and preprocessing strategies we used in the project.")
         l2.setText("Select a strategy from below and click plot to view the graph.")
         
         grid.addWidget(l1)

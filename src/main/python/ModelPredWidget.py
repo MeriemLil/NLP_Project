@@ -17,7 +17,7 @@ class ModelPredWidget(QWidget):
         
         l1 = QLabel()
         l2 = QLabel()
-        l1.setText("This widget shows the predicted emotion categories for input sentnces")
+        l1.setText("This widget shows the predicted emotion categories for input sentences")
         grid.addWidget(l1)
 
         self.label = QLabel("Input one or more test sentences, separated by a semicolon (;)\nA CNN model will predict the emotion state.")
