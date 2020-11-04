@@ -5,28 +5,27 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
-
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-
 \begin{document}
+
 \title{Emotion analysis in dataset}
 
 
 \author{\IEEEauthorblockN{Meriem Aggoune}
-\IEEEauthorblockA{\centerline{Faculty of Information Technology and Electrical Engineering} \\
+\IEEEauthorblockA{\textit{Faculty of Inf. Technology and Electrical Engineering} \\
 \textit{Univ. of Oulu}\\
 Oulu, Finland \\
 meriem.aggoune@student.oulu.fi}
 \and
-\IEEEauthorblockN{ Lauri Heikka}
-\IEEEauthorblockA{\centerline{Faculty of Information Technology and Electrical Engineering} \\
+\IEEEauthorblockN{Lauri Heikka}
+\IEEEauthorblockA{\textit{Faculty of Inf. Technology and Electrical Engineering} \\
 \textit{Univ. of Oulu}\\
 Oulu, Finland \\
 lauri.heikka@student.oulu.fi}
 \and
 \IEEEauthorblockN{Anusha Ihalapathiranae}
-\IEEEauthorblockA{\centerline{Faculty of Information Technology and Electrical Engineering} \\
+\IEEEauthorblockA{\centerline{Faculty of Inf. Technology and Electrical Engineering} \\
 \textit{Univ. of Oulu}\\
 Oulu, Finland \\
 anusha.ihalapathirana@student.oulu.fi}
@@ -281,7 +280,7 @@ For the different machine learning algorithms test set performance is quite simi
 \label{fig2}
 \end{figure}
 
-To form a fair comparison preprocessing approaches and classifiers, it is important to take into account not just the best iteration, but all iterations that were experimented with. Figure~\ref{fig2}  shows boxplots describing the distribution of accuracies for each model and preprocessing setup. In addition, average accuracies are reported in appendix \ref{FirstAppendix}, table~\ref{taba5}. Tf-idf vectorization seems to have slightly higher test set accuracy across all quartiles and stop word specifications, although performance differences are small. For stop words, we see that the largest, scikit-learn set of stop words results in the most stable performance despite nltk stop words having the best performance. Again, lemmatization does not seem to have much effect on test set performance.
+To form a fair comparison preprocessing approaches and classifiers, it is important to take into account not just the best iteration, but all iterations that were experimented with. Figure~\ref{fig2}  shows boxplots describing the distribution of accuracies for each model and preprocessing setup. In addition, average accuracies are reported in Apo\ref{FirstAppendix}, table~\ref{taba5}. Tf-idf vectorization seems to have slightly higher test set accuracy across all quartiles and stop word specifications, although performance differences are small. For stop words, we see that the largest, scikit-learn set of stop words results in the most stable performance despite nltk stop words having the best performance. Again, lemmatization does not seem to have much effect on test set performance.
 
 For the maximum size of the vocabulary, using the full vocabulary seems to result in less stable performance than using the most frequent 2000 or 3000 words. This is likely due to the fact that the large amount of feature results with the full vocabulary results in overfitting the training data. For example decision tree algorithms, are very prone to overfitting, when the tree depth is not restricted, which the case for deafult scikit-learn parameters. The lower quartiles and bounds shown in Fig.~\ref{fig2} for the decision trees support this intuition.The Random Forest remains the best performing algorithm, with over half of the iterations have an accuracy of around or above 0.85. Gradient boosting  likewise, has good berformance on the median, but it's accuracy seems restricted in the upper bound.
 
@@ -291,7 +290,7 @@ Random Forest is selected as the best algorithm. To make a fair comparison, we t
 
 \subsection{Validation set performance of best models}
 
-Table~\ref{tabval} reports the accuracies on the test and validation datasets for the three benchmark models and CNN models with 4 different word embedding configurations. The CNN models all achieve validation accuracies between 0.925 and 0.93, while the best bag-of-words model, a tuned random forest achieves a 0.899 accuracy. The CNNs clearly outperform bag-of-words models in terms of accuracy. Hyperparameter tuning improves random forest performance on the test set very little, from the best accuracy of 0.888 in the previous section to 0.890. Validation set performance is slightly better, however at 0.899.
+Table~\ref{tab1} reports the accuracies on the test and validation datasets for the three benchmark models and CNN models with 4 different word embedding configurations. The CNN models all achieve validation accuracies between 0.925 and 0.93, while the best bag-of-words model, a tuned random forest achieves a 0.899 accuracy. The CNNs clearly outperform bag-of-words models in terms of accuracy. Hyperparameter tuning improves random forest performance on the test set very little, from the best accuracy of 0.888 in the previous section to 0.890. Validation set performance is slightly better, however at 0.899.
 
 Which word embeddings are used, does not seem to matter much. Differences between the different models are very small\footnote{We do not establish statistical significance between the accuracy values. It is, however, likely that these differences are not statistically significant.}. The highest accuracy is achieved by pre-trained word2vec embeddings. However, embeddings trained from scratch on the training dataset achieve similar performance. Interestingly, the word embeddings trained from scratch achieve higher validation accuracy than pre-trained fastText embeddings. 
 
@@ -319,13 +318,13 @@ CNN fastText own & 0.928 & 0.931 \\
 CNN Word2Vec pretrained & 0.930 & 0.928 \\ 
 \hline
 \end{tabular}
-\label{tabval}
+\label{tab1}
 \end{center}
 \end{table}
 
-In table~\ref{tabval}, it is noteworthy that, the validation accuracy for naive bayes is only 0.681 for the preprocessing strategy selected in the model. This is much smaller than the best performing naive bayes models at the model selection stage. This is likely caused by the use of tf-idf vectorization. The naive bayes algorithm assumes  a multinomial discrete distribution, which count vectorization produces but tf-idf does not. However, a commonly accepted stylized fact is, that tf-idf matrices can also work well with naive bayes. In the interest of simplicity, we elect to use the best performing overall preprocessing strategy from the previous section for all algorithms. Furthermore, considering the test set performances reported in previous section, it is unlikely that naive bayes would have outperformed the CNNs or the tuned random forest. Accuracies on the test and validation datasets are very similar for all models. There seems to be no evidence in overfitting the test dataset. Note that the test dataset is not used for retraining the model, but only for hyperparameter tuning and model selection.
+In table~\ref{tab1}, it is noteworthy that, the validation accuracy for naive bayes is only 0.681 for the preprocessing strategy selected in the model. This is much smaller than the best performing naive bayes models at the model selection stage. This is likely caused by the use of tf-idf vectorization. The naive bayes algorithm assumes  a multinomial discrete distribution, which count vectorization produces but tf-idf does not. However, a commonly accepted stylized fact is, that tf-idf matrices can also work well with naive bayes. In the interest of simplicity, we elect to use the best performing overall preprocessing strategy from the previous section for all algorithms. Furthermore, considering the test set performances reported in previous section, it is unlikely that naive bayes would have outperformed the CNNs or the tuned random forest. Accuracies on the test and validation datasets are very similar for all models. There seems to be no evidence in overfitting the test dataset. Note that the test dataset is not used for retraining the model, but only for hyperparameter tuning and model selection.
 
-An important aspect to note, is that the word embeddings for all the best performing cnn iterations, reported in table~\ref{tabval} are re-trained in the model training, i.e. using the non-static and multichannel methods. A comparison of test set accuracies and test losses for the CNN models using different types of embeddings: multichannel, non-static and static, is reported in table~\ref{taba1}. The models with pre-trained word embeddings achieve best test set accuracy using to sets of embeddings, trainable and non-trainable, while the word embeddings trained from scratch benefit from using only one set of trainable embeddings. This is an intuitive result in the sense that, considering the small size of the dataset, the custom word embeddings are not likely to contain as semantically relevant information as the pretrained ones, which are trained using massive corpora.
+An important aspect to note, is that the word embeddings for all the best performing cnn iterations, reported in table~\ref{tab1} are re-trained in the model training, i.e. using the non-static and multichannel methods. A comparison of test set accuracies and test losses for the CNN models using different types of embeddings: multichannel, non-static and static, is reported in table~\ref{taba1}. The models with pre-trained word embeddings achieve best test set accuracy using to sets of embeddings, trainable and non-trainable, while the word embeddings trained from scratch benefit from using only one set of trainable embeddings. This is an intuitive result in the sense that, considering the small size of the dataset, the custom word embeddings are not likely to contain as semantically relevant information as the pretrained ones, which are trained using massive corpora.
 
 Pre-trained vs. custom embeddings seem to affect the characteristics of an ideal model, even though they do not affect the performance very much. The selected hyperparameters for the CNN models are reported in table~\ref{taba4}. Noteworthy aspects are the fact that, the custom-trained embeddings benefit from a smaller word dimension of 50 compared to the 300, which is mandated by the pretrained vectors. Furthermore, stronger regularization with higher dropout and added $l_2$ regularization is applied on the custom embeddings. Table~\ref{tabfmaps} reports the best model and test set accuracy for different number of convolutions. The ideal number of convolutions seems to be 100 or 150 depending on the embeddings, after which performance slightly drops off.
 
@@ -432,7 +431,7 @@ These sentences are unlikely to be assigned the given emotion labels by a human 
 
 \section{Conclusion}
 
-In this work, we have conducted an empirical comparison of different text categorization approaches to the task of emotion analysis. Our main results indicate that bag-of-words methods outperform simple methods and CNN approaches outperform bag-of-words approaches. These results are in line with results from other areas of text classification. However, our dataset under stury limits the generalizability of our results, due to it's homogenous sentences. The dataset also has some questionable labeling at times. Furthermore, the methods we study, do not include the current state-of-the-art approaches to text classification.
+In this work, we have conducted an empriical comparison of different text categorization approaches to the task of emotion analysis. Our main results indicate that bag-of-words methods outperform simple methods and CNN approaches outperform bag-of-words approaches. These results are in line with results from other areas of text classification. However, our dataset under stury limits the generalizability of our results, due to it's homogenous sentences. The dataset also has some questionable labeling at times. Furthermore, the methods we study, do not include the current state-of-the-art approaches to text classification.
 
 Our work raises a few main avenues for further research on emotion analysis. First, our work highlights the importance of a high quality annotated dataset, preferably with as heterogeneous texts as possible. Second, a heavier focus on state-of-the-art would be interesting from a research perspective. A recent survey \cite{alswaidan2020survey} reviews the current state-of-the art for emotion recognition from text and provides a solid starting point for a potential empirical comparison between state-of-the-art approaches.
 
