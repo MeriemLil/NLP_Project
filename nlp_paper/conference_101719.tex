@@ -322,6 +322,9 @@ An important aspect to note, is that the word embeddings for all the best perfor
 
 Pre-trained vs. custom embeddings seem to affect the characteristics of an ideal model, even though they do not affect the performance very much. The selected hyperparameters for the CNN models are reported in table~\ref{taba4}. Noteworthy aspects are the fact that, the custom-trained embeddings benefit from a smaller word dimension of 50 compared to the 300, which is mandated by the pretrained vectors. Furthermore, stronger regularization with higher dropout and added $l_2$ regularization is applied on the custom embeddings. Table~\ref{tabfmaps} reports the best model and test set accuracy for different number of convolutions. The ideal number of convolutions seems to be 100 or 150 depending on the embeddings, after which performance slightly drops off.
 
+
+
+
 Table~\ref{tab2} reports the class weighted precision and recall on the validation dataset for the three benchmark models and CNN models with 4 different word embedding configurations. Validation set confusion matrices for the best models for each emotion are reported in table~\ref{taba2}. The overall takeaway from the two tables is, that the model accuracies are not explained by class imbalances.
 
 \begin{table}[htbp]
@@ -440,6 +443,8 @@ We thank Mourad Oussalah and other seminar participants for their helpful commen
 \section{Additional Tables}
 \label{FirstAppendix}
 
+This Appendix contains aditional tables, that are referenced in the text.
+
 \begin{table}[htbp]
 \caption{Harvard General Inquirer Category Selection}
 \begin{center}
@@ -467,7 +472,7 @@ fear & Weak & \\
 \end{table}
 
 \begin{table}[htbp]
-\caption{CNN Hyperparams}
+\caption{Tuned CNN Hyperparams}
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
