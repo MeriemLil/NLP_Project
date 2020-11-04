@@ -5,21 +5,22 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-\begin{document}
 
+\begin{document}
 \title{Emotion analysis in dataset}
 
 
 \author{\IEEEauthorblockN{Meriem Aggoune}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockA{\centerline{Faculty of Information Technology and Electrical Engineering} \\
+\textit{Univ. of Oulu}\\
+Oulu, Finland \\
+meriem.aggoune@student.oulu.fi}
 \and
 \IEEEauthorblockN{ Lauri Heikka}
-\IEEEauthorblockA{\textit{Faculty of Information Technology and Electrical Engineering} \\
+\IEEEauthorblockA{\centerline{Faculty of Information Technology and Electrical Engineering} \\
 \textit{Univ. of Oulu}\\
 Oulu, Finland \\
 lauri.heikka@student.oulu.fi}
@@ -52,13 +53,13 @@ Title: Emotion Analysis in Dataset
 Github: https://github.com/MeriemLil/NLP\_Project
 
 \section{Introduction}
-Emotions are feelings that caused by a situation person interact with. It is also associate with person’s character, mood, personality and motivation. People express their feelings and emotions using verbally and non-verbally such as words, intonation of voice, facial expressions, gestures, and tears. Nowadays people communicate their ideas, opinions, and feelings through social media, such as Twitter, Facebook and Instagram. Categorizing text into emotion types is known as emotion analysis. Sentiment analysis detect positive, negative, and neutral feelings from text and emotion analysis detect the types of feelings, emotion state, in the text \cite{emotiondetection}. 
+Emotions are feelings triggered by a situation a person is put in. They are associated with the person’s character, mood, personality and motivation. People express their feelings and emotions using verbal and non-verbal manners such as words, intonation of voice, facial expressions, gestures, and tears. Nowadays people communicate their ideas, opinions, and feelings through social media, such as Twitter, Facebook and Instagram. Categorizing text into emotion types is known as emotion analysis. While sentiment analysis detects only positive, negative, and neutral feelings from text; emotion analysis detects the types of feelings, namely emotion states, in the text \cite{emotiondetection}. 
 
-Emotion analysis takes major role in some applications which use emotion recognition, and it is a growing research area.Emotion analysis has a variety of use-cases, including building corpora for research e.g. in psychology, dialog systems such as chatbots, intelligent agents \cite{klinger2018analysis}, marketing \cite{businesscase}, e-learning systems \cite{elearning}, and even the medical field\cite{calvo2017natural}.
+Emotion analysis takes major role in some applications which use emotion recognition, and it is a growing research area. Emotion analysis has a variety of use-cases, including building corpora for research e.g. in psychology, dialog systems such as chatbots, intelligent agents \cite{klinger2018analysis}, marketing \cite{businesscase}, e-learning systems \cite{elearning}, and even medical diagnoses\cite{calvo2017natural}.
 
- Research methods include bethods supervised and unsupervised approaches can be found in emotion analysis. A novel unsupervised context-based approach represents in \cite{unsupervisedemotiondetection} to detect emotions from text in sentence level. Their approached does not need any existing manually created lexicons and they used semantic relation between words and emotion type. They fine tune scores using syntactic dependencies within the sentence structure and proves this model provide more accurate results than other unsupervised approaches. Research carried out in \cite{jan2020emotion} paid their attention towards capturing semantic features in the text. Authors used distributional semantic model to calculate the semantic relatedness of the emotion in the text and they achieved accuracy of 71.79\% without training or annotation of data use.
+Research methods  in emotion analysis include both supervised and unsupervised approaches. A novel unsupervised context-based approach presented in \cite{unsupervisedemotiondetection} to detect emotions from text in sentence level. Their approach does not need any existing manually created lexicons and they used semantic relation between words and emotion type. They fine tune scores using syntactic dependencies within the sentence structure and this model provides more accurate results than other unsupervised approaches. Research carried out in \cite{jan2020emotion} paid their attention towards capturing semantic features in the text. Authors used distributional semantic model to calculate the semantic relatedness of the emotion in the text and they achieved accuracy of 71.79\% without training or annotation of data use.
 
-In our research, we view emotion analysis as part of a broader natural language processing research area, text classification. Research on text classification has a long history. Bag-of-words representations, first suggested by Luhn in the 1950s \cite{luhn}, are an important advance, and still a commonly applied tool for natural language processing tasks including text classification. In these models, text is represented as a sparse feature matrix, where features represents the occurrences of a given word in a text. Earlier approaches involved counting the occurrences of words. Later, improvements have been suggested that offset the number of occurrences of a word in a given text by the frequency of the word's occurrence in other texts in the corpus \cite{tfidf}. The most notable of these approaches is the term frequency–inverse document frequency (tf-idf) weighting.
+In our research, we view emotion analysis as part of a broader natural language processing research area: text classification. Research on text classification has a long history. Bag-of-words representations, first suggested by Luhn in the 1950s \cite{luhn}, are an important advance, and still a commonly applied tool for natural language processing tasks including text classification. In these models, text is represented as a sparse feature matrix, where features represents the occurrences of a given word in a text. Earlier approaches involved counting the occurrences of words. Later, improvements have been suggested that offset the number of occurrences of a word in a given text by the frequency of the word's occurrence in other texts in the corpus \cite{tfidf}. The most notable of these approaches is the term frequency–inverse document frequency (tf-idf) weighting.
 
 In a seminal paper on applying machine learning algorithms using a bag-of-words representation \cite{joachims-svm} propose the use of support vector regressions with the tf-idf matrix approach. Using this approach, they achieve notable improvements over the state-of-the-art benchmarks at the time. In a more recent example, \cite{chaffaretal}  demonstrate their work on supervised machine learning approach to recognize the emotion types using emotion annotated dataset which combined news headlines, fairy tales and blogs. The authors use bag of words and N-grams and find evidence that support vector machines show better performance and generalization than other classifiers. 
 
@@ -66,15 +67,15 @@ More recent advances introduce methods allowing for word representations that co
 
 Research in \cite{bert} introduces a new language representation model, BERT, a pretrained deep bidirectional representations from unlabeled text. The authors use conditioning on both information before and after a given word in all layers. BERT and successors inspired by it (e.g. \cite{xlnet}), have massively improved the state-of-the-art in many language understanding tasks. For text classification, \cite{ bertclassification} provide a general solution for BERT fine tuning in a text classification setting. Similarly, research on \cite{xu2020improving} improves the fine tuning of BERT using two effective mechanisms: self-ensemble and self-distillation.
 
-In this work, we describe and empirically study a variety of approaches suggested in the text classification and emotion analysis literature. Specifically, we focus on the task of identifying emotions from sentences, using a labeled dataset of 20 000 sentences spanning six different emotion states. The studied approaches include methods based on word categorization and matching, semantic similarity and a wide range of different bag-of-words machine learning approaches. For these machine learning algorithms we also examine different methods of  preprocessing the sentences and forming bag-of-words representations. Finally we consider more recent advances in text classification by examining convolutional neural networks together with different approaches of forming word vector embeddings. 
+In this work, we describe and empirically study a variety of approaches suggested in the text classification and emotion analysis literature. Specifically, we focus on the task of identifying emotions from sentences, using a labeled dataset of 20 000 sentences spanning six different emotion states. The studied approaches include methods based on word categorization and matching, semantic similarity and a wide range of different bag-of-words machine learning approaches. We also examine different methods of  preprocessing the sentences and forming bag-of-words representations for the machine learning algorithms. Finally we consider more recent advances in text classification by examining convolutional neural networks together with different approaches of forming word vector embeddings. 
 
-In addition to the exhaustive amount of different approaches considered, we aim to provide as fair a comparison as possible across the different approaches. Importantly, we use a separate testing dataset for model selection and hyperparameter tuning, and then compare best performing approaches on a separate validation dataset. This avoids the problem of overfitting a test dataset, which is often bound to happen, when a large amount of candidate models and hyperparameter sets are considered.
+In addition to the exhaustive amount of different approaches considered, we aim to provide as fair a comparison as possible across the different approaches. Importantly, for the machine learning approaches, we use a separate testing dataset for model selection and hyperparameter tuning, and then compare best performing approaches on a separate validation dataset. This avoids the problem of overfitting a test dataset, which is often bound to happen, when a large amount of candidate models and hyperparameter sets are considered. The word categorization and matching, as well as semantic similarity approaches require no model, so we use the largest dataset available for testing, i.e. the full 20 000 sentences.
 
 \section{Data and Methodologies}
 \subsection{Datasets and sources}
 Our main dataset of interest is a labeled dataset of 20 000 sentences with between 3 and 66 words. The dataset is provided by \cite{kaggledata}. The sentences are labeled to convey one of six different emotions: fear, anger, joy, love, surprise and sadness. The dataset is collected following the approach of \cite{saravia-etal-2018-carer}. The sentences are tweets, and the emotion labels are hashtags at the end of the tweet. The sentences are preprocessed in that they contain no punctuation or special characters and all words are lowercase.
 
-The dataset has a predefined split into training, test and validation samples, with 16 000, 2 000 and 2 000, respectively. Because the semantic similarity and string matching approaches do not employ any predictive modeling, in these sections we use the all 20 000 sentences to measure prediction accuracy. For the machine learning approaches, we use the training set for model training, the test set for model selection and hyperparameter tuning, and reserve the validation dataset as a final benchmark, to ensure a fair comparison accross approaches.
+The dataset has a predefined split into training, test and validation samples, with 16 000, 2000 and 2000, respectively. Because the semantic similarity and string matching approaches do not employ any predictive modeling, in these sections we use the all 20 000 sentences to measure prediction accuracy. For the machine learning approaches, we use the training set for model training, the test set for model selection and hyperparameter tuning, and reserve the validation dataset as a final benchmark, to ensure a fair comparison accross approaches.
 
 In addition, we use pre-trained, 300-dimensional word2vec embeddings  from \cite{mikolov2013distributed} and pre-trained fastText embeddings from \cite{bojanowski2016enriching}. Both datasets consist of 300-dimensional word embeddings, with embeddings for 3 and 1 million english words, respectively. For the string matching, we use the Harvard General Inquirer dataset, which contains categorizations for around 11 000 english words.
 
@@ -85,10 +86,10 @@ The first method we explore is to categorize each word in Harvard General Inquir
 The next method we explore is to use the Empath Client \cite{empathclient}, a text analyzing tool with a pre-buildt category set. We identify categories related to each sentence using the Empath client. Then for all the identified categories, we compute empath category similarity with each label using the concept of lowest common hypernymy. We then associate each category provided by the Empath client with the emotion that has the highest similarity. Then, we use the label assigned to each category of a sentence to identify the label that has the highest number of occurrences. The emotion is predicted to be this label. The empath client categorization has a category for each of our labels as well, so we also experiment using only the exact emotion category.
 
 \subsection{Semantic Similarity}
-We pre-process our dataset by tokenizing the sentences, removing stop words and adding position tags. Then we evaluate the semantic similarity between each emotion category and every sentence in the pre-processed dataset as the arithmetic average of Wu and Palmer similarity. The sentence is predicted to belong to the emotion category with the highest semantic similarity. We repeat this experiment using two scenarios, taking only the first synset of the emotion category and taking mean of all synsets of the emotion categories. 
+We pre-process our dataset by tokenizing the sentences, removing stop words and adding position tags. Then we evaluate the semantic similarity between each emotion category and every sentence in the pre-processed dataset as the arithmetic average of Wu and Palmer similarity. The sentence is predicted to belong to the emotion category with the highest semantic similarity. We repeat this experiment using two scenarios: first by taking only the first synset of the emotion category, i.e. the most frequent, and second by taking the mean similarity of all synsets of the emotion categories. 
 
 \subsection{SentiStrength Sentiment Scores}
-As part of the project specification, we also use the SentiStrength client \cite{sentistrength}, to compute sentiment scores. These can be potentially be used as an additional feature in any approach to distinguish between the negative and positive emotions. However, intuitively, the more difficult task is distinguishing between different positive emotions and between different negative emotions. For this purpose, the sentiment scores are unlikely to provide added benefit. Considering this, and the fact that the simple approaches perform quite poorly, we do not explore the effects of these sentiment scores onto the accuracy of different models. Sentiment scores are still delivered as part of the project database, as suggested in the project specification.
+As part of the project specification, we also use the SentiStrength client \cite{sentistrength}, to compute sentiment scores. These can be potentially used as an additional feature in any approach to distinguish between the negative and positive emotions. However, intuitively, the more difficult task is distinguishing between different positive emotions and between different negative emotions. For this purpose, the sentiment scores are unlikely to provide added benefit. Considering this, and the fact that the simple approaches perform quite poorly, we do not explore the effects of these sentiment scores onto the accuracy of different models. Sentiment scores are still delivered as part of the project database, as suggested in the project specification.
 
 \subsection{Bag-of-Words Models}
 
@@ -96,7 +97,7 @@ Next, we conduct an empirical comparison on bag-of-words models. We treat this t
 
 The machine learning algorithms require some form of vectorization for the sentences. A bag-of-words model is a representation of documents (here sentences) that discards spatial information regarding the words in the document, and represents it as a collection of the number or frequency of occurrences for each word in a vocabulary. We consider the two most commonly employed bag-of-words representations: word counts\cite{luhn}, and term frequency-inverse document frequency\cite{tfidf}. It is important to note that we are, in a sense, misusing the term bag-of-words here, because the tf-idf is not a bag-of-words model. However, for the purpose of this research, we elect to use the term bag-of-words to describe any approach that disregards spatial information between words, to create a distinction between this branch of models and the convolutional neural networks that we introduce later.
 
-Vectorization based on word counts is a simple approach, where the sentences are represented as a vector of length $length of vocabulary$, and the values correspond to the number of occurrences in the sentence. The tf-idf approach reweights the frequency of a word appearing in a document in proportion to it's frequency across the whole corpus. The tf-idf method has the advantage over word counts, that it adjusts for the over-emphasis on words that appear very often in the document corpus, and instead places emphasis on words that appear frequently in a given document, but not in other documents in the corpus.
+Vectorization based on word counts is a simple approach, where the sentences are represented as a vector of length $length$ $of$ $vocabulary$, and the values correspond to the number of occurrences in the sentence. The tf-idf approach reweights the frequency of a word appearing in a document in proportion to it's frequency across the whole corpus. The tf-idf method has the advantage over word counts, that it adjusts for the over-emphasis on words that appear very often in the document corpus, and instead places emphasis on words that appear frequently in a given document, but not in other documents in the corpus.
 
 The vocabulary used in vectorization is usually defined by the words occurring in the document corpus that is used for model training. Here, we use the vocabulary defined by the training dataset sentences. A common approach is to  restrict the vocabulary to some subset of the most frequent words occurring in the training corpus. We compare model performance between vocabularies restricted to 3000, 2000, 1000, 500 and 100 most frequent words, as well as using the full vocabulary. It is also possible to consider word n-grams to vectorize the sentences, but in order to keep the amount and complexity of model runs manageable, we elect to stick to single words.
 
@@ -179,7 +180,7 @@ FastText \cite{bojanowski2016enriching} is proposed as an extension to the word2
 
 
 \subsubsection{Hyperparameters and training}
- For the custom-trained word2vec and fastText models, we use a maximum distance between predicted words of five and early stopping on a generic word analogy evaluation task. Since this is a secondary objective, we do not explore alternative setups or model tuning for the word embedding task, and focus on tuning the CNN instead. We report results for pre-trained and custom-trained iterations of both word2vec and fastText models. As for the dimension of the word embeddings, we experiment with 50-, 100- and 300-dimensional word embeddings for the custom-trained word embeddings. With the pre-trained embeddings, we are restricted to the commonly available 300-dimensional word embeddings. 
+For the custom-trained word2vec and fastText models, we use a maximum distance between predicted words of five and early stopping on a generic word analogy evaluation task. Since this is a secondary objective, we do not explore alternative setups or model tuning for the word embedding task, and focus on tuning the CNN instead. We report results for pre-trained and custom-trained iterations of both word2vec and fastText models. As for the dimension of the word embeddings, we experiment with 50-, 100- and 300-dimensional word embeddings for the custom-trained word embeddings. With the pre-trained embeddings, we are restricted to the commonly available 300-dimensional word embeddings. 
 
 For all CNN models, we use sentence length $n = 70$ and convolution windows $h$ of 3, 4 and 5.  following the original paper. We use a rectified linear unit (ReLU) activation function for the convolutions, and a softmax activation for the output layer. The original paper uses Adadelta \cite{adadelta} optimization, but we achieve faster convergence with an Adam \cite{adam} update rule. We train using mini-batches of 50 sentences, a learning rate of $10^{-3}$ and the cross-entropy loss function. We also employ early stopping based on the models cross-entropy loss on the test dataset.
 
@@ -188,6 +189,10 @@ For the input mode, we experiment with all three methods, static, non-static and
 \section{Results and Discussion}
 
 \subsection{Word categorizations and semantic similarity}
+
+The table below shows accuracies obtained from semantic similarity and string matching methods introduced earlier in this paper. The overall takeaway from results in table~\ref{tab1} is that none of the previously specified methods is reliable enough in emotion analysis for our project. Generally, the accuracy remains low for all these methods, varying from the least value 0.160 for Empath Client to the best value 0.336 for Harvard String Matching.
+
+The best performing approach out of the simple approaches, harvard string matching assigns correct labels to 33,6\% of sentences. By comparison, predicting every label to be the most frequent label, joy, would result in 33.8\% accuracy. An important caveat is, that due to the nature of the methods considered, some sentences cannot be assigned a label due to no matches for the category. Because this is the nature of the methods, we consider these sentences as a special case of an incorrect prediction, which brings the overall accuracy down. However, excluding sentences for which label cannot be assigned from performance evaluation, does not significantly improve the accuracy of these approaches.
 
 \begin{table}[htbp]
 \caption{Word categorizations and semantic similarity accuracies}
@@ -268,7 +273,7 @@ classifier & DecisionTreeClassifier & 0.866 \\
 \end{center}
 \end{table}
 
-For the different machine learning algorithms test set performance is quite similar. The random forest algorithm outperforms others the next best classifier, logistic regression with $l_2$ penalty by 0.01. Even simple naivebayes achieves a test set accuracy just under 0.86 for the best iteration. Notably, gradient boosting, which we add beyond the project specification has the worst test set accuracy on the best iteration out of all classifiers. This is interesting, because gradient boosting has been shown to generally outperform other classification algorithms, though this does depend on data characteristics\cite{gbacc}.It also might be that the scikit-learn default hyperparameters are not well suited for our task. As our focus is an out-of-the-box model comparison, we do not do further experiment with alternative specifications for the gradient boosting.
+For the different machine learning algorithms test set performance is quite similar. The random forest algorithm outperforms others the next best classifier, logistic regression with $l_2$ penalty by 0.01. Even simple naivebayes achieves a test set accuracy just under 0.86 for the best iteration. Notably, gradient boosting, which we add beyond the project specification has the worst test set accuracy on the best iteration out of all classifiers. This is interesting, because gradient boosting has been shown to generally outperform other classification algorithms, though this does depend on data characteristics\cite{gbacc}. It also might be that the scikit-learn default hyperparameters are not well suited for our task. As our focus is an out-of-the-box model comparison, we do not do further experiment with alternative specifications for the gradient boosting.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width = 0.5 \textwidth]{fig2.png}}
@@ -276,7 +281,7 @@ For the different machine learning algorithms test set performance is quite simi
 \label{fig2}
 \end{figure}
 
-To form a fair comparison preprocessing approaches and classifiers, it is important to take into account not just the best iteration, but all iterations that were experimented with. Figure~\ref{fig2}  shows boxplots describing the distribution of accuracies for each model and preprocessing setup. In addition, average accuracies are reported in the Appendix, table~\ref{taba5}. Tf-idf vectorization seems to have slightly higher test set accuracy across all quartiles and stop word specifications, although performance differences are small. For stop words, we see that the largest, scikit-learn set of stop words results in the most stable performance despite nltk stop words having the best performance. Again, lemmatization does not seem to have much effect on test set performance.
+To form a fair comparison preprocessing approaches and classifiers, it is important to take into account not just the best iteration, but all iterations that were experimented with. Figure~\ref{fig2}  shows boxplots describing the distribution of accuracies for each model and preprocessing setup. In addition, average accuracies are reported in appendix \ref{FirstAppendix}, table~\ref{taba5}. Tf-idf vectorization seems to have slightly higher test set accuracy across all quartiles and stop word specifications, although performance differences are small. For stop words, we see that the largest, scikit-learn set of stop words results in the most stable performance despite nltk stop words having the best performance. Again, lemmatization does not seem to have much effect on test set performance.
 
 For the maximum size of the vocabulary, using the full vocabulary seems to result in less stable performance than using the most frequent 2000 or 3000 words. This is likely due to the fact that the large amount of feature results with the full vocabulary results in overfitting the training data. For example decision tree algorithms, are very prone to overfitting, when the tree depth is not restricted, which the case for deafult scikit-learn parameters. The lower quartiles and bounds shown in Fig.~\ref{fig2} for the decision trees support this intuition.The Random Forest remains the best performing algorithm, with over half of the iterations have an accuracy of around or above 0.85. Gradient boosting  likewise, has good berformance on the median, but it's accuracy seems restricted in the upper bound.
 
@@ -286,7 +291,7 @@ Random Forest is selected as the best algorithm. To make a fair comparison, we t
 
 \subsection{Validation set performance of best models}
 
-Table~\ref{tab1} reports the accuracies on the test and validation datasets for the three benchmark models and CNN models with 4 different word embedding configurations. The CNN models all achieve validation accuracies between 0.925 and 0.93, while the best bag-of-words model, a tuned random forest achieves a 0.899 accuracy. The CNNs clearly outperform bag-of-words models in terms of accuracy. Hyperparameter tuning improves random forest performance on the test set very little, from the best accuracy of 0.888 in the previous section to 0.890. Validation set performance is slightly better, however at 0.899.
+Table~\ref{tabval} reports the accuracies on the test and validation datasets for the three benchmark models and CNN models with 4 different word embedding configurations. The CNN models all achieve validation accuracies between 0.925 and 0.93, while the best bag-of-words model, a tuned random forest achieves a 0.899 accuracy. The CNNs clearly outperform bag-of-words models in terms of accuracy. Hyperparameter tuning improves random forest performance on the test set very little, from the best accuracy of 0.888 in the previous section to 0.890. Validation set performance is slightly better, however at 0.899.
 
 Which word embeddings are used, does not seem to matter much. Differences between the different models are very small\footnote{We do not establish statistical significance between the accuracy values. It is, however, likely that these differences are not statistically significant.}. The highest accuracy is achieved by pre-trained word2vec embeddings. However, embeddings trained from scratch on the training dataset achieve similar performance. Interestingly, the word embeddings trained from scratch achieve higher validation accuracy than pre-trained fastText embeddings. 
 
@@ -314,13 +319,13 @@ CNN fastText own & 0.928 & 0.931 \\
 CNN Word2Vec pretrained & 0.930 & 0.928 \\ 
 \hline
 \end{tabular}
-\label{tab1}
+\label{tabval}
 \end{center}
 \end{table}
 
-In table~\ref{tab1}, it is noteworthy that, the validation accuracy for naive bayes is only 0.681 for the preprocessing strategy selected in the model. This is much smaller than the best performing naive bayes models at the model selection stage. This is likely caused by the use of tf-idf vectorization. The naive bayes algorithm assumes  a multinomial discrete distribution, which count vectorization produces but tf-idf does not. However, a commonly accepted stylized fact is, that tf-idf matrices can also work well with naive bayes. In the interest of simplicity, we elect to use the best performing overall preprocessing strategy from the previous section for all algorithms. Furthermore, considering the test set performances reported in previous section, it is unlikely that naive bayes would have outperformed the CNNs or the tuned random forest. Accuracies on the test and validation datasets are very similar for all models. There seems to be no evidence in overfitting the test dataset. Note that the test dataset is not used for retraining the model, but only for hyperparameter tuning and model selection.
+In table~\ref{tabval}, it is noteworthy that, the validation accuracy for naive bayes is only 0.681 for the preprocessing strategy selected in the model. This is much smaller than the best performing naive bayes models at the model selection stage. This is likely caused by the use of tf-idf vectorization. The naive bayes algorithm assumes  a multinomial discrete distribution, which count vectorization produces but tf-idf does not. However, a commonly accepted stylized fact is, that tf-idf matrices can also work well with naive bayes. In the interest of simplicity, we elect to use the best performing overall preprocessing strategy from the previous section for all algorithms. Furthermore, considering the test set performances reported in previous section, it is unlikely that naive bayes would have outperformed the CNNs or the tuned random forest. Accuracies on the test and validation datasets are very similar for all models. There seems to be no evidence in overfitting the test dataset. Note that the test dataset is not used for retraining the model, but only for hyperparameter tuning and model selection.
 
-An important aspect to note, is that the word embeddings for all the best performing cnn iterations, reported in table~\ref{tab1} are re-trained in the model training, i.e. using the non-static and multichannel methods. A comparison of test set accuracies and test losses for the CNN models using different types of embeddings: multichannel, non-static and static, is reported in table~\ref{taba1}. The models with pre-trained word embeddings achieve best test set accuracy using to sets of embeddings, trainable and non-trainable, while the word embeddings trained from scratch benefit from using only one set of trainable embeddings. This is an intuitive result in the sense that, considering the small size of the dataset, the custom word embeddings are not likely to contain as semantically relevant information as the pretrained ones, which are trained using massive corpora.
+An important aspect to note, is that the word embeddings for all the best performing cnn iterations, reported in table~\ref{tabval} are re-trained in the model training, i.e. using the non-static and multichannel methods. A comparison of test set accuracies and test losses for the CNN models using different types of embeddings: multichannel, non-static and static, is reported in table~\ref{taba1}. The models with pre-trained word embeddings achieve best test set accuracy using to sets of embeddings, trainable and non-trainable, while the word embeddings trained from scratch benefit from using only one set of trainable embeddings. This is an intuitive result in the sense that, considering the small size of the dataset, the custom word embeddings are not likely to contain as semantically relevant information as the pretrained ones, which are trained using massive corpora.
 
 Pre-trained vs. custom embeddings seem to affect the characteristics of an ideal model, even though they do not affect the performance very much. The selected hyperparameters for the CNN models are reported in table~\ref{taba4}. Noteworthy aspects are the fact that, the custom-trained embeddings benefit from a smaller word dimension of 50 compared to the 300, which is mandated by the pretrained vectors. Furthermore, stronger regularization with higher dropout and added $l_2$ regularization is applied on the custom embeddings. Table~\ref{tabfmaps} reports the best model and test set accuracy for different number of convolutions. The ideal number of convolutions seems to be 100 or 150 depending on the embeddings, after which performance slightly drops off.
 
@@ -404,9 +409,9 @@ The precision and recall are mostly in line with the accuracies. False positives
 
 \section{Overall discussion and related literature}
 
-We mostly contribute to prior literature by conducting an exhaustive empirical examination of popular, and more rarely used methods in sentence classification. Model comparisons in a sentence classification context, have been before, for example by \cite{colas}. A strength of our study is it's broadness in terms of different approaches considered. Furthermore, we aim to provide as fair as possible representation of model performance. Machine learning models have the potential to overfit training datasets, and even an out-of-sample test dataset, when many model candidates and hyperparameters are considered. We set up our testing with this in mind, and focus on results on an additional out-of-sample validation dataset. The simpler methods considered require no training data, and thus we use our whole sample for testing purposes.
+We mostly contribute to prior literature by conducting an exhaustive empirical examination of popular, and more rarely used methods in sentence classification. Model comparisons in a sentence classification context, have been conducted before, for example by \cite{colas}. A strength of our study is it's broadness in terms of different approaches considered. Furthermore, we aim to provide as fair as possible representation of model performance. Machine learning models have the potential to overfit training datasets, and even an out-of-sample test dataset, when many model candidates and hyperparameters are considered. We set up our testing with this in mind, and focus on results on an additional out-of-sample validation dataset. The simpler methods considered require no training data, and thus we use our whole sample for testing purposes.
 
-A key takeaway from our results that ad-hoc methods based on linguistic constructs and identifying key words do not perform well in identifying emotions from sentences. The approaches discussed in this paper, such as keywords and semantic similarity do not provide much value over random guessing. The best performing ad-hoc approach, harvard string matching assigns correct labels to 33,6\% of sentences. By comparison, predicting every label to be the most frequent label, joy, would result in 33.8\% accuracy.  This is not to say, that these concepts cannot be useful, but rather that simmple applications of these concepts are unlikely to work well in a text classification setting. One interesting example of applying these concepts in a more sophisticated manner is \cite{scott-matwin-1998-text}. The authors use wordnet hyponyms to form an improved bag-of-words representation for text classification, finding improved performance over standard bag-of-words representations.
+A key takeaway from our results that ad-hoc methods based on linguistic constructs and identifying key words do not perform well in identifying emotions from sentences. The approaches discussed in this paper, such as keywords and semantic similarity do not provide much value over random guessing. This is not to say, that these concepts cannot be useful, but rather that simmple applications of these concepts are unlikely to work well in a text classification setting. One interesting example of applying these concepts in a more sophisticated manner is \cite{scott-matwin-1998-text}. The authors use wordnet hyponyms to form an improved bag-of-words representation for text classification, finding improved performance over standard bag-of-words representations.
 
 Machine learning algorithms, achieve acceptable performance. With bag-of-words representations, the choice classification algorithm and preprocessing strategy, does not seem to make massive differences in terms of accuracy. Any reasonable setup results in an accuracy above 0.8. More sophisticated algorithms, like random forest expectedly outperform simpler benchmark. However, the accuracy for bag-of-words models seems capped at 0.9. CNNs outperform the best bag-of-words models, but not by a very large margin,  achieving an accuracy of around 0.93 at best. This is understandable, considering the fact that, as performance increases, improving results further becomes increasingly difficult. This difficulty is amplified by the nature of our dataset, which we discuss further below.
 
@@ -427,7 +432,7 @@ These sentences are unlikely to be assigned the given emotion labels by a human 
 
 \section{Conclusion}
 
-In this work, we have conducted an empriical comparison of different text categorization approaches to the task of emotion analysis. Our main results indicate that bag-of-words methods outperform simple methods and CNN approaches outperform bag-of-words approaches. These results are in line with results from other areas of text classification. However, our dataset under stury limits the generalizability of our results, due to it's homogenous sentences. The dataset also has some questionable labeling at times. Furthermore, the methods we study, do not include the current state-of-the-art approaches to text classification.
+In this work, we have conducted an empirical comparison of different text categorization approaches to the task of emotion analysis. Our main results indicate that bag-of-words methods outperform simple methods and CNN approaches outperform bag-of-words approaches. These results are in line with results from other areas of text classification. However, our dataset under stury limits the generalizability of our results, due to it's homogenous sentences. The dataset also has some questionable labeling at times. Furthermore, the methods we study, do not include the current state-of-the-art approaches to text classification.
 
 Our work raises a few main avenues for further research on emotion analysis. First, our work highlights the importance of a high quality annotated dataset, preferably with as heterogeneous texts as possible. Second, a heavier focus on state-of-the-art would be interesting from a research perspective. A recent survey \cite{alswaidan2020survey} reviews the current state-of-the art for emotion recognition from text and provides a solid starting point for a potential empirical comparison between state-of-the-art approaches.
 
@@ -587,6 +592,30 @@ CNN word2vec pretrained & multichannel & 0.928 & 6.583 \\
 \end{center}
 \end{table}
 
+\begin{table}[htbp]
+\caption{CNN Models by number of convolutions}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{}&\multicolumn{2}{|c|}{\textbf{}} \\ 
+\cline{2-3}
+\textbf{Model} & \textbf{\textit{Test Accuracy}}& \textbf{\textit{Number of feature maps}} \\ 
+\hline
+CNN Word2Vec own & 0.924 & 50 \\ 
+\hline
+CNN fastText own & 0.931 & 100 \\ 
+\hline
+CNN fastText own & 0.930& 150 \\ 
+\hline
+CNN fastText pretrained & 0.924 & 200 \\ 
+\hline
+CNN Word2Vec own & 0.927 & 250 \\ 
+\hline
+\end{tabular}
+\label{tabfmaps}
+\end{center}
+\end{table}
+
 \begin{table*}[htbp]
 \caption{Hyperparameters for the best CNN Models}
 \begin{center}
@@ -613,31 +642,6 @@ mode & non-static & non-static & non-static & multichannel \\
 \end{center}
 \end{table*}
 
-\begin{table}[htbp]
-\caption{CNN Models by number of convolutions}
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-\textbf{}&\multicolumn{2}{|c|}{\textbf{}} \\ 
-\cline{2-3}
-\textbf{Model} & \textbf{\textit{Test Accuracy}}& \textbf{\textit{Number of feature maps}} \\ 
-\hline
-CNN Word2Vec own & 0.924 & 50 \\ 
-\hline
-CNN fastText own & 0.931 & 100 \\ 
-\hline
-CNN fastText own & 0.930& 150 \\ 
-\hline
-CNN fastText pretrained & 0.924 & 200 \\ 
-\hline
-CNN Word2Vec own & 0.927 & 250 \\ 
-\hline
-\end{tabular}
-\label{tabfmaps}
-\end{center}
-\end{table}
 
-
-\label{FirstAppendix}
 
 \end{document}
