@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
+
 from PyQt5.QtWidgets import *
+import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from sqlalchemy import create_engine
 
 
@@ -34,12 +33,16 @@ class PlotWidget(QWidget):
         dropdown = QComboBox()
         dropdown.addItems(self.df.columns[:-1])
         grid.addWidget(dropdown, 2, 0)
+        
+        dropdown_est = QComboBox()
+        dropdown_est.addItems(['max','mean'])
+        grid.addWidget(dropdown_est, 2, 1)
 
         btn1 = QPushButton('Plot', self)
         btn1.resize(btn1.sizeHint())
-        btn1.clicked.connect(lambda: self.plot(estimator=np.mean,
+        btn1.clicked.connect(lambda: self.plot(estimator=dropdown_est.currentText(),
                                 col=dropdown.currentText()))
-        grid.addWidget(btn1, 2, 1)
+        grid.addWidget(btn1, 2, 2)
     
 
         self.figure = Figure(figsize=(10, 5), dpi=100)
@@ -48,18 +51,20 @@ class PlotWidget(QWidget):
 
 
     def plot(self, estimator, col):
-        sns.set_style("darkgrid")
+        plt.style.use('seaborn-darkgrid')
         self.figure.clf()
         ax = self.figure.add_subplot(111)
         a = self.df.groupby(col)['score'].aggregate(estimator).reset_index()
         a = a.sort_values('score', ascending=False)
-        ax = sns.barplot(data = self.df, x=col, y='score', estimator=estimator,
-                    order=a[col], hue=col, hue_order=a[col],
-                    ci=None, capsize=.2, ax=ax, dodge=False)
+        colors = ['lightcoral','lightblue','lightgreen','wheat','lightcyan','plum']
+        
+        ax.bar(x = a[col], height=a['score'], color=colors[:len(a)],
+                    tick_label=['']*len(a))
         ax.set(xticklabels=[], xlabel='', ylim=(0,1), ylabel='')
         ax.set_title(col.capitalize(), fontsize='xx-large')
         ax.set_ylabel('Accuracy', fontsize='x-large')
-        ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.2)
+        handles = [plt.Rectangle((0,0),1,1, color=colors[i]) for i in range(len(a))]
+        ax.legend(handles, a[col], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.2)
         self.figure.subplots_adjust(left=0.1, right=0.7, bottom=0.1, top=0.9)
         self.figure.suptitle('Comparison of dev set accuracies with different setups',
                      fontsize=16, x=4, y=0.95)
