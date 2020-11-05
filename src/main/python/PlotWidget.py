@@ -5,13 +5,15 @@ from PyQt5.QtWidgets import *
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from sqlalchemy import create_engine
+from DatabaseConn import database_connect
 
+import warnings
+warnings.filterwarnings("ignore")
 
 class PlotWidget(QWidget):
     def __init__(self):
         super(PlotWidget, self).__init__()
-        self.engine = create_engine('sqlite:///data/project.db', echo=False)
+        self.engine = database_connect()
         self.df = pd.read_sql('SELECT * FROM bowModels', con=self.engine)
         self.df['max_features'] = self.df.max_features.fillna('Full  ').astype(str).str[:-2]
         self.initUI()

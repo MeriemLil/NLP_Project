@@ -2,12 +2,12 @@ import pandas as pd
 import numpy as np
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from sqlalchemy import create_engine
+from DatabaseConn import database_connect
 
 class BowDetailedTable(QWidget): 
     def __init__(self): 
         super(BowDetailedTable, self).__init__()
-        self.engine = create_engine('sqlite:///data/project.db', echo=False)
+        self.engine = database_connect()
         self.df = pd.read_sql('SELECT * FROM bestModels', con=self.engine)
         self.df.set_index('name', inplace=True, drop=True)
         self.initUI()

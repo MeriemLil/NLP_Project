@@ -1,12 +1,12 @@
 import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from sqlalchemy import create_engine
+from DatabaseConn import database_connect
 
 class HarvardInqDBWidget(QWidget): 
     def __init__(self): 
         super(HarvardInqDBWidget, self).__init__()
-        self.engine = create_engine('sqlite:///data/project.db', echo=False)
+        self.engine = database_connect()
         self.initUI()
 
   

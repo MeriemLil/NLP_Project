@@ -1,13 +1,13 @@
 import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from sqlalchemy import create_engine
+from DatabaseConn import database_connect
 
 
 class TableWidget(QWidget): 
     def __init__(self): 
         super(TableWidget, self).__init__()
-        self.engine = create_engine('sqlite:///data/project.db', echo=False)
+        self.engine = database_connect()
         self.df = pd.read_sql('SELECT * FROM bowModels', con=self.engine)
         self.df['max_features'] = self.df.max_features.fillna('Full  ').astype(str).str[:-2]
         self.initUI()
